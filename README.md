@@ -39,13 +39,16 @@ _Note that it is planned to generate some part of this based on the XML files wi
 
 ## Channels
 
-_Here you should provide information about available channel types, what their meaning is and how they can be used._
 
-_Note that it is planned to generate some part of this based on the XML files within ```src/main/resources/ESH-INF/thing``` of your binding._
 
-| channel  | type   | description                  |
-|----------|--------|------------------------------|
-| control  | Switch | This is the control channel  |
+| channel              | type   | description                  |
+|----------------------|--------|------------------------------|
+| channelPower         | Switch | This is the control channel  |
+| channelMute          | Switch | This is the control channel  |
+| channelVolume        | Dimmer | This is the control channel  |
+| channelInput         | String | This is the control channel  |
+| channelSelectPreset  | String | This is the control channel  |
+| channelPresets       | String | This is the control channel  |
 
 ## Full Example
 
