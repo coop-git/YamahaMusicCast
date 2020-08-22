@@ -1,59 +1,49 @@
-# yamahamusiccast Binding
+# Yamaha MusicCast Binding
 
-_Give some details about what this binding is meant for - a protocol, system, specific device._
-
-_If possible, provide some resources like pictures, a YouTube video, etc. to give an impression of what can be done with this binding. You can place such resources into a `doc` folder next to this README.md._
+Binding to control AV Receiver(s) from Yamaha via their MusicCast protocol (aka Yamaha Extended Control).
 
 ## Supported Things
 
-_Please describe the different supported things / devices within this section._
-_Which different types are supported, which models were tested etc.?_
-_Note that it is planned to generate some part of this based on the XML files within ```src/main/resources/ESH-INF/thing``` of your binding._
+Each AV Receiver is a Thing.
 
 ## Discovery
 
-_Describe the available auto-discovery features here. Mention for what it works and what needs to be kept in mind when using it._
+No auto discovery
 
 ## Binding Configuration
 
-_If your binding requires or supports general configuration settings, please create a folder ```cfg``` and place the configuration file ```<bindingId>.cfg``` inside it. In this section, you should link to this file and provide some information about the options. The file could e.g. look like:_
-
-```
-# Configuration for the Philips Hue Binding
-#
-# Default secret key for the pairing of the Philips Hue Bridge.
-# It has to be between 10-40 (alphanumeric) characters
-# This may be changed by the user for security reasons.
-secret=openHABSecret
-```
-
-_Note that it is planned to generate some part of this based on the information that is available within ```src/main/resources/ESH-INF/binding``` of your binding._
-
-_If your binding does not offer any generic configurations, you can remove this section completely._
+N/A
 
 ## Thing Configuration
 
-_Describe what is needed to manually configure a thing, either through the (Paper) UI or via a thing-file. This should be mainly about its mandatory and optional configuration parameters. A short example entry for a thing file can help!_
+Address (config_host) : IP address of the AVR
+Refresh Interval (config_refreshInterval) : number of seconds to refresh items in OH
+Log everything  (config_FullLogs) : set to false to have almost no logs, true to have all logs.
 
-_Note that it is planned to generate some part of this based on the XML files within ```src/main/resources/ESH-INF/thing``` of your binding._
+Thing yamahamusiccast:Device:Living "YXC Living" [config_host="1.2.3.4" , config_refreshInterval=60, config_FullLogs=false]
 
 ## Channels
 
 
 
-| channel              | type   | description                  |
-|----------------------|--------|------------------------------|
-| channelPower         | Switch | This is the control channel  |
-| channelMute          | Switch | This is the control channel  |
-| channelVolume        | Dimmer | This is the control channel  |
-| channelInput         | String | This is the control channel  |
-| channelSelectPreset  | String | This is the control channel  |
-| channelPresets       | String | This is the control channel  |
+| channel              | type   | description                                         |
+|----------------------|--------|-----------------------------------------------------|
+| channelPower         | Switch | Power ON/OFF                                        |
+| channelMute          | Switch | Mute ON/OFF                                         |
+| channelVolume        | Dimmer | Volume 0-100 (recalculated based on Max Volume AVR  |
+| channelInput         | String | See below for list                                  |
+| channelSelectPreset  | String | Select Netradio/USB preset (favorite)               |
+| channelPresets       | String | List of Presets to facilitate creation of sitempas  |
 
 ## Full Example
 
-_Provide a full usage example based on textual configuration files (*.things, *.items, *.sitemap)._
+N/A
 
-## Any custom content here!
+## Input List
 
-_Feel free to add additional sections for whatever you think should also be mentioned about your binding!_
+cd / tuner / multi_ch / phono / hdmi1 / hdmi2 / hdmi3 / hdmi4 / hdmi5 / hdmi6 / hdmi7 /
+hdmi8 / hdmi / av1 / av2 / av3 / av4 / av5 / av6 / av7 / v_aux / aux1 / aux2 / aux / audio1 /
+audio2 / audio3 / audio4 / audio_cd / audio / optical1 / optical2 / optical / coaxial1 / coaxial2 /
+coaxial / digital1 / digital2 / digital / line1 / line2 / line3 / line_cd / analog / tv / bd_dvd /
+usb_dac / usb / bluetooth / server / net_radio / rhapsody / napster / pandora / siriusxm /
+spotify / juke / airplay / radiko / qobuz / mc_link / main_sync / none
