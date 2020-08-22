@@ -17,7 +17,9 @@ N/A
 ## Thing Configuration
 
 Address (config_host) : IP address of the AVR
+
 Refresh Interval (config_refreshInterval) : number of seconds to refresh items in OH
+
 Log everything  (config_FullLogs) : set to false to have almost no logs, true to have all logs.
 
 Thing yamahamusiccast:Device:Living "YXC Living" [config_host="1.2.3.4" , config_refreshInterval=60, config_FullLogs=false]
