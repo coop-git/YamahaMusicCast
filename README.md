@@ -37,6 +37,7 @@ Thing yamahamusiccast:Device:Living "YXC Living" [config_host="1.2.3.4" , config
 | channelSoundProgram  | String | See below for list                                  |
 | channelSelectPreset  | String | Select Netradio/USB preset (favorite)               |
 | channelPresets       | String | List of Presets to facilitate creation of sitempas  |
+| channelPlayer        | Player | PLAY/PAUSE/NEXT/PREVIOUS/REWIND/FASTFORWARD         |
 
 ## Full Example
 
