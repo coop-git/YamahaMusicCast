@@ -37,11 +37,11 @@ Thing yamahamusiccast:Device:zone#Living "YXC Living" [config_host="1.2.3.4"]
 |----------------------|--------|-----------------------------------------------------|
 | channelPower         | Switch | Power ON/OFF                                        |
 | channelMute          | Switch | Mute ON/OFF                                         |
-| channelVolume        | Dimmer | Volume 0-100 (recalculated based on Max Volume AVR  |
+| channelVolume        | Dimmer | Volume 0-100 (recalculated based on Max Volume AVR) |
 | channelInput         | String | See below for list                                  |
 | channelSoundProgram  | String | See below for list                                  |
 | channelSelectPreset  | String | Select Netradio/USB preset (favorite)               |
-| channelPresets       | String | List of Presets to facilitate creation of sitempas  |
+| channelPresets       | String | List of Presets to facilitate creation of sitemaps  |
 | channelPlayer        | Player | PLAY/PAUSE/NEXT/PREVIOUS/REWIND/FASTFORWARD         |
 
 ## Full Example
