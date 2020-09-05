@@ -1,6 +1,7 @@
 # Yamaha MusicCast Binding
 
 Binding to control AV Receiver(s) from Yamaha via their MusicCast protocol (aka Yamaha Extended Control).
+With support for 4 zones : main, zone2, zone3, zone4. Main is always present. Zone2, Zone3, Zone4 to enable.
 
 ## Supported Things
 
@@ -16,13 +17,17 @@ N/A
 
 ## Thing Configuration
 
-Address (config_host) : IP address of the AVR
+| Parameter              | type    | description                                             | Advanced | Required      |
+|------------------------|---------|---------------------------------------------------------|----------|---------------|
+| config_host            | String  | IP address of AVR                                       | false    | true          |
+| config_refreshInterval | Integer | The refresh interval in seconds (0=disable).            | false    | Default=60    |
+| config_Zone2           | Booelan | Is Zone 2 active?                                       | true     | Default=false |
+| config_Zone3           | Boolean | Is Zone 3 active?                                       | true     | Default=false |
+| config_Zone4           | Boolean | Is Zone 4 active?                                       | true     | Default=false |
+| config_FullLogs        | Boolean | Is Zone 4 active?                                       | true     | Default=false |
+| config_ActionRefresh   | Boolean | Is Zone 4 active?                                       | true     | Default=false |
 
-Refresh Interval (config_refreshInterval) : number of seconds to refresh items in OH
-
-Log everything  (config_FullLogs) : set to false to have almost no logs, true to have all logs.
-
-Thing yamahamusiccast:Device:Living "YXC Living" [config_host="1.2.3.4" , config_refreshInterval=60, config_FullLogs=false]
+Thing yamahamusiccast:Device:zone#Living "YXC Living" [config_host="1.2.3.4"]
 
 ## Channels
 
