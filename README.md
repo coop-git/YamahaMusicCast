@@ -24,8 +24,7 @@ N/A
 | config_Zone2           | Booelan | Is Zone 2 active?                                       | true     | Default=false |
 | config_Zone3           | Boolean | Is Zone 3 active?                                       | true     | Default=false |
 | config_Zone4           | Boolean | Is Zone 4 active?                                       | true     | Default=false |
-| config_FullLogs        | Boolean | Is Zone 4 active?                                       | true     | Default=false |
-| config_ActionRefresh   | Boolean | Is Zone 4 active?                                       | true     | Default=false |
+| config_FullLogs        | Boolean | Log everything?                                         | true     | Default=false |
 
 Thing yamahamusiccast:Device:zone#Living "YXC Living" [config_host="1.2.3.4"]
 
@@ -66,3 +65,7 @@ action_game / roleplaying_game / game / music_video / music / recital_opera / pa
 disco / standard / spectacle / sci-fi / adventure / drama / talk_show / tv_program /
 mono_movie / movie / enhanced / 2ch_stereo / 5ch_stereo / 7ch_stereo / 9ch_stereo /
 11ch_stereo / stereo / surr_decoder / my_surround / target / straight / off
+
+## Tested Devices
+
+RX-D485 / WX-010 / WX-030 / ISX-80 / YSP-1600 /RX-A860 / R-N303D / EX-A1080 

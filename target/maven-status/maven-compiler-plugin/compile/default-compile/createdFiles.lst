@@ -1,0 +1,4 @@
+org\openhab\binding\yamahamusiccast\internal\yamahamusiccastBindingConstants.class
+org\openhab\binding\yamahamusiccast\internal\yamahamusiccastHandler.class
+org\openhab\binding\yamahamusiccast\internal\yamahamusiccastConfiguration.class
+org\openhab\binding\yamahamusiccast\internal\yamahamusiccastHandlerFactory.class
