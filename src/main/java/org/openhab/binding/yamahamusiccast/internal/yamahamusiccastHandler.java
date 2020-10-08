@@ -493,6 +493,20 @@ public class yamahamusiccastHandler extends BaseThingHandler {
         }
     }
 
+    private String setSleep(String Value, String Zone) {
+        TopicAVR = "setSleep";
+        try {
+            httpResponse = HttpUtil.executeUrl("GET", "http://" + config.config_host + "/YamahaExtendedControl/v1/" + Zone + "/setSleep?sleep=" + Value, ConnectionTimeout);
+            if (config.config_FullLogs == true) {
+                logger.info(httpResponse);
+            }
+            return httpResponse;
+        } catch (IOException e) {
+            logger.warn("IO Exception - " + TopicAVR, e);
+            return "{\"response_code\":\"999\"}";
+        }
+    }
+
     // End Zone Related
 
     // Start Net Radio/USB Related
