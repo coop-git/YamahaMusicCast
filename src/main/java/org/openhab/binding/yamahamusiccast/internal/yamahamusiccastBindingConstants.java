@@ -38,4 +38,5 @@ public class yamahamusiccastBindingConstants {
     public static final String CHANNEL_PRESETS = "channelPresets";
     public static final String CHANNEL_SELECTPRESET = "channelSelectPreset";
     public static final String CHANNEL_PLAYER = "channelPlayer";
+    public static final String CHANNEL_SLEEP = "channelSleep";
 }

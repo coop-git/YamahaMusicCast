@@ -13,6 +13,7 @@
 package org.openhab.binding.yamahamusiccast.internal;
 
 import static org.openhab.binding.yamahamusiccast.internal.yamahamusiccastBindingConstants.*;
+import org.openhab.binding.yamahamusiccast.internal.model.Status;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
@@ -247,6 +248,10 @@ public class yamahamusiccastHandler extends BaseThingHandler {
             PresetState = jsonObject.get("input").getAsString();
             //InputText = "";
 
+            Status targetObject = new Status();
+            targetObject = new Gson().fromJson(tmpString, Status.class);
+            logger.info("DTO test : response : {}", targetObject.getResponseCode());
+ 
         } catch (Exception e) {
             ResponseCode = "999";
         }

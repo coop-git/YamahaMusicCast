@@ -66,6 +66,7 @@
 			<channel id="channelInput" typeId="channelInput" />
 			<channel id="channelSoundProgram" typeId="channelSoundProgram" />
 			<channel id="channelSelectPreset" typeId="channelSelectPreset" />
+			<channel id="channelSleep" typeId="channelSleep" />
 		</channels>
 	</channel-group-type>
 
@@ -78,6 +79,7 @@
 			<channel id="channelInput" typeId="channelInput" />
 			<channel id="channelSoundProgram" typeId="channelSoundProgram" />
 			<channel id="channelSelectPreset" typeId="channelSelectPreset" />
+			<channel id="channelSleep" typeId="channelSleep" />
 		</channels>
 	</channel-group-type>
 
@@ -90,6 +92,7 @@
 			<channel id="channelInput" typeId="channelInput" />
 			<channel id="channelSoundProgram" typeId="channelSoundProgram" />
 			<channel id="channelSelectPreset" typeId="channelSelectPreset" />
+			<channel id="channelSleep" typeId="channelSleep" />
 		</channels>
 	</channel-group-type>
 
@@ -102,6 +105,7 @@
 			<channel id="channelInput" typeId="channelInput" />
 			<channel id="channelSoundProgram" typeId="channelSoundProgram" />
 			<channel id="channelSelectPreset" typeId="channelSelectPreset" />
+			<channel id="channelSleep" typeId="channelSleep" />
 		</channels>
 	</channel-group-type>
 
@@ -158,4 +162,10 @@
 		<label>Player for Net Radio/USB</label>
 		<description>Player for Net Radio/USB channel</description>
 	</channel-type>
+	<channel-type id="channelSleep">
+		<item-type>String</item-type>
+		<label>Sleep</label>
+		<description>Sleep channel</description>
+	</channel-type>
+
 </thing:thing-descriptions>
