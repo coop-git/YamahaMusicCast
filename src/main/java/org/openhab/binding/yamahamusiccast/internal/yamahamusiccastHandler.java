@@ -95,6 +95,7 @@ public class yamahamusiccastHandler extends BaseThingHandler {
     String Zone = "main";
     String Channel = "";
     String ZoneChannelCombo = "";
+    String SleepState = "";
     @NonNullByDefault({}) String ThingLabel = "";
 
     public yamahamusiccastHandler(Thing thing) {
@@ -184,6 +185,13 @@ public class yamahamusiccastHandler extends BaseThingHandler {
                         setPlayback("fast_forward_end");
                     }
                     break;
+                case CHANNEL_SLEEP:
+                    tmpString = command.toString();
+                    if (config.config_FullLogs == true) {
+                      logger.info("setSleep:" + tmpString);
+                    }
+                    setSleep(tmpString, Zone);
+                    break;
             }            
         }
     }
@@ -236,21 +244,29 @@ public class yamahamusiccastHandler extends BaseThingHandler {
     private void UpdateStatusZone(String ZoneToUpdate) {
         tmpString = getStatus(ZoneToUpdate);
         try {
-            JsonElement jsonTree = parser.parse(tmpString);
-            JsonObject jsonObject = jsonTree.getAsJsonObject();
-            ResponseCode = jsonObject.get("response_code").getAsString();
-            PowerState = jsonObject.get("power").getAsString();
-            MuteState = jsonObject.get("mute").getAsString();
-            VolumeState = jsonObject.get("volume").getAsInt();
-            MaxVolumeState = jsonObject.get("max_volume").getAsInt();
-            InputState = jsonObject.get("input").getAsString();
-            SoundProgramState = jsonObject.get("sound_program").getAsString();
-            PresetState = jsonObject.get("input").getAsString();
+            //JsonElement jsonTree = parser.parse(tmpString);
+            //JsonObject jsonObject = jsonTree.getAsJsonObject();
+            //ResponseCode = jsonObject.get("response_code").getAsString();
+            //PowerState = jsonObject.get("power").getAsString();
+            //MuteState = jsonObject.get("mute").getAsString();
+            //VolumeState = jsonObject.get("volume").getAsInt();
+            //MaxVolumeState = jsonObject.get("max_volume").getAsInt();
+            //InputState = jsonObject.get("input").getAsString();
+            //SoundProgramState = jsonObject.get("sound_program").getAsString();
+            //PresetState = jsonObject.get("input").getAsString(); // TODO : still needed?
             //InputText = "";
 
             Status targetObject = new Status();
             targetObject = new Gson().fromJson(tmpString, Status.class);
-            logger.info("DTO test : response : {}", targetObject.getResponseCode());
+            ResponseCode = targetObject.getResponseCode();
+            PowerState = targetObject.getPower();
+            MuteState = targetObject.getMute();
+            VolumeState = targetObject.getVolume();
+            MaxVolumeState = targetObject.getMaxVolume();
+            InputState = targetObject.getInput();
+            SoundProgramState = targetObject.getSoundProgram();
+
+
  
         } catch (Exception e) {
             ResponseCode = "999";

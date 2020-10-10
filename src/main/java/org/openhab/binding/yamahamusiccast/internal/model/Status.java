@@ -24,21 +24,50 @@ public class Status {
     private String ResponseCode;
 
     @SerializedName("power")
-    private String PowerState;
-	
+    private String Power;
+
+    @SerializedName("mute")
+    private String Mute;
+
+    @SerializedName("volume")
+    private Integer Volume;
+
+    @SerializedName("max_volume")
+    private Integer MaxVolume;
+
+    @SerializedName("input")
+    private String Input;
+
+    @SerializedName("sound_program")
+    private String SoundProgram;
+
+
     public String getResponseCode() {
         return ResponseCode;
     }
 
-    public void setResponseCode(String ResponseCode) {
-        this.ResponseCode = ResponseCode;
-    }
-
     public String getPower() {
-        return PowerState;
+        return Power;
     }
 
-    public void setPower(String PowerState) {
-        this.PowerState = PowerState;
+    public String getMute() {
+        return Mute;
     }
+
+    public Integer getVolume() {
+        return Volume;
+    }
+
+    public Integer getMaxVolume() {
+        return MaxVolume;
+    }
+
+    public String getInput() {
+        return Input;
+    }
+
+    public String getSoundProgram() {
+        return SoundProgram;
+    }
+
 }
