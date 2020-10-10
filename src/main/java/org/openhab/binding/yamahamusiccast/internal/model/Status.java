@@ -41,6 +41,9 @@ public class Status {
     @SerializedName("sound_program")
     private String SoundProgram;
 
+    @SerializedName("sleep")
+    private Integer Sleep;
+
 
     public String getResponseCode() {
         return ResponseCode;
@@ -68,6 +71,10 @@ public class Status {
 
     public String getSoundProgram() {
         return SoundProgram;
+    }
+
+    public Integer getSleep() {
+        return Sleep;
     }
 
 }

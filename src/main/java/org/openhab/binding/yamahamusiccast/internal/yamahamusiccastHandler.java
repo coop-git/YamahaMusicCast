@@ -95,7 +95,7 @@ public class yamahamusiccastHandler extends BaseThingHandler {
     String Zone = "main";
     String Channel = "";
     String ZoneChannelCombo = "";
-    String SleepState = "";
+    Integer SleepState = 0;
     @NonNullByDefault({}) String ThingLabel = "";
 
     public yamahamusiccastHandler(Thing thing) {
@@ -265,8 +265,7 @@ public class yamahamusiccastHandler extends BaseThingHandler {
             MaxVolumeState = targetObject.getMaxVolume();
             InputState = targetObject.getInput();
             SoundProgramState = targetObject.getSoundProgram();
-
-
+            SleepState = targetObject.getSleep();
  
         } catch (Exception e) {
             ResponseCode = "999";
@@ -319,7 +318,13 @@ public class yamahamusiccastHandler extends BaseThingHandler {
                                 updateState(channelUID, StringType.valueOf(SoundProgramState));
                             }   
                             break;
-                    }
+                        case CHANNEL_SLEEP:
+                            if (Zone.equals(ZoneToUpdate)) {
+                                updateState(channelUID, new DecimalType(SleepState));
+                            }   
+                            break;
+
+                        }
                 }    
                 break;
             case "999":

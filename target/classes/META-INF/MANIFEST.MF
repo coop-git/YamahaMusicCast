@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Automatic-Module-Name: org.openhab.binding.yamahamusiccast
-Bnd-LastModified: 1602336648241
+Bnd-LastModified: 1602358673405
 Bundle-Description: This project contains the official add-ons of open
  HAB
 Bundle-Developers: openhab;email="info@openhab.org";name=openHAB;organ
@@ -21,7 +21,7 @@ Bundle-SCM: url="https://github.com/openhab/openhab-addons/org.openhab
  ",tag=HEAD
 Bundle-SymbolicName: org.openhab.binding.yamahamusiccast
 Bundle-Vendor: openHAB.org
-Bundle-Version: 2.5.5.202010101330
+Bundle-Version: 2.5.5.202010101937
 Created-By: 1.8.0_251 (Oracle Corporation)
 Import-Package: org.eclipse.smarthome.core.library.types,org.eclipse.s
  marthome.core.thing,org.eclipse.smarthome.core.thing.binding,org.ecli
