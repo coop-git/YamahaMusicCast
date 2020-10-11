@@ -40,6 +40,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
 import java.math.BigDecimal;
@@ -110,9 +111,6 @@ public class yamahamusiccastHandler extends BaseThingHandler {
 
     private yamahamusiccastStateDescriptionProvider stateDescriptionProvider;
     
-    
-    
-
     public yamahamusiccastHandler(Thing thing, yamahamusiccastStateDescriptionProvider stateDescriptionProvider) {
         super(thing);
         this.stateDescriptionProvider = stateDescriptionProvider;
@@ -251,6 +249,7 @@ public class yamahamusiccastHandler extends BaseThingHandler {
         }
         //Not Zone related
         UpdatePresets();
+        AddOptions();
     }
 
     @Override
@@ -397,6 +396,16 @@ public class yamahamusiccastHandler extends BaseThingHandler {
         } 
     }
 
+    private void AddOptions() {
+        //logger.info("adding options");
+        List<StateOption> options = new ArrayList<>();
+        options.add(new StateOption("abc", "abc"));
+        options.add(new StateOption("xyz", "xyz"));
+        ChannelUID testchannel = new ChannelUID(getThing().getUID(), "Link1", "channelServer");
+        //logger.info("channel:{}", testchannel);
+        stateDescriptionProvider.setStateOptions(testchannel, options);
+    }
+
     private String GetResponseCode(String json) {
         JsonElement jsonTree = parser.parse(json);
         JsonObject jsonObject = jsonTree.getAsJsonObject();
@@ -433,6 +442,7 @@ public class yamahamusiccastHandler extends BaseThingHandler {
         return Text;
     }
 
+    // End Various functions
 
     // API calls to AVR
 

@@ -15,6 +15,7 @@
 			<channel-group id="zone3" typeId="zone3Controls"/>
 			<channel-group id="zone4" typeId="zone4Controls"/>
 			<channel-group id="playerControls" typeId="playerControls"/>
+			<channel-group id="Link1" typeId="Link1"/>
 		</channel-groups>
 
 		<config-description>
