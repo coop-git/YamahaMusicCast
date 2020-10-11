@@ -33,26 +33,26 @@
 				<description>Is Zone 2 active?</description>
 				<default>false</default>
 				<advanced>true</advanced>
-			</parameter>			
+			</parameter>
 			<parameter name="config_Zone3" type="boolean">
 				<label>Zone 3</label>
 				<description>Is Zone 3 active?</description>
 				<default>false</default>
 				<advanced>true</advanced>
-			</parameter>			
+			</parameter>
 			<parameter name="config_Zone4" type="boolean">
 				<label>Zone 4</label>
 				<description>Is Zone 4 active?</description>
 				<default>false</default>
 				<advanced>true</advanced>
-			</parameter>			
+			</parameter>
 
 			<parameter name="config_FullLogs" type="boolean">
 				<label>Log everything?</label>
 				<description>Almost nothing is written in the logs unless specified. To avoid large logfiles. </description>
 				<default>false</default>
 				<advanced>true</advanced>
-			</parameter>			
+			</parameter>
 
 		</config-description>
 	</thing-type>
@@ -60,60 +60,60 @@
 	<channel-group-type id="mainControls">
 		<label>Main Zone (default zone)</label>
 		<channels>
-			<channel id="channelPower" typeId="channelPower" />
-			<channel id="channelMute" typeId="channelMute" />
-			<channel id="channelVolume" typeId="channelVolume" />
-			<channel id="channelInput" typeId="channelInput" />
-			<channel id="channelSoundProgram" typeId="channelSoundProgram" />
-			<channel id="channelSelectPreset" typeId="channelSelectPreset" />
-			<channel id="channelSleep" typeId="channelSleep" />
+			<channel id="channelPower" typeId="channelPower"/>
+			<channel id="channelMute" typeId="channelMute"/>
+			<channel id="channelVolume" typeId="channelVolume"/>
+			<channel id="channelInput" typeId="channelInput"/>
+			<channel id="channelSoundProgram" typeId="channelSoundProgram"/>
+			<channel id="channelSelectPreset" typeId="channelSelectPreset"/>
+			<channel id="channelSleep" typeId="channelSleep"/>
 		</channels>
 	</channel-group-type>
 
 	<channel-group-type id="zone2Controls">
 		<label>Zone 2 (to activate via config)</label>
 		<channels>
-			<channel id="channelPower" typeId="channelPower" />
-			<channel id="channelMute" typeId="channelMute" />
-			<channel id="channelVolume" typeId="channelVolume" />
-			<channel id="channelInput" typeId="channelInput" />
-			<channel id="channelSoundProgram" typeId="channelSoundProgram" />
-			<channel id="channelSelectPreset" typeId="channelSelectPreset" />
-			<channel id="channelSleep" typeId="channelSleep" />
+			<channel id="channelPower" typeId="channelPower"/>
+			<channel id="channelMute" typeId="channelMute"/>
+			<channel id="channelVolume" typeId="channelVolume"/>
+			<channel id="channelInput" typeId="channelInput"/>
+			<channel id="channelSoundProgram" typeId="channelSoundProgram"/>
+			<channel id="channelSelectPreset" typeId="channelSelectPreset"/>
+			<channel id="channelSleep" typeId="channelSleep"/>
 		</channels>
 	</channel-group-type>
 
 	<channel-group-type id="zone3Controls">
 		<label>Zone 3 (to activate via config)</label>
 		<channels>
-			<channel id="channelPower" typeId="channelPower" />
-			<channel id="channelMute" typeId="channelMute" />
-			<channel id="channelVolume" typeId="channelVolume" />
-			<channel id="channelInput" typeId="channelInput" />
-			<channel id="channelSoundProgram" typeId="channelSoundProgram" />
-			<channel id="channelSelectPreset" typeId="channelSelectPreset" />
-			<channel id="channelSleep" typeId="channelSleep" />
+			<channel id="channelPower" typeId="channelPower"/>
+			<channel id="channelMute" typeId="channelMute"/>
+			<channel id="channelVolume" typeId="channelVolume"/>
+			<channel id="channelInput" typeId="channelInput"/>
+			<channel id="channelSoundProgram" typeId="channelSoundProgram"/>
+			<channel id="channelSelectPreset" typeId="channelSelectPreset"/>
+			<channel id="channelSleep" typeId="channelSleep"/>
 		</channels>
 	</channel-group-type>
 
 	<channel-group-type id="zone4Controls">
 		<label>Zone 4 (to activate via config)</label>
 		<channels>
-			<channel id="channelPower" typeId="channelPower" />
-			<channel id="channelMute" typeId="channelMute" />
-			<channel id="channelVolume" typeId="channelVolume" />
-			<channel id="channelInput" typeId="channelInput" />
-			<channel id="channelSoundProgram" typeId="channelSoundProgram" />
-			<channel id="channelSelectPreset" typeId="channelSelectPreset" />
-			<channel id="channelSleep" typeId="channelSleep" />
+			<channel id="channelPower" typeId="channelPower"/>
+			<channel id="channelMute" typeId="channelMute"/>
+			<channel id="channelVolume" typeId="channelVolume"/>
+			<channel id="channelInput" typeId="channelInput"/>
+			<channel id="channelSoundProgram" typeId="channelSoundProgram"/>
+			<channel id="channelSelectPreset" typeId="channelSelectPreset"/>
+			<channel id="channelSleep" typeId="channelSleep"/>
 		</channels>
 	</channel-group-type>
 
 	<channel-group-type id="playerControls">
 		<label>player Controls</label>
 		<channels>
-			<channel id="channelPresets" typeId="channelPresets" />
-			<channel id="channelPlayer" typeId="channelPlayer" />
+			<channel id="channelPresets" typeId="channelPresets"/>
+			<channel id="channelPlayer" typeId="channelPlayer"/>
 		</channels>
 	</channel-group-type>
 
@@ -121,7 +121,7 @@
 	<channel-group-type id="Link1">
 		<label>Link1</label>
 		<channels>
-			<channel id="channelServer" typeId="channelServer" />
+			<channel id="channelServer" typeId="channelServer"/>
 		</channels>
 	</channel-group-type>
 
@@ -140,7 +140,7 @@
 		<item-type>Dimmer</item-type>
 		<label>Volume</label>
 		<description>Volume channel</description>
-		<state min="0" max="100" />
+		<state min="0" max="100"/>
 	</channel-type>
 	<channel-type id="channelInput">
 		<item-type>String</item-type>

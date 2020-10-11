@@ -1,5 +1,6 @@
-D:\Workspace\Openhab repo\2.5.x\bundles\org.openhab.binding.yamahamusiccast\src\main\java\org\openhab\binding\yamahamusiccast\internal\yamahamusiccastHandlerFactory.java
-D:\Workspace\Openhab repo\2.5.x\bundles\org.openhab.binding.yamahamusiccast\src\main\java\org\openhab\binding\yamahamusiccast\internal\model\Status.java
-D:\Workspace\Openhab repo\2.5.x\bundles\org.openhab.binding.yamahamusiccast\src\main\java\org\openhab\binding\yamahamusiccast\internal\yamahamusiccastBindingConstants.java
-D:\Workspace\Openhab repo\2.5.x\bundles\org.openhab.binding.yamahamusiccast\src\main\java\org\openhab\binding\yamahamusiccast\internal\yamahamusiccastConfiguration.java
-D:\Workspace\Openhab repo\2.5.x\bundles\org.openhab.binding.yamahamusiccast\src\main\java\org\openhab\binding\yamahamusiccast\internal\yamahamusiccastHandler.java
+D:\Workspace\Openhab repo\openhab2-addons\bundles\org.openhab.binding.yamahamusiccast\src\main\java\org\openhab\binding\yamahamusiccast\internal\model\Status.java
+D:\Workspace\Openhab repo\openhab2-addons\bundles\org.openhab.binding.yamahamusiccast\src\main\java\org\openhab\binding\yamahamusiccast\internal\yamahamusiccastHandlerFactory.java
+D:\Workspace\Openhab repo\openhab2-addons\bundles\org.openhab.binding.yamahamusiccast\src\main\java\org\openhab\binding\yamahamusiccast\internal\yamahamusiccastConfiguration.java
+D:\Workspace\Openhab repo\openhab2-addons\bundles\org.openhab.binding.yamahamusiccast\src\main\java\org\openhab\binding\yamahamusiccast\internal\yamahamusiccastHandler.java
+D:\Workspace\Openhab repo\openhab2-addons\bundles\org.openhab.binding.yamahamusiccast\src\main\java\org\openhab\binding\yamahamusiccast\internal\yamahamusiccastStateDescriptionProvider.java
+D:\Workspace\Openhab repo\openhab2-addons\bundles\org.openhab.binding.yamahamusiccast\src\main\java\org\openhab\binding\yamahamusiccast\internal\yamahamusiccastBindingConstants.java

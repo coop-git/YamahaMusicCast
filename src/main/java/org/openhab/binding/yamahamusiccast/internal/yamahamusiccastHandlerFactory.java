@@ -25,7 +25,8 @@ import org.eclipse.smarthome.core.thing.binding.BaseThingHandlerFactory;
 import org.eclipse.smarthome.core.thing.binding.ThingHandler;
 import org.eclipse.smarthome.core.thing.binding.ThingHandlerFactory;
 import org.osgi.service.component.annotations.Component;
-
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.Activate;
 import  org.openhab.binding.yamahamusiccast.internal.yamahamusiccastHandler;
 import  org.openhab.binding.yamahamusiccast.internal.yamahamusiccastStateDescriptionProvider;
 
@@ -40,9 +41,12 @@ import  org.openhab.binding.yamahamusiccast.internal.yamahamusiccastStateDescrip
 public class yamahamusiccastHandlerFactory extends BaseThingHandlerFactory {
 
     private static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Collections.singleton(THING_DEVICE);
-    
-    private yamahamusiccastStateDescriptionProvider stateDescriptionProvider; 
+    private final yamahamusiccastStateDescriptionProvider stateDescriptionProvider;
 
+    @Activate
+    public yamahamusiccastHandlerFactory(@Reference yamahamusiccastStateDescriptionProvider stateDescriptionProvider) {
+        this.stateDescriptionProvider = stateDescriptionProvider;
+    }
     @Override
     public boolean supportsThingType(ThingTypeUID thingTypeUID) {
         return SUPPORTED_THING_TYPES_UIDS.contains(thingTypeUID);
@@ -53,6 +57,7 @@ public class yamahamusiccastHandlerFactory extends BaseThingHandlerFactory {
         ThingTypeUID thingTypeUID = thing.getThingTypeUID();
 
         if (THING_DEVICE.equals(thingTypeUID)) {
+            
             return new yamahamusiccastHandler(thing,stateDescriptionProvider);
         }
 

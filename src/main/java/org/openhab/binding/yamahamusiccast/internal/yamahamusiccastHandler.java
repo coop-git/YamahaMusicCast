@@ -14,17 +14,23 @@ package org.openhab.binding.yamahamusiccast.internal;
 
 import static org.openhab.binding.yamahamusiccast.internal.yamahamusiccastBindingConstants.*;
 import org.openhab.binding.yamahamusiccast.internal.model.Status;
-
-
+import org.openhab.binding.yamahamusiccast.internal.yamahamusiccastStateDescriptionProvider;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingStatus;
+import org.eclipse.smarthome.core.thing.ThingStatusDetail;
 import org.eclipse.smarthome.core.thing.binding.BaseThingHandler;
+import org.eclipse.smarthome.core.thing.Channel;
+import org.eclipse.smarthome.core.thing.type.ChannelTypeUID;
 import org.eclipse.smarthome.core.types.Command;
 import org.eclipse.smarthome.core.types.RefreshType;
+import org.eclipse.smarthome.core.types.State;
+import org.eclipse.smarthome.core.types.StateOption;
+import org.eclipse.smarthome.core.types.UnDefType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,9 +51,9 @@ import org.eclipse.smarthome.core.library.types.DateTimeType;
 import org.eclipse.smarthome.core.library.types.DecimalType;
 import org.eclipse.smarthome.core.library.types.StringType;
 import org.eclipse.smarthome.core.library.types.PercentType;
-import org.eclipse.smarthome.core.thing.Channel;
-import org.eclipse.smarthome.core.types.State;
-import org.eclipse.smarthome.core.types.UnDefType;
+
+
+
 import org.eclipse.smarthome.core.library.types.OnOffType;
 import org.eclipse.smarthome.core.library.types.PlayPauseType;
 import org.eclipse.smarthome.core.library.types.NextPreviousType;
@@ -60,7 +66,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonArray;
-import org.openhab.binding.yamahamusiccast.internal.yamahamusiccastStateDescriptionProvider;
+
 
 
 /**
@@ -104,7 +110,8 @@ public class yamahamusiccastHandler extends BaseThingHandler {
 
     private yamahamusiccastStateDescriptionProvider stateDescriptionProvider;
     
-
+    
+    
 
     public yamahamusiccastHandler(Thing thing, yamahamusiccastStateDescriptionProvider stateDescriptionProvider) {
         super(thing);

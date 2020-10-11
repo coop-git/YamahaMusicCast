@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="org.openhab.binding.yamahamusiccast.internal.yamahamusiccastStateDescriptionProvider">
+  <service>
+    <provide interface="org.eclipse.smarthome.core.thing.type.DynamicStateDescriptionProvider"/>
+    <provide interface="org.openhab.binding.yamahamusiccast.internal.yamahamusiccastStateDescriptionProvider"/>
+  </service>
+  <reference name="ChannelTypeI18nLocalizationService" interface="org.eclipse.smarthome.core.thing.i18n.ChannelTypeI18nLocalizationService" bind="setChannelTypeI18nLocalizationService" unbind="unsetChannelTypeI18nLocalizationService"/>
+  <implementation class="org.openhab.binding.yamahamusiccast.internal.yamahamusiccastStateDescriptionProvider"/>
+</scr:component>
