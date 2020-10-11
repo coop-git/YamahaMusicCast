@@ -15,6 +15,8 @@ package org.openhab.binding.yamahamusiccast.internal;
 import static org.openhab.binding.yamahamusiccast.internal.yamahamusiccastBindingConstants.*;
 import org.openhab.binding.yamahamusiccast.internal.model.Status;
 
+
+
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.smarthome.core.thing.ChannelUID;
@@ -58,6 +60,8 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonArray;
+import org.openhab.binding.yamahamusiccast.internal.yamahamusiccastStateDescriptionProvider;
+
 
 /**
  * The {@link yamahamusiccastHandler} is responsible for handling commands, which are
@@ -98,8 +102,14 @@ public class yamahamusiccastHandler extends BaseThingHandler {
     Integer SleepState = 0;
     @NonNullByDefault({}) String ThingLabel = "";
 
-    public yamahamusiccastHandler(Thing thing) {
+    private yamahamusiccastStateDescriptionProvider stateDescriptionProvider;
+    
+
+
+    public yamahamusiccastHandler(Thing thing, yamahamusiccastStateDescriptionProvider stateDescriptionProvider) {
         super(thing);
+        this.stateDescriptionProvider = stateDescriptionProvider;
+
     }
 
     @Override
