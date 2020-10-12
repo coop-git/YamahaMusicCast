@@ -22,7 +22,7 @@ import org.eclipse.smarthome.core.thing.ThingTypeUID;
  * @author Lennert Coopman - Initial contribution
  */
 @NonNullByDefault
-public class yamahamusiccastBindingConstants {
+public class YamahaMusiccastBindingConstants {
 
     private static final String BINDING_ID = "yamahamusiccast";
 

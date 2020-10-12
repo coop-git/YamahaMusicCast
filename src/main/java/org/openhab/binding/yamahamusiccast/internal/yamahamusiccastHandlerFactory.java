@@ -12,7 +12,7 @@
  */
 package org.openhab.binding.yamahamusiccast.internal;
 
-import static org.openhab.binding.yamahamusiccast.internal.yamahamusiccastBindingConstants.*;
+import static org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastBindingConstants.*;
 
 import java.util.Collections;
 import java.util.Set;
@@ -27,8 +27,8 @@ import org.eclipse.smarthome.core.thing.binding.ThingHandlerFactory;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.Activate;
-import  org.openhab.binding.yamahamusiccast.internal.yamahamusiccastHandler;
-import  org.openhab.binding.yamahamusiccast.internal.yamahamusiccastStateDescriptionProvider;
+import  org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastHandler;
+import  org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastStateDescriptionProvider;
 
 /**
  * The {@link yamahamusiccastHandlerFactory} is responsible for creating things and thing
@@ -38,13 +38,13 @@ import  org.openhab.binding.yamahamusiccast.internal.yamahamusiccastStateDescrip
  */
 @NonNullByDefault
 @Component(configurationPid = "binding.yamahamusiccast", service = ThingHandlerFactory.class)
-public class yamahamusiccastHandlerFactory extends BaseThingHandlerFactory {
+public class YamahaMusiccastHandlerFactory extends BaseThingHandlerFactory {
 
     private static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Collections.singleton(THING_DEVICE);
-    private final yamahamusiccastStateDescriptionProvider stateDescriptionProvider;
+    private final YamahaMusiccastStateDescriptionProvider stateDescriptionProvider;
 
     @Activate
-    public yamahamusiccastHandlerFactory(@Reference yamahamusiccastStateDescriptionProvider stateDescriptionProvider) {
+    public YamahaMusiccastHandlerFactory(@Reference YamahaMusiccastStateDescriptionProvider stateDescriptionProvider) {
         this.stateDescriptionProvider = stateDescriptionProvider;
     }
     @Override
@@ -58,7 +58,7 @@ public class yamahamusiccastHandlerFactory extends BaseThingHandlerFactory {
 
         if (THING_DEVICE.equals(thingTypeUID)) {
             
-            return new yamahamusiccastHandler(thing,stateDescriptionProvider);
+            return new YamahaMusiccastHandler(thing,stateDescriptionProvider);
         }
 
         return null;

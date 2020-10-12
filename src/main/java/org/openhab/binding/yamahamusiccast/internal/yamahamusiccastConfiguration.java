@@ -18,7 +18,7 @@ package org.openhab.binding.yamahamusiccast.internal;
  * @author Lennert Coopman - Initial contribution
  */
 
-public class yamahamusiccastConfiguration {
+public class YamahaMusiccastConfiguration {
 
     /**
      * Sample configuration parameter. Replace with your own.

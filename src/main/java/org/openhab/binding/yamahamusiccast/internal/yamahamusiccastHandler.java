@@ -12,9 +12,10 @@
  */
 package org.openhab.binding.yamahamusiccast.internal;
 
-import static org.openhab.binding.yamahamusiccast.internal.yamahamusiccastBindingConstants.*;
+import static org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastBindingConstants.*;
 import org.openhab.binding.yamahamusiccast.internal.model.Status;
-import org.openhab.binding.yamahamusiccast.internal.yamahamusiccastStateDescriptionProvider;
+import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastStateDescriptionProvider;
+import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastConfiguration;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
@@ -77,11 +78,11 @@ import com.google.gson.JsonArray;
  * @author Lennert Coopman - Initial contribution
  */
 @NonNullByDefault
-public class yamahamusiccastHandler extends BaseThingHandler {
+public class YamahaMusiccastHandler extends BaseThingHandler {
 
-    private Logger logger = LoggerFactory.getLogger(yamahamusiccastHandler.class);
+    private Logger logger = LoggerFactory.getLogger(YamahaMusiccastHandler.class);
     private @Nullable ScheduledFuture<?> refreshTask;
-    private @NonNullByDefault({}) yamahamusiccastConfiguration config;
+    private @NonNullByDefault({}) YamahaMusiccastConfiguration config;
     private @NonNullByDefault({}) String httpResponse;
     
     JsonParser parser = new JsonParser();
@@ -109,9 +110,9 @@ public class yamahamusiccastHandler extends BaseThingHandler {
     Integer SleepState = 0;
     @NonNullByDefault({}) String ThingLabel = "";
 
-    private yamahamusiccastStateDescriptionProvider stateDescriptionProvider;
+    private YamahaMusiccastStateDescriptionProvider stateDescriptionProvider;
     
-    public yamahamusiccastHandler(Thing thing, yamahamusiccastStateDescriptionProvider stateDescriptionProvider) {
+    public YamahaMusiccastHandler(Thing thing, YamahaMusiccastStateDescriptionProvider stateDescriptionProvider) {
         super(thing);
         this.stateDescriptionProvider = stateDescriptionProvider;
 
@@ -215,7 +216,7 @@ public class yamahamusiccastHandler extends BaseThingHandler {
     public void initialize() {
         ThingLabel = thing.getLabel();
         logger.info("YXC - Start initializing! - {}", ThingLabel);
-        this.config = getConfigAs(yamahamusiccastConfiguration.class);
+        this.config = getConfigAs(YamahaMusiccastConfiguration.class);
 
         updateStatus(ThingStatus.UNKNOWN);
         if (config.config_host.equals("")) {

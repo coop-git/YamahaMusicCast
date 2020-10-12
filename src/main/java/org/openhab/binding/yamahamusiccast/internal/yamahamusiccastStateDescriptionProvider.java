@@ -25,9 +25,9 @@ import org.osgi.service.component.annotations.Reference;
  *
  * @author Lennert Coopman - Initial contribution
  */
-@Component(service = { DynamicStateDescriptionProvider.class, yamahamusiccastStateDescriptionProvider.class })
+@Component(service = { DynamicStateDescriptionProvider.class, YamahaMusiccastStateDescriptionProvider.class })
 @NonNullByDefault
-public class yamahamusiccastStateDescriptionProvider extends BaseDynamicStateDescriptionProvider {
+public class YamahaMusiccastStateDescriptionProvider extends BaseDynamicStateDescriptionProvider {
 
     @Reference
     protected void setChannelTypeI18nLocalizationService(

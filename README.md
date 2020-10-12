@@ -30,8 +30,6 @@ Thing yamahamusiccast:Device:zone#Living "YXC Living" [config_host="1.2.3.4"]
 
 ## Channels
 
-
-
 | channel              | type   | description                                         |
 |----------------------|--------|-----------------------------------------------------|
 | channelPower         | Switch | Power ON/OFF                                        |
@@ -42,6 +40,7 @@ Thing yamahamusiccast:Device:zone#Living "YXC Living" [config_host="1.2.3.4"]
 | channelSelectPreset  | String | Select Netradio/USB preset (favorite)               |
 | channelPresets       | String | List of Presets to facilitate creation of sitemaps  |
 | channelPlayer        | Player | PLAY/PAUSE/NEXT/PREVIOUS/REWIND/FASTFORWARD         |
+| channelSleep         | Number | Fixed values for Sleep : 0/30/60/90/120             |
 
 ## Full Example
 
@@ -68,4 +67,4 @@ mono_movie / movie / enhanced / 2ch_stereo / 5ch_stereo / 7ch_stereo / 9ch_stere
 
 ## Tested Devices
 
-RX-D485 / WX-010 / WX-030 / ISX-80 / YSP-1600 /RX-A860 / R-N303D / EX-A1080 
+RX-D485 / WX-010 / WX-030 / ISX-80 / YSP-1600 / RX-A860 / R-N303D / EX-A1080 
