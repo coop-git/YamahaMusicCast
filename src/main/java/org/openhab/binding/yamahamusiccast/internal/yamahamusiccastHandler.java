@@ -14,6 +14,7 @@ package org.openhab.binding.yamahamusiccast.internal;
 
 import static org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastBindingConstants.*;
 import org.openhab.binding.yamahamusiccast.internal.model.Status;
+import org.openhab.binding.yamahamusiccast.internal.model.ThingsRest;
 import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastStateDescriptionProvider;
 import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastConfiguration;
 
@@ -250,7 +251,8 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
         //Not Zone related
         UpdatePresets();
-        AddOptions();
+        //AddOptions();
+        fetchOtherDevices();
     }
 
     @Override
@@ -296,7 +298,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     ZoneChannelCombo = channelUID.getId();
                     Zone = GetZoneFromChannelID(ZoneChannelCombo);
                     Channel = GetChannelFromChannelID(ZoneChannelCombo);
-
+                    Channel = channelUID.getIdWithoutGroup();
                     switch (Channel) { //channelUID.getId()
                         case CHANNEL_POWER:
                             if (PowerState.equals("on")) {
@@ -441,6 +443,29 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             }
         }
         return Text;
+    }
+
+    private void fetchOtherDevices() {
+        try {
+            httpResponse = HttpUtil.executeUrl("GET", "http://127.0.0.1:8080/rest/things", LongConnectionTimeout);               
+            List<StateOption> options = new ArrayList<>();
+            Gson gson = new Gson(); 
+            ThingsRest[] resultArray = gson.fromJson(httpResponse, ThingsRest[].class);
+            
+            
+            for(ThingsRest result : resultArray) {
+                if (result.getThingTypeUID().equals("yamahamusiccast:Device")) {
+                    String label = result.getLabel();
+                    JsonObject jsonObject = result.getConfiguration();
+                    String host = jsonObject.get("config_host").getAsString();
+                    options.add(new StateOption(host, label));                    
+                }
+
+            }
+            ChannelUID testchannel = new ChannelUID(getThing().getUID(), "Link1", "channelServer");
+            stateDescriptionProvider.setStateOptions(testchannel, options);
+        } catch (IOException e) {
+        }
     }
 
     // End Various functions
@@ -665,5 +690,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             return "{\"response_code\":\"999\"}";
         }
     }
+
 
 }
