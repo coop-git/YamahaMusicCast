@@ -41,6 +41,7 @@ Thing yamahamusiccast:Device:zone#Living "YXC Living" [config_host="1.2.3.4"]
 | channelPresets       | String | List of Presets to facilitate creation of sitemaps  |
 | channelPlayer        | Player | PLAY/PAUSE/NEXT/PREVIOUS/REWIND/FASTFORWARD         |
 | channelSleep         | Number | Fixed values for Sleep : 0/30/60/90/120             |
+| channelServer        | String | Device to start Musiccast                           |
 
 ## Full Example
 
