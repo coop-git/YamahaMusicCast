@@ -1,7 +1,0 @@
-org\openhab\binding\yamahamusiccast\internal\model\Status.class
-org\openhab\binding\yamahamusiccast\internal\YamahaMusiccastConfiguration.class
-org\openhab\binding\yamahamusiccast\internal\YamahaMusiccastBindingConstants.class
-org\openhab\binding\yamahamusiccast\internal\YamahaMusiccastHandlerFactory.class
-org\openhab\binding\yamahamusiccast\internal\model\ThingsRest.class
-org\openhab\binding\yamahamusiccast\internal\YamahaMusiccastStateDescriptionProvider.class
-org\openhab\binding\yamahamusiccast\internal\YamahaMusiccastHandler.class

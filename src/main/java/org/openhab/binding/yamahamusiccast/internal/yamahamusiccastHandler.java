@@ -126,15 +126,24 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             //refreshProcess();
         } else  {
             logger.info("Handling command {} for channel {}", command, channelUID);
-            ZoneChannelCombo = channelUID.getId();
-            Zone = GetZoneFromChannelID(ZoneChannelCombo);
-            Channel = GetChannelFromChannelID(ZoneChannelCombo);
+            //ZoneChannelCombo = channelUID.getId();
+            //Zone = GetZoneFromChannelID(ZoneChannelCombo);
+            //Channel = GetChannelFromChannelID(ZoneChannelCombo);
+            Channel = channelUID.getIdWithoutGroup();
             switch (Channel) { //channelUID.getId()
                 case CHANNEL_POWER:
                     if (command.equals(OnOffType.ON)) {
-                        setPower("on", Zone);
+                        httpResponse = setPower("on", Zone);
+                        tmpString = GetResponseCode(httpResponse);
+                        if (!tmpString.equals("0")) {
+                            updateState(channelUID, OnOffType.OFF); 
+                        }
                     } else if (command.equals(OnOffType.OFF)) {
-                        setPower("standby", Zone);
+                        httpResponse = setPower("standby", Zone);
+                        tmpString = GetResponseCode(httpResponse);
+                        if (!tmpString.equals("0")) {
+                            updateState(channelUID, OnOffType.ON); 
+                        }
                     }
                     break;  
                 case CHANNEL_MUTE:
@@ -204,9 +213,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     break;
                 case CHANNEL_SLEEP:
                     tmpString = command.toString();
-                    if (config.config_FullLogs == true) {
-                      logger.info("setSleep:" + tmpString);
-                    }
                     setSleep(tmpString, Zone);
                     break;
             }            
@@ -251,7 +257,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
         //Not Zone related
         UpdatePresets();
-        //AddOptions();
         fetchOtherDevices();
     }
 
@@ -295,9 +300,9 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                 for (Channel channel : getThing().getChannels()) {
                     ChannelUID channelUID = channel.getUID();
 
-                    ZoneChannelCombo = channelUID.getId();
-                    Zone = GetZoneFromChannelID(ZoneChannelCombo);
-                    Channel = GetChannelFromChannelID(ZoneChannelCombo);
+                    // = channelUID.getId();
+                    //Zone = GetZoneFromChannelID(ZoneChannelCombo);
+                    //Channel = GetChannelFromChannelID(ZoneChannelCombo);
                     Channel = channelUID.getIdWithoutGroup();
                     switch (Channel) { //channelUID.getId()
                         case CHANNEL_POWER:
@@ -342,7 +347,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                                 updateState(channelUID, new DecimalType(SleepState));
                             }   
                             break;
-
                         }
                 }    
                 break;
@@ -364,49 +368,37 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             tmpInteger = 0;
             tmpString = "";
             PresetNumber = 0;
+            List<StateOption> optionsPresets = new ArrayList<>();
             for (JsonElement pr : presetsArray) {
                 tmpInteger = tmpInteger + 1;
                 JsonObject presetObject = pr.getAsJsonObject();
                 String Input = presetObject.get("input").getAsString();
                 String Text = presetObject.get("text").getAsString();
                 if (!Text.equals("")) {
-                    tmpString = tmpString + tmpInteger + ":" + Text + " | ";
+                    //tmpString = tmpString + tmpInteger + ":" + Text + " | ";
+                    optionsPresets.add(new StateOption(tmpInteger.toString(), Text));                
                     if (InputText.equals(Text)) {
                         PresetNumber = tmpInteger;
                     }
                 }
             }
-            ListPresetsState = tmpString;
+            //ListPresetsState = tmpString;
             for (Channel channel : getThing().getChannels()) {
                 ChannelUID channelUID = channel.getUID();
-                ZoneChannelCombo = channelUID.getId();
-                Zone = GetZoneFromChannelID(ZoneChannelCombo);
-                Channel = GetChannelFromChannelID(ZoneChannelCombo);
+                Channel = channelUID.getIdWithoutGroup();
                 switch (Channel) { //channelUID.getId()
-                    case CHANNEL_PRESETS:
-                        updateState(channelUID,StringType.valueOf(ListPresetsState));
-                        break;
+                    //case CHANNEL_PRESETS:
+                    //    updateState(channelUID,StringType.valueOf(ListPresetsState));
+                    //    break;
                     case CHANNEL_SELECTPRESET:
+                        stateDescriptionProvider.setStateOptions(channelUID, optionsPresets);
                         updateState(channelUID,StringType.valueOf(PresetNumber.toString()));
                         break;
                 }
             }
-            if (config.config_FullLogs == true) {
-                logger.info("Presets: " + tmpString);
-            }
         } catch (Exception e) {
             logger.info("Something went wrong with fetching Presets");
         } 
-    }
-
-    private void AddOptions() {
-        //logger.info("adding options");
-        List<StateOption> options = new ArrayList<>();
-        options.add(new StateOption("abc", "abc"));
-        options.add(new StateOption("xyz", "xyz"));
-        ChannelUID testchannel = new ChannelUID(getThing().getUID(), "Link1", "channelServer");
-        //logger.info("channel:{}", testchannel);
-        stateDescriptionProvider.setStateOptions(testchannel, options);
     }
 
     private String GetResponseCode(String json) {
@@ -458,11 +450,27 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     String label = result.getLabel();
                     JsonObject jsonObject = result.getConfiguration();
                     String host = jsonObject.get("config_host").getAsString();
-                    options.add(new StateOption(host, label));                    
+
+                    options.add(new StateOption(host + "#" + "main", label + "#main"));                    
+
+                    Boolean zone2 = jsonObject.get("config_Zone2").getAsBoolean();
+                    if (zone2 == true) {
+                        options.add(new StateOption(host + "#" + "zone2", label + "#zone2"));
+                    }
+                    Boolean zone3 = jsonObject.get("config_Zone3").getAsBoolean();
+                    if (zone3 == true) {
+                        options.add(new StateOption(host + "#" + "zone3", label + "#zone3"));
+                    }
+                    Boolean zone4 = jsonObject.get("config_Zone4").getAsBoolean();
+                    if (zone4 == true) {
+                        options.add(new StateOption(host + "#" + "zone4", label + "#zone4"));
+                    }
                 }
 
             }
             ChannelUID testchannel = new ChannelUID(getThing().getUID(), "Link1", "channelServer");
+            stateDescriptionProvider.setStateOptions(testchannel, options);
+            testchannel = new ChannelUID(getThing().getUID(), "Link1", "channelClient1");
             stateDescriptionProvider.setStateOptions(testchannel, options);
         } catch (IOException e) {
         }

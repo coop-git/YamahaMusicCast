@@ -113,7 +113,6 @@
 	<channel-group-type id="playerControls">
 		<label>player Controls</label>
 		<channels>
-			<channel id="channelPresets" typeId="channelPresets"/>
 			<channel id="channelPlayer" typeId="channelPlayer"/>
 		</channels>
 	</channel-group-type>
@@ -123,6 +122,10 @@
 		<label>Link1</label>
 		<channels>
 			<channel id="channelServer" typeId="channelServer"/>
+			<channel id="channelClient1" typeId="channelClient1"/>
+			<channel id="channelClient2" typeId="channelClient2"/>
+			<channel id="channelClient3" typeId="channelClient3"/>
+			<channel id="channelDistribution" typeId="channelDistribution"/>
 		</channels>
 	</channel-group-type>
 
@@ -187,5 +190,24 @@
 		<label>Server for MusicCast Link</label>
 		<description>Select IP of device to be Server for MusicCast Link</description>
 	</channel-type>
-
+	<channel-type id="channelClient1">
+		<item-type>String</item-type>
+		<label>Client1 for MusicCast Link</label>
+		<description>Select IP of device to be Client1 for MusicCast Link</description>
+	</channel-type>
+	<channel-type id="channelClient2">
+		<item-type>String</item-type>
+		<label>Client2 for MusicCast Link</label>
+		<description>Select IP of device to be Client2 for MusicCast Link</description>
+	</channel-type>
+	<channel-type id="channelClient3">
+		<item-type>String</item-type>
+		<label>Client3 for MusicCast Link</label>
+		<description>Select IP of device to be Client3 for MusicCast Link</description>
+	</channel-type>
+	<channel-type id="channelDistribution">
+		<item-type>Switch</item-type>
+		<label>Distribution</label>
+		<description>Musiccast Distribution</description>
+	</channel-type>
 </thing:thing-descriptions>
