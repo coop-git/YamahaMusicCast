@@ -42,7 +42,7 @@ public class Status {
     private String SoundProgram;
 
     @SerializedName("sleep")
-    private Integer Sleep;
+    private Integer Sleep = Integer.valueOf(0);
 
 
     public String getResponseCode() {

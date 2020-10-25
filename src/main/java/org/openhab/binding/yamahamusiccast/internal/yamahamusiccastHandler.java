@@ -20,6 +20,7 @@ import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastConfiguration
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingStatus;
@@ -47,6 +48,8 @@ import java.util.Date;
 import java.util.Objects;
 import java.math.BigDecimal;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ByteArrayInputStream;
 import java.util.Optional;
 
 import org.eclipse.smarthome.config.core.Configuration;
@@ -105,11 +108,13 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     String ListPresetsState = "";
     String PlayerState = "";
     String TopicAVR = "";
-    String Zone = "main";
+    @NonNullByDefault({}) String Zone = "main";
     String Channel = "";
     String ZoneChannelCombo = "";
     Integer SleepState = 0;
     @NonNullByDefault({}) String ThingLabel = "";
+    @NonNullByDefault({}) String mclink1Server = "";
+    @NonNullByDefault({}) String mclink1Client1 = "";
 
     private YamahaMusiccastStateDescriptionProvider stateDescriptionProvider;
     
@@ -130,6 +135,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             //Zone = GetZoneFromChannelID(ZoneChannelCombo);
             //Channel = GetChannelFromChannelID(ZoneChannelCombo);
             Channel = channelUID.getIdWithoutGroup();
+            Zone = channelUID.getGroupId();
             switch (Channel) { //channelUID.getId()
                 case CHANNEL_POWER:
                     if (command.equals(OnOffType.ON)) {
@@ -167,9 +173,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     try {
                         tmpInteger = Integer.parseInt(tmpString);
                         tmpInteger = (MaxVolumeState * tmpInteger)/100;
-                        if (config.config_FullLogs == true) {
-                            logger.info("Pushed Volume:" + tmpString + "/Calculated Volume:" + tmpInteger);
-                        }    
+                        logger.debug("Pushed Volume:" + tmpString + "/Calculated Volume:" + tmpInteger);
                         setVolume(tmpInteger, Zone);
                     } catch (Exception e) {
                         //Wait for refresh
@@ -215,7 +219,48 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     tmpString = command.toString();
                     setSleep(tmpString, Zone);
                     break;
+                case CHANNEL_SERVER:
+                    mclink1Server = command.toString();
+                    logger.info("mclink Server: {}", mclink1Server);
+                    break;
+                case CHANNEL_CLIENT1:
+                    mclink1Client1 = command.toString();
+                    logger.info("mclink Client1: {}", mclink1Client1);
+                    break;
+                case CHANNEL_DISTRIBUTION:
+                    String[] parts = mclink1Server.split("#");
+                    String mclinkSetupServer = parts[0];
+                    parts = mclink1Client1.split("#");
+                    String mclinkSetupClient1 = parts[0];
+                    
+                    String testJSON = "{\"group_id\":\"9A237BF5AB80ED3C7251DFF49825CA42\", \"zone\":\"main\", \"type\":\"add\", \"client_list\":[\"" + mclinkSetupClient1 + "\"]}";
+                    InputStream is = new ByteArrayInputStream(testJSON.getBytes());
+                    try {
+                        httpResponse = HttpUtil.executeUrl("POST", "http://" + mclinkSetupServer + "/YamahaExtendedControl/v1/dist/setServerInfo", is, "", LongConnectionTimeout);               
+                        logger.info("serverinfo : {}", httpResponse);
+                    } catch (IOException e) {
+                        logger.info(e.toString());
+                    }
+                    testJSON = "{\"group_id\":\"9A237BF5AB80ED3C7251DFF49825CA42\", \"zone\":[\"main\"]}";
+                    is = new ByteArrayInputStream(testJSON.getBytes());
+                    try {
+                        httpResponse = HttpUtil.executeUrl("POST", "http://" + mclinkSetupClient1 + "/YamahaExtendedControl/v1/dist/setClientInfo", is, "", LongConnectionTimeout);               
+                        logger.info("clientinfo : {}", httpResponse);
+                    } catch (IOException e) {
+                        logger.info(e.toString());
+                    }   
+                    try {
+                        httpResponse = HttpUtil.executeUrl("GET", "http://" + mclinkSetupServer + "/YamahaExtendedControl/v1/dist/startDistribution?num=1", LongConnectionTimeout);               
+                        logger.info("start distribution: {}", httpResponse);
+                    } catch (IOException e) {
+                        logger.info(e.toString());
+                    }  
+
+
+                    break;
+
             }            
+
         }
     }
 
@@ -258,6 +303,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         //Not Zone related
         UpdatePresets();
         fetchOtherDevices();
+        tmpString = getDistributionInfo();
     }
 
     @Override
@@ -268,18 +314,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     private void UpdateStatusZone(String ZoneToUpdate) {
         tmpString = getStatus(ZoneToUpdate);
         try {
-            //JsonElement jsonTree = parser.parse(tmpString);
-            //JsonObject jsonObject = jsonTree.getAsJsonObject();
-            //ResponseCode = jsonObject.get("response_code").getAsString();
-            //PowerState = jsonObject.get("power").getAsString();
-            //MuteState = jsonObject.get("mute").getAsString();
-            //VolumeState = jsonObject.get("volume").getAsInt();
-            //MaxVolumeState = jsonObject.get("max_volume").getAsInt();
-            //InputState = jsonObject.get("input").getAsString();
-            //SoundProgramState = jsonObject.get("sound_program").getAsString();
-            //PresetState = jsonObject.get("input").getAsString(); // TODO : still needed?
-            //InputText = "";
-
             Status targetObject = new Status();
             targetObject = new Gson().fromJson(tmpString, Status.class);
             ResponseCode = targetObject.getResponseCode();
@@ -304,6 +338,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     //Zone = GetZoneFromChannelID(ZoneChannelCombo);
                     //Channel = GetChannelFromChannelID(ZoneChannelCombo);
                     Channel = channelUID.getIdWithoutGroup();
+                    Zone = channelUID.getGroupId();
                     switch (Channel) { //channelUID.getId()
                         case CHANNEL_POWER:
                             if (PowerState.equals("on")) {
@@ -656,6 +691,20 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
 
 
     // End Net Radio/USB Related
+
+    // Start Music Cast API calls
+    private String getDistributionInfo() {
+        TopicAVR = "DistributionInfo";
+        try {
+            httpResponse = HttpUtil.executeUrl("GET", "http://" + config.config_host + "/YamahaExtendedControl/v1/dist/getDistributionInfo", ConnectionTimeout);
+            logger.info(httpResponse);
+            return httpResponse;
+        } catch (IOException e) {
+            logger.warn("IO Exception - " + TopicAVR, e);
+            return "{\"response_code\":\"999\"}";
+        }
+    }
+    // End Music Cast API calls
 
     //Unused API calls to AVR
     private String getDeviceInfo() {
