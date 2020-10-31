@@ -117,7 +117,8 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     @NonNullByDefault({}) String mclink1Client1 = "";
     @NonNullByDefault({}) String mclinkSetupServer = "";
     @NonNullByDefault({}) String mclinkSetupClient1 = "";
-    
+    Boolean mclinkClientsFound = false;
+    String url = "";
 
     private YamahaMusiccastStateDescriptionProvider stateDescriptionProvider;
     
@@ -231,55 +232,61 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     logger.info("mclink Client1: {}", mclink1Client1);
                     break;
                 case CHANNEL_DISTRIBUTION:
-                    for (Channel channel_mc : getThing().getChannels()) {
-                        ChannelUID channelUID_mc = channel_mc.getUID();
-                        String Channel_mc = channelUID_mc.getIdWithoutGroup();
-                        String Zone_mc = channelUID_mc.getGroupId();
-                        // do magic for mc link here
-                        switch (Zone_mc) {
-                            case CHANNEL_SERVER:
-                                mclink1Server = command.toString();
-                                logger.info("mclink Server: {}", mclink1Server);
-                                break;
-                            case CHANNEL_CLIENT1:
-                                mclink1Client1 = command.toString();
-                                logger.info("mclink Client1: {}", mclink1Client1);
-                                break;
-                        }
-                    }
-                    if (!mclink1Server.equals("")) {
-                        logger.info("MC Server not empty");
+                    mclinkClientsFound = false;
+                    if (command.equals(OnOffType.ON)) {
+                        logger.info("mclink Server: {}", mclink1Server);
+                        logger.info("mclink Client1: {}", mclink1Client1);
                         String[] parts = mclink1Server.split("#");
-                        String mclinkSetupServer = parts[0];
-                        parts = mclink1Client1.split("#");
-                        String mclinkSetupClient1 = parts[0];    
+                        if (!mclink1Server.equals("")) {
+                            mclinkClientsFound = true;
+                            parts = mclink1Server.split("#");
+                            mclinkSetupServer = parts[0];
+                        } 
+                        if (!mclink1Client1.equals("")) {
+                            mclinkClientsFound = true;
+                            parts = mclink1Client1.split("#");
+                            mclinkSetupClient1 = parts[0];        
+                        } else {
+                            mclinkClientsFound = false;
+                        }
+
+                        if (mclinkClientsFound == false) {
+                            updateState(channelUID, OnOffType.OFF); 
+                        }
+
                     }
+
                     
                     String testJSON = "{\"group_id\":\"9A237BF5AB80ED3C7251DFF49825CA42\", \"zone\":\"main\", \"type\":\"add\", \"client_list\":[\"" + mclinkSetupClient1 + "\"]}";
+                    logger.info("group json: {}", testJSON);
                     InputStream is = new ByteArrayInputStream(testJSON.getBytes());
                     try {
-                        httpResponse = HttpUtil.executeUrl("POST", "http://" + mclinkSetupServer + "/YamahaExtendedControl/v1/dist/setServerInfo", is, "", LongConnectionTimeout);               
+                        url = "http://" + mclinkSetupServer + "/YamahaExtendedControl/v1/dist/setServerInfo";
+                        httpResponse = HttpUtil.executeUrl("POST", url, is, "", LongConnectionTimeout);               
                         logger.info("serverinfo : {}", httpResponse);
                     } catch (IOException e) {
-                        logger.info(e.toString());
+                        logger.info("serverinfo : {}",e.toString());
                     }
                     testJSON = "{\"group_id\":\"9A237BF5AB80ED3C7251DFF49825CA42\", \"zone\":[\"main\"]}";
                     is = new ByteArrayInputStream(testJSON.getBytes());
                     try {
-                        httpResponse = HttpUtil.executeUrl("POST", "http://" + mclinkSetupClient1 + "/YamahaExtendedControl/v1/dist/setClientInfo", is, "", LongConnectionTimeout);               
+                        url = "http://" + mclinkSetupClient1 + "/YamahaExtendedControl/v1/dist/setClientInfo";
+                        httpResponse = HttpUtil.executeUrl("POST", url, is, "", LongConnectionTimeout);               
                         logger.info("clientinfo : {}", httpResponse);
                     } catch (IOException e) {
-                        logger.info(e.toString());
+                        logger.info("clientinfo : {}",e.toString());
                     }   
                     try {
-                        httpResponse = HttpUtil.executeUrl("GET", "http://" + mclinkSetupServer + "/YamahaExtendedControl/v1/dist/startDistribution?num=1", LongConnectionTimeout);               
+                        url = "http://" + mclinkSetupServer + "/YamahaExtendedControl/v1/dist/startDistribution?num=1";
+                        httpResponse = HttpUtil.executeUrl("GET", url, LongConnectionTimeout);               
                         logger.info("start distribution: {}", httpResponse);
                     } catch (IOException e) {
-                        logger.info(e.toString());
-                    }  
+                        logger.info("start distribution: {}",e.toString());
+                    } 
 
 
-                    break; //END DISTRIBUTION
+                    break; 
+                //END DISTRIBUTION
             }  // END Switch Channel          
         }
     }
@@ -520,6 +527,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                 }
 
             }
+            options.add(new StateOption("", ""));
             ChannelUID testchannel = new ChannelUID(getThing().getUID(), "Link1", "channelServer");
             stateDescriptionProvider.setStateOptions(testchannel, options);
             testchannel = new ChannelUID(getThing().getUID(), "Link1", "channelClient1");
