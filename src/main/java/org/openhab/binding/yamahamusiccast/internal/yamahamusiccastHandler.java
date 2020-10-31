@@ -115,6 +115,9 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     @NonNullByDefault({}) String ThingLabel = "";
     @NonNullByDefault({}) String mclink1Server = "";
     @NonNullByDefault({}) String mclink1Client1 = "";
+    @NonNullByDefault({}) String mclinkSetupServer = "";
+    @NonNullByDefault({}) String mclinkSetupClient1 = "";
+    
 
     private YamahaMusiccastStateDescriptionProvider stateDescriptionProvider;
     
@@ -228,10 +231,29 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     logger.info("mclink Client1: {}", mclink1Client1);
                     break;
                 case CHANNEL_DISTRIBUTION:
-                    String[] parts = mclink1Server.split("#");
-                    String mclinkSetupServer = parts[0];
-                    parts = mclink1Client1.split("#");
-                    String mclinkSetupClient1 = parts[0];
+                    for (Channel channel_mc : getThing().getChannels()) {
+                        ChannelUID channelUID_mc = channel_mc.getUID();
+                        String Channel_mc = channelUID_mc.getIdWithoutGroup();
+                        String Zone_mc = channelUID_mc.getGroupId();
+                        // do magic for mc link here
+                        switch (Zone_mc) {
+                            case CHANNEL_SERVER:
+                                mclink1Server = command.toString();
+                                logger.info("mclink Server: {}", mclink1Server);
+                                break;
+                            case CHANNEL_CLIENT1:
+                                mclink1Client1 = command.toString();
+                                logger.info("mclink Client1: {}", mclink1Client1);
+                                break;
+                        }
+                    }
+                    if (!mclink1Server.equals("")) {
+                        logger.info("MC Server not empty");
+                        String[] parts = mclink1Server.split("#");
+                        String mclinkSetupServer = parts[0];
+                        parts = mclink1Client1.split("#");
+                        String mclinkSetupClient1 = parts[0];    
+                    }
                     
                     String testJSON = "{\"group_id\":\"9A237BF5AB80ED3C7251DFF49825CA42\", \"zone\":\"main\", \"type\":\"add\", \"client_list\":[\"" + mclinkSetupClient1 + "\"]}";
                     InputStream is = new ByteArrayInputStream(testJSON.getBytes());
@@ -257,10 +279,8 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     }  
 
 
-                    break;
-
-            }            
-
+                    break; //END DISTRIBUTION
+            }  // END Switch Channel          
         }
     }
 
@@ -334,9 +354,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                 for (Channel channel : getThing().getChannels()) {
                     ChannelUID channelUID = channel.getUID();
 
-                    // = channelUID.getId();
-                    //Zone = GetZoneFromChannelID(ZoneChannelCombo);
-                    //Channel = GetChannelFromChannelID(ZoneChannelCombo);
                     Channel = channelUID.getIdWithoutGroup();
                     Zone = channelUID.getGroupId();
                     switch (Channel) { //channelUID.getId()
@@ -697,7 +714,9 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         TopicAVR = "DistributionInfo";
         try {
             httpResponse = HttpUtil.executeUrl("GET", "http://" + config.config_host + "/YamahaExtendedControl/v1/dist/getDistributionInfo", ConnectionTimeout);
-            logger.info(httpResponse);
+            if (config.config_FullLogs == true) {
+                logger.info(httpResponse);
+            }
             return httpResponse;
         } catch (IOException e) {
             logger.warn("IO Exception - " + TopicAVR, e);
