@@ -3,6 +3,8 @@
 Binding to control AV Receiver(s) from Yamaha via their MusicCast protocol (aka Yamaha Extended Control).
 With support for 4 zones : main, zone2, zone3, zone4. Main is always present. Zone2, Zone3, Zone4 to enable.
 
+For Music Cast, items need to be created only once for a Thing.
+
 ## Supported Things
 
 Each AV Receiver is a Thing.
@@ -38,9 +40,18 @@ Thing yamahamusiccast:Device:zone#Living "YXC Living" [config_host="1.2.3.4"]
 | channelInput         | String | See below for list                                  |
 | channelSoundProgram  | String | See below for list                                  |
 | channelSelectPreset  | String | Select Netradio/USB preset (favorite)               |
-| channelPlayer        | Player | PLAY/PAUSE/NEXT/PREVIOUS/REWIND/FASTFORWARD         |
 | channelSleep         | Number | Fixed values for Sleep : 0/30/60/90/120             |
 | channelServer        | String | Device to start Musiccast                           |
+| channelClient1       | String | Linked device for Musiccast                         |
+| channelDistribution  | Switch | Start Musiccast Link                                |
+| channelPlayer        | Player | PLAY/PAUSE/NEXT/PREVIOUS/REWIND/FASTFORWARD         |
+
+| Zones                | description                                          |
+|----------------------|------------------------------------------------------|
+| Zone1-4              | Zone 1 to 4 to control Power, Volume, ...            |
+| playerControls       | Separate zone for Play, Pause, ...                   |
+| Link1                | First zone to support Music Cast                     |
+
 
 ## Full Example
 
