@@ -13,42 +13,42 @@
 package org.openhab.binding.yamahamusiccast.internal.model;
 import com.google.gson.annotations.SerializedName;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonArray;
-
-
 /**
  * This class represents the push request sent to the API.
  *
  * @author Lennert Coopman - Initial contribution
  */
-public class ThingsRest {
+public class DistributionInfo {
 
-    @SerializedName("thingTypeUID")
-    private String thingTypeUID;
-    
-    @SerializedName("label")
-    private String label;
+    @SerializedName("response_code")
+    private String responseCode;
 
-    @SerializedName("configuration")
-    private JsonObject configuration;
+    @SerializedName("group_id")
+    private String groupId;
 
+    @SerializedName("role")
+    private String role;
 
-    public String getThingTypeUID() {
-        return thingTypeUID;
-    }
-    
-    public String getLabel() {
-        return label;
+    @SerializedName("server_zone")
+    private String serverZone;
+
+    public String getResponseCode() {
+        return responseCode;
     }
 
-    public JsonObject getConfiguration() {
-        return configuration;
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public String getServerZone() {
+        return serverZone;
     }
 
 
 }
+
+

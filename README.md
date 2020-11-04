@@ -26,7 +26,6 @@ N/A
 | config_Zone2           | Booelan | Is Zone 2 active?                                       | true     | Default=false |
 | config_Zone3           | Boolean | Is Zone 3 active?                                       | true     | Default=false |
 | config_Zone4           | Boolean | Is Zone 4 active?                                       | true     | Default=false |
-| config_FullLogs        | Boolean | Log everything?                                         | true     | Default=false |
 
 Thing yamahamusiccast:Device:zone#Living "YXC Living" [config_host="1.2.3.4"]
 
@@ -59,12 +58,23 @@ N/A
 
 ## Input List
 
+Firmware v1
+
 cd / tuner / multi_ch / phono / hdmi1 / hdmi2 / hdmi3 / hdmi4 / hdmi5 / hdmi6 / hdmi7 /
 hdmi8 / hdmi / av1 / av2 / av3 / av4 / av5 / av6 / av7 / v_aux / aux1 / aux2 / aux / audio1 /
 audio2 / audio3 / audio4 / audio_cd / audio / optical1 / optical2 / optical / coaxial1 / coaxial2 /
 coaxial / digital1 / digital2 / digital / line1 / line2 / line3 / line_cd / analog / tv / bd_dvd /
 usb_dac / usb / bluetooth / server / net_radio / rhapsody / napster / pandora / siriusxm /
 spotify / juke / airplay / radiko / qobuz / mc_link / main_sync / none
+
+Firmware v2
+
+cd / tuner / multi_ch / phono / hdmi1 / hdmi2 / hdmi3 / hdmi4 / hdmi5 / hdmi6 / hdmi7 / 
+hdmi8 / hdmi / av1 / av2 / av3 / av4 / av5 / av6 / av7 / v_aux / aux1 / aux2 / aux / audio1 / 
+audio2 / audio3 / audio4 / **audio5** / audio_cd / audio / optical1 / optical2 / optical / coaxial1 / coaxial2 / 
+coaxial / digital1 / digital2 / digital / line1 / line2 / line3 / line_cd / analog / tv / bd_dvd / 
+usb_dac / usb / bluetooth / server / net_radio / ~~rhapsody~~ /napster / pandora / siriusxm / 
+spotify / juke / airplay / radiko / qobuz / **tidal** / **deezer** / mc_link / main_sync / none
 
 ## Sound Program
 
@@ -78,4 +88,5 @@ mono_movie / movie / enhanced / 2ch_stereo / 5ch_stereo / 7ch_stereo / 9ch_stere
 
 ## Tested Devices
 
-RX-D485 / WX-010 / WX-030 / ISX-80 / YSP-1600 / RX-A860 / R-N303D / EX-A1080 / WXA-050
+RX-D485 / WX-010 / WX-030 / ISX-80 / YSP-1600 / RX-A860 / R-N303D / EX-A1080 / WXA-050 / HTR-4068 (RX-V479)
+MusicCast 20 / WCX-50

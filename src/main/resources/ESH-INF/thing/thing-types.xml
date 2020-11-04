@@ -48,13 +48,6 @@
 				<advanced>true</advanced>
 			</parameter>
 
-			<parameter name="config_FullLogs" type="boolean">
-				<label>Log everything?</label>
-				<description>Almost nothing is written in the logs unless specified. To avoid large logfiles. </description>
-				<default>false</default>
-				<advanced>true</advanced>
-			</parameter>
-
 		</config-description>
 	</thing-type>
 
@@ -68,6 +61,7 @@
 			<channel id="channelSoundProgram" typeId="channelSoundProgram"/>
 			<channel id="channelSelectPreset" typeId="channelSelectPreset"/>
 			<channel id="channelSleep" typeId="channelSleep"/>
+			<channel id="channelMCServer" typeId="channelMCServer"/>
 		</channels>
 	</channel-group-type>
 
@@ -81,6 +75,7 @@
 			<channel id="channelSoundProgram" typeId="channelSoundProgram"/>
 			<channel id="channelSelectPreset" typeId="channelSelectPreset"/>
 			<channel id="channelSleep" typeId="channelSleep"/>
+			<channel id="channelMCServer" typeId="channelMCServer"/>
 		</channels>
 	</channel-group-type>
 
@@ -94,6 +89,7 @@
 			<channel id="channelSoundProgram" typeId="channelSoundProgram"/>
 			<channel id="channelSelectPreset" typeId="channelSelectPreset"/>
 			<channel id="channelSleep" typeId="channelSleep"/>
+			<channel id="channelMCServer" typeId="channelMCServer"/>
 		</channels>
 	</channel-group-type>
 
@@ -107,6 +103,7 @@
 			<channel id="channelSoundProgram" typeId="channelSoundProgram"/>
 			<channel id="channelSelectPreset" typeId="channelSelectPreset"/>
 			<channel id="channelSleep" typeId="channelSleep"/>
+			<channel id="channelMCServer" typeId="channelMCServer"/>
 		</channels>
 	</channel-group-type>
 
@@ -125,6 +122,12 @@
 			<channel id="channelClient1" typeId="channelClient1"/>
 			<channel id="channelClient2" typeId="channelClient2"/>
 			<channel id="channelClient3" typeId="channelClient3"/>
+			<channel id="channelClient4" typeId="channelClient4"/>
+			<channel id="channelClient5" typeId="channelClient5"/>
+			<channel id="channelClient6" typeId="channelClient6"/>
+			<channel id="channelClient7" typeId="channelClient7"/>
+			<channel id="channelClient8" typeId="channelClient8"/>
+			<channel id="channelClient9" typeId="channelClient9"/>
 			<channel id="channelDistribution" typeId="channelDistribution"/>
 		</channels>
 	</channel-group-type>
@@ -156,11 +159,6 @@
 		<label>SoundProgram</label>
 		<description>SoundProgram channel</description>
 	</channel-type>
-	<channel-type id="channelPresets">
-		<item-type>String</item-type>
-		<label>Presets</label>
-		<description>Presets channel</description>
-	</channel-type>
 	<channel-type id="channelSelectPreset">
 		<item-type>String</item-type>
 		<label>Select Net Radio/USB Preset</label>
@@ -189,6 +187,11 @@
 		<item-type>String</item-type>
 		<label>Server for MusicCast Link</label>
 		<description>Select IP of device to be Server for MusicCast Link</description>
+	</channel-type>
+	<channel-type id="channelMCServer">
+		<item-type>String</item-type>
+		<label>Server for MusicCast Link</label>
+		<description>Select IP of device to be Server for MusicCast Link - v2</description>
 	</channel-type>
 	<channel-type id="channelClient1">
 		<item-type>String</item-type>

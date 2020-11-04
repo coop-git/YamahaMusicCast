@@ -21,60 +21,60 @@ import com.google.gson.annotations.SerializedName;
 public class Status {
 
     @SerializedName("response_code")
-    private String ResponseCode;
+    private String responseCode;
 
     @SerializedName("power")
-    private String Power;
+    private String power;
 
     @SerializedName("mute")
-    private String Mute;
+    private String mute;
 
     @SerializedName("volume")
-    private Integer Volume;
+    private Integer volume;
 
     @SerializedName("max_volume")
-    private Integer MaxVolume;
+    private Integer maxVolume;
 
     @SerializedName("input")
-    private String Input;
+    private String input;
 
     @SerializedName("sound_program")
-    private String SoundProgram;
+    private String soundProgram;
 
     @SerializedName("sleep")
-    private Integer Sleep = Integer.valueOf(0);
+    private Integer sleep = Integer.valueOf(0);
 
 
     public String getResponseCode() {
-        return ResponseCode;
+        return responseCode;
     }
 
     public String getPower() {
-        return Power;
+        return power;
     }
 
     public String getMute() {
-        return Mute;
+        return mute;
     }
 
     public Integer getVolume() {
-        return Volume;
+        return volume;
     }
 
     public Integer getMaxVolume() {
-        return MaxVolume;
+        return maxVolume;
     }
 
     public String getInput() {
-        return Input;
+        return input;
     }
 
     public String getSoundProgram() {
-        return SoundProgram;
+        return soundProgram;
     }
 
     public Integer getSleep() {
-        return Sleep;
+        return sleep;
     }
 
 }
