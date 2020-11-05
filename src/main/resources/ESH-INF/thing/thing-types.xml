@@ -15,7 +15,6 @@
 			<channel-group id="zone3" typeId="zone3Controls"/>
 			<channel-group id="zone4" typeId="zone4Controls"/>
 			<channel-group id="playerControls" typeId="playerControls"/>
-			<channel-group id="Link1" typeId="Link1"/>
 		</channel-groups>
 
 		<config-description>
@@ -115,22 +114,6 @@
 	</channel-group-type>
 
 
-	<channel-group-type id="Link1">
-		<label>Link1</label>
-		<channels>
-			<channel id="channelServer" typeId="channelServer"/>
-			<channel id="channelClient1" typeId="channelClient1"/>
-			<channel id="channelClient2" typeId="channelClient2"/>
-			<channel id="channelClient3" typeId="channelClient3"/>
-			<channel id="channelClient4" typeId="channelClient4"/>
-			<channel id="channelClient5" typeId="channelClient5"/>
-			<channel id="channelClient6" typeId="channelClient6"/>
-			<channel id="channelClient7" typeId="channelClient7"/>
-			<channel id="channelClient8" typeId="channelClient8"/>
-			<channel id="channelClient9" typeId="channelClient9"/>
-			<channel id="channelDistribution" typeId="channelDistribution"/>
-		</channels>
-	</channel-group-type>
 
 
 	<channel-type id="channelPower">
@@ -183,34 +166,9 @@
 			</options>
 		</state>
 	</channel-type>
-	<channel-type id="channelServer">
-		<item-type>String</item-type>
-		<label>Server for MusicCast Link</label>
-		<description>Select IP of device to be Server for MusicCast Link</description>
-	</channel-type>
 	<channel-type id="channelMCServer">
 		<item-type>String</item-type>
 		<label>Server for MusicCast Link</label>
 		<description>Select IP of device to be Server for MusicCast Link - v2</description>
-	</channel-type>
-	<channel-type id="channelClient1">
-		<item-type>String</item-type>
-		<label>Client1 for MusicCast Link</label>
-		<description>Select IP of device to be Client1 for MusicCast Link</description>
-	</channel-type>
-	<channel-type id="channelClient2">
-		<item-type>String</item-type>
-		<label>Client2 for MusicCast Link</label>
-		<description>Select IP of device to be Client2 for MusicCast Link</description>
-	</channel-type>
-	<channel-type id="channelClient3">
-		<item-type>String</item-type>
-		<label>Client3 for MusicCast Link</label>
-		<description>Select IP of device to be Client3 for MusicCast Link</description>
-	</channel-type>
-	<channel-type id="channelDistribution">
-		<item-type>Switch</item-type>
-		<label>Distribution</label>
-		<description>Musiccast Distribution</description>
 	</channel-type>
 </thing:thing-descriptions>

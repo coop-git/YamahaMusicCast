@@ -35,20 +35,8 @@ public class YamahaMusiccastBindingConstants {
     public static final String CHANNEL_VOLUME = "channelVolume";
     public static final String CHANNEL_INPUT = "channelInput";
     public static final String CHANNEL_SOUNDPROGRAM = "channelSoundProgram";
-    public static final String CHANNEL_PRESETS = "channelPresets";
     public static final String CHANNEL_SELECTPRESET = "channelSelectPreset";
     public static final String CHANNEL_PLAYER = "channelPlayer";
     public static final String CHANNEL_SLEEP = "channelSleep";
-    public static final String CHANNEL_SERVER = "channelServer";
     public static final String CHANNEL_MCSERVER = "channelMCServer";
-    public static final String CHANNEL_CLIENT1 = "channelClient1";
-    public static final String CHANNEL_CLIENT2 = "channelClient2";
-    public static final String CHANNEL_CLIENT3 = "channelClient3";
-    public static final String CHANNEL_CLIENT4 = "channelClient4";
-    public static final String CHANNEL_CLIENT5 = "channelClient5";
-    public static final String CHANNEL_CLIENT6 = "channelClient6";
-    public static final String CHANNEL_CLIENT7 = "channelClient7";
-    public static final String CHANNEL_CLIENT8 = "channelClient8";
-    public static final String CHANNEL_CLIENT9 = "channelClient9";
-    public static final String CHANNEL_DISTRIBUTION = "channelDistribution";
 }

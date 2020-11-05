@@ -110,26 +110,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     @NonNullByDefault({}) String zone = "main";
     String channelWithoutGroup = "";
     @NonNullByDefault({}) String thingLabel = "";
-    @NonNullByDefault({}) String mclink1Server = "";
-    @NonNullByDefault({}) String mclink1Client1 = "";
-    @NonNullByDefault({}) String mclink1Client2 = "";
-    @NonNullByDefault({}) String mclink1Client3 = "";
-    @NonNullByDefault({}) String mclink1Client4 = "";
-    @NonNullByDefault({}) String mclink1Client5 = "";
-    @NonNullByDefault({}) String mclink1Client6 = "";
-    @NonNullByDefault({}) String mclink1Client7 = "";
-    @NonNullByDefault({}) String mclink1Client8 = "";
-    @NonNullByDefault({}) String mclink1Client9 = "";
     @NonNullByDefault({}) String mclinkSetupServer = "";
-    @NonNullByDefault({}) String mclinkSetupClient1 = "";
-    @NonNullByDefault({}) String mclinkSetupClient2 = "";
-    @NonNullByDefault({}) String mclinkSetupClient3 = "";
-    @NonNullByDefault({}) String mclinkSetupClient4 = "";
-    @NonNullByDefault({}) String mclinkSetupClient5 = "";
-    @NonNullByDefault({}) String mclinkSetupClient6 = "";
-    @NonNullByDefault({}) String mclinkSetupClient7 = "";
-    @NonNullByDefault({}) String mclinkSetupClient8 = "";
-    @NonNullByDefault({}) String mclinkSetupClient9 = "";
     Boolean mclinkServerFound = false;
     Boolean mclinkClientsFound = false;
     String url = "";
@@ -226,129 +207,11 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     tmpString = command.toString();
                     setSleep(tmpString, zone);
                     break;
-                case CHANNEL_SERVER:
-                    mclink1Server = command.toString();
-                    break;
-                case CHANNEL_CLIENT1:
-                    mclink1Client1 = command.toString();
-                    break;
-                case CHANNEL_CLIENT2:
-                    mclink1Client2 = command.toString();
-                    break;
-                case CHANNEL_CLIENT3:
-                    mclink1Client3 = command.toString();
-                    break;
-                case CHANNEL_CLIENT4:
-                    mclink1Client4 = command.toString();
-                    break;
-                case CHANNEL_CLIENT5:
-                    mclink1Client5 = command.toString();
-                    break;
-                case CHANNEL_CLIENT6:
-                    mclink1Client6 = command.toString();
-                    break;
-                case CHANNEL_CLIENT7:
-                    mclink1Client7 = command.toString();
-                    break;
-                case CHANNEL_CLIENT8:
-                    mclink1Client8 = command.toString();
-                    break;
-                case CHANNEL_CLIENT9:
-                    mclink1Client9 = command.toString();
-                    break;
-                case CHANNEL_DISTRIBUTION:
-                    mclinkServerFound = false;
-                    mclinkClientsFound = false;
-                    ArrayList<String> musiccastClients = new ArrayList<String>();
-                    if (command.equals(OnOffType.ON)) {
-                        logger.info("mclink Server: {}", mclink1Server);
-                        logger.info("mclink Client1: {}", mclink1Client1);
-                        String[] parts = mclink1Server.split("#");
-
-                        ChannelUID tempchannel = new ChannelUID(getThing().getUID(), "Link1", CHANNEL_SERVER);
-                        if (isLinked(tempchannel)) {
-                            logger.info("channel server linked");
-                            if (!mclink1Server.equals("")) {
-                                mclinkServerFound = true;
-                                parts = mclink1Server.split("#");
-                                mclinkSetupServer = parts[0];
-                            }
-                        } 
- 
-                        tempchannel = new ChannelUID(getThing().getUID(), "Link1", CHANNEL_CLIENT1);
-                        if (isLinked(tempchannel)) {
-                            logger.info("channel client1 linked");
-                            if (!mclink1Client1.equals("")) {
-                                mclinkClientsFound = true;
-                                parts = mclink1Client1.split("#");
-                                mclinkSetupClient1 = parts[0];
-                                musiccastClients.add(parts[0]);
-                            } 
-                        }
-
-                        tempchannel = new ChannelUID(getThing().getUID(), "Link1", CHANNEL_CLIENT2);
-                        if (isLinked(tempchannel)) {
-                            logger.info("channel client2 linked");
-                            if (!mclink1Client2.equals("")) {
-                                mclinkClientsFound = true;
-                                parts = mclink1Client2.split("#");
-                                mclinkSetupClient2 = parts[0];
-                                musiccastClients.add(parts[0]);
-                            } 
-                        }
-
-
-
-
-                        if (mclinkServerFound == false) {
-                            updateState(channelUID, OnOffType.OFF); 
-                        }
-                        if (mclinkClientsFound == false) {
-                            updateState(channelUID, OnOffType.OFF); 
-                        }
-
-                    } else { //Unlink devices
-
-                    }
-
-                    //for (int i = 0; i < cars.size(); i++) {
-                    //    System.out.println(cars.get(i));
-                    //}
-
-
-                    String testJSON = "{\"group_id\":\"9A237BF5AB80ED3C7251DFF49825CA42\", \"zone\":\"main\", \"type\":\"add\", \"client_list\":[\"" + mclinkSetupClient1 + "\"]}";
-                    logger.info("group json: {}", testJSON);
-                    InputStream is = new ByteArrayInputStream(testJSON.getBytes());
-                    try {
-                        url = "http://" + mclinkSetupServer + "/YamahaExtendedControl/v1/dist/setServerInfo";
-                        httpResponse = HttpUtil.executeUrl("POST", url, is, "", longConnectionTimeout);               
-                        logger.info("serverinfo : {}", httpResponse);
-                    } catch (IOException e) {
-                        logger.info("serverinfo : {}",e.toString());
-                    }
-                    testJSON = "{\"group_id\":\"9A237BF5AB80ED3C7251DFF49825CA42\", \"zone\":[\"main\"]}";
-                    is = new ByteArrayInputStream(testJSON.getBytes());
-                    try {
-                        url = "http://" + mclinkSetupClient1 + "/YamahaExtendedControl/v1/dist/setClientInfo";
-                        httpResponse = HttpUtil.executeUrl("POST", url, is, "", longConnectionTimeout);               
-                        logger.info("clientinfo : {}", httpResponse);
-                    } catch (IOException e) {
-                        logger.info("clientinfo : {}",e.toString());
-                    }   
-                    try {
-                        url = "http://" + mclinkSetupServer + "/YamahaExtendedControl/v1/dist/startDistribution?num=1";
-                        httpResponse = HttpUtil.executeUrl("GET", url, longConnectionTimeout);               
-                        logger.info("start distribution: {}", httpResponse);
-                    } catch (IOException e) {
-                        logger.info("start distribution: {}",e.toString());
-                    } 
-
-
-                    break; 
-                //END DISTRIBUTION
                 case CHANNEL_MCSERVER:
                     String groupId = "";
                     String role = "";
+                    json = "";
+                    InputStream is2 = new ByteArrayInputStream(json.getBytes());
                     tmpString = command.toString();
                     String[] parts2 = tmpString.split("#");
                     mclinkSetupServer = parts2[0];
@@ -366,12 +229,22 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     } else if (role.equals("none")) {
                         groupId = generateGroupId();
                     }
-
-                    if (!groupId.equals("")) {
+                    
+                    if (command.toString().equals("")) {
+                        json = "{\"group_id\":\"\"}";
+                        is2 = new ByteArrayInputStream(json.getBytes());
+                        try {
+                            url = "http://" + config.config_host + "/YamahaExtendedControl/v1/dist/setClientInfo";
+                            httpResponse = HttpUtil.executeUrl("POST", url, is2, "", longConnectionTimeout);               
+                            logger.info("clientinfo : {}", httpResponse);
+                        } catch (IOException e) {
+                            logger.info("clientinfo : {}",e.toString());
+                        }   
+                    } else if (!command.toString().equals("") && !groupId.equals("")) { 
                         // create JSON with new client, IP = config.host and zone is zone :)
                         json = "{\"group_id\":\"" + groupId + "\", \"zone\":\"" + zone + "\", \"type\":\"add\", \"client_list\":[\"" + config.config_host + "\"]}";
                         logger.info("group json: {}", json);
-                        InputStream is2 = new ByteArrayInputStream(json.getBytes());
+                        is2 = new ByteArrayInputStream(json.getBytes());
                         try {
                             url = "http://" + mclinkSetupServer + "/YamahaExtendedControl/v1/dist/setServerInfo";
                             httpResponse = HttpUtil.executeUrl("POST", url, is2, "", longConnectionTimeout);               
@@ -616,31 +489,8 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                 }
             }
             options.add(new StateOption("", ""));
-            ChannelUID testchannel = new ChannelUID(getThing().getUID(), "Link1", "channelServer");
+            ChannelUID testchannel = new ChannelUID(getThing().getUID(), "main", "channelMCServer");
             stateDescriptionProvider.setStateOptions(testchannel, options);
-            testchannel = new ChannelUID(getThing().getUID(), "Link1", "channelClient1");
-            stateDescriptionProvider.setStateOptions(testchannel, options);
-            testchannel = new ChannelUID(getThing().getUID(), "Link1", "channelClient2");
-            stateDescriptionProvider.setStateOptions(testchannel, options);
-            testchannel = new ChannelUID(getThing().getUID(), "Link1", "channelClient3");
-            stateDescriptionProvider.setStateOptions(testchannel, options);
-            testchannel = new ChannelUID(getThing().getUID(), "Link1", "channelClient4");
-            stateDescriptionProvider.setStateOptions(testchannel, options);
-            testchannel = new ChannelUID(getThing().getUID(), "Link1", "channelClient5");
-            stateDescriptionProvider.setStateOptions(testchannel, options);
-            testchannel = new ChannelUID(getThing().getUID(), "Link1", "channelClient6");
-            stateDescriptionProvider.setStateOptions(testchannel, options);
-            testchannel = new ChannelUID(getThing().getUID(), "Link1", "channelClient7");
-            stateDescriptionProvider.setStateOptions(testchannel, options);
-            testchannel = new ChannelUID(getThing().getUID(), "Link1", "channelClient8");
-            stateDescriptionProvider.setStateOptions(testchannel, options);
-            testchannel = new ChannelUID(getThing().getUID(), "Link1", "channelClient9");
-            stateDescriptionProvider.setStateOptions(testchannel, options);
-
-            testchannel = new ChannelUID(getThing().getUID(), "main", "channelMCServer");
-            stateDescriptionProvider.setStateOptions(testchannel, options);
-
-
         } catch (IOException e) {
         }
     }
