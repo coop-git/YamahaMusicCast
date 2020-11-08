@@ -115,6 +115,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     Boolean mclinkClientsFound = false;
     String url = "";
     String json = "";
+    String action= "";
 
     private YamahaMusiccastStateDescriptionProvider stateDescriptionProvider;
     
@@ -210,37 +211,45 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                 case CHANNEL_MCSERVER:
                     String groupId = "";
                     String role = "";
+                    action = "";
                     json = "";
                     InputStream is2 = new ByteArrayInputStream(json.getBytes());
-                    tmpString = command.toString();
-                    String[] parts2 = tmpString.split("#");
-                    mclinkSetupServer = parts2[0];
-                    tmpString = getDistributionInfo(mclinkSetupServer);
-                    DistributionInfo targetObject = new DistributionInfo();
-                    targetObject = new Gson().fromJson(tmpString, DistributionInfo.class);
-                    responseCode = targetObject.getResponseCode();
-                    
-                    role = targetObject.getRole();
-                    if (role.equals("server")) {
-                        groupId = targetObject.getGroupId();
-                    } else if (role.equals("client")) {
-                        // error geven
-                        groupId = "";
-                    } else if (role.equals("none")) {
-                        groupId = generateGroupId();
+
+                    if (command.toString().equals("")) {
+                        action="unlink";
+                        role="";
+                        groupId="";
+                    } else {
+                        action="link";
+                        String[] parts2 = command.toString().split("#");
+                        mclinkSetupServer = parts2[0];
+                        tmpString = getDistributionInfo(mclinkSetupServer);
+                        DistributionInfo targetObject = new DistributionInfo();
+                        targetObject = new Gson().fromJson(tmpString, DistributionInfo.class);
+                        responseCode = targetObject.getResponseCode();
+                        
+                        role = targetObject.getRole();
+                        if (role.equals("server")) {
+                            groupId = targetObject.getGroupId();
+                        } else if (role.equals("client")) {
+                            // error geven
+                            groupId = "";
+                        } else if (role.equals("none")) {
+                            groupId = generateGroupId();
+                        }                            
                     }
                     
-                    if (command.toString().equals("")) {
+                    if (action.equals("unlink")) {
                         json = "{\"group_id\":\"\"}";
                         is2 = new ByteArrayInputStream(json.getBytes());
                         try {
                             url = "http://" + config.config_host + "/YamahaExtendedControl/v1/dist/setClientInfo";
                             httpResponse = HttpUtil.executeUrl("POST", url, is2, "", longConnectionTimeout);               
-                            logger.info("clientinfo : {}", httpResponse);
+                            logger.info("setClientInfo unlink : {}", httpResponse);
                         } catch (IOException e) {
-                            logger.info("clientinfo : {}",e.toString());
+                            logger.info("setClientInfo unlink : {}",e.toString());
                         }   
-                    } else if (!command.toString().equals("") && !groupId.equals("")) { 
+                    } else if (action.equals("link")) { 
                         // create JSON with new client, IP = config.host and zone is zone :)
                         json = "{\"group_id\":\"" + groupId + "\", \"zone\":\"" + zone + "\", \"type\":\"add\", \"client_list\":[\"" + config.config_host + "\"]}";
                         logger.info("group json: {}", json);
@@ -248,18 +257,18 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                         try {
                             url = "http://" + mclinkSetupServer + "/YamahaExtendedControl/v1/dist/setServerInfo";
                             httpResponse = HttpUtil.executeUrl("POST", url, is2, "", longConnectionTimeout);               
-                            logger.info("serverinfo : {}", httpResponse);
+                            logger.info("setServerInfo : {}", httpResponse);
                         } catch (IOException e) {
-                            logger.info("serverinfo : {}",e.toString());
+                            logger.info("setServerInfo : {}",e.toString());
                         }
                         json = "{\"group_id\":\"" + groupId + "\", \"zone\":[\"" + zone + "\"]}";
                         is2 = new ByteArrayInputStream(json.getBytes());
                         try {
                             url = "http://" + config.config_host + "/YamahaExtendedControl/v1/dist/setClientInfo";
                             httpResponse = HttpUtil.executeUrl("POST", url, is2, "", longConnectionTimeout);               
-                            logger.info("clientinfo : {}", httpResponse);
+                            logger.info("setClientInfo link : {}", httpResponse);
                         } catch (IOException e) {
-                            logger.info("clientinfo : {}",e.toString());
+                            logger.info("setClientInfo link : {}",e.toString());
                         }   
                         try {
                             url = "http://" + mclinkSetupServer + "/YamahaExtendedControl/v1/dist/startDistribution?num=1";
