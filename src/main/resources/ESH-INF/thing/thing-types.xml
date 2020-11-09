@@ -61,6 +61,7 @@
 			<channel id="channelSelectPreset" typeId="channelSelectPreset"/>
 			<channel id="channelSleep" typeId="channelSleep"/>
 			<channel id="channelMCServer" typeId="channelMCServer"/>
+			<channel id="channelRecallScene" typeId="channelRecallScene"/>
 		</channels>
 	</channel-group-type>
 
@@ -75,6 +76,7 @@
 			<channel id="channelSelectPreset" typeId="channelSelectPreset"/>
 			<channel id="channelSleep" typeId="channelSleep"/>
 			<channel id="channelMCServer" typeId="channelMCServer"/>
+			<channel id="channelRecallScene" typeId="channelRecallScene"/>
 		</channels>
 	</channel-group-type>
 
@@ -89,6 +91,7 @@
 			<channel id="channelSelectPreset" typeId="channelSelectPreset"/>
 			<channel id="channelSleep" typeId="channelSleep"/>
 			<channel id="channelMCServer" typeId="channelMCServer"/>
+			<channel id="channelRecallScene" typeId="channelRecallScene"/>
 		</channels>
 	</channel-group-type>
 
@@ -103,6 +106,7 @@
 			<channel id="channelSelectPreset" typeId="channelSelectPreset"/>
 			<channel id="channelSleep" typeId="channelSleep"/>
 			<channel id="channelMCServer" typeId="channelMCServer"/>
+			<channel id="channelRecallScene" typeId="channelRecallScene"/>
 		</channels>
 	</channel-group-type>
 
@@ -171,4 +175,10 @@
 		<label>Server for MusicCast Link</label>
 		<description>Select IP of device to be Server for MusicCast Link - v2</description>
 	</channel-type>
+	<channel-type id="channelRecallScene">
+		<item-type>Number</item-type>
+		<label>Scene selection</label>
+		<description>Scene selection (if available)</description>
+	</channel-type>
+
 </thing:thing-descriptions>

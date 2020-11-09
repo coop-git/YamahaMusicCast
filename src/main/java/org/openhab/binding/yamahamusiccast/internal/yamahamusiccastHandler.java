@@ -16,6 +16,7 @@ import static org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastBindin
 import org.openhab.binding.yamahamusiccast.internal.model.Status;
 import org.openhab.binding.yamahamusiccast.internal.model.ThingsRest;
 import org.openhab.binding.yamahamusiccast.internal.model.DistributionInfo;
+import org.openhab.binding.yamahamusiccast.internal.model.Features;
 import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastStateDescriptionProvider;
 import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastConfiguration;
 
@@ -102,7 +103,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     Integer volumeState = 0;
     Integer maxVolumeState = 0;
     String inputState = "";
-    String inputText = "";
     Integer presetNumber = 0;
     String soundProgramState = "";
     Integer sleepState = 0;
@@ -111,11 +111,10 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     String channelWithoutGroup = "";
     @NonNullByDefault({}) String thingLabel = "";
     @NonNullByDefault({}) String mclinkSetupServer = "";
-    Boolean mclinkServerFound = false;
-    Boolean mclinkClientsFound = false;
     String url = "";
     String json = "";
     String action= "";
+    Integer zoneNum = 0;
 
     private YamahaMusiccastStateDescriptionProvider stateDescriptionProvider;
     
@@ -250,7 +249,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                             logger.info("setClientInfo unlink : {}",e.toString());
                         }   
                     } else if (action.equals("link")) { 
-                        // create JSON with new client, IP = config.host and zone is zone :)
                         json = "{\"group_id\":\"" + groupId + "\", \"zone\":\"" + zone + "\", \"type\":\"add\", \"client_list\":[\"" + config.config_host + "\"]}";
                         logger.info("group json: {}", json);
                         is2 = new ByteArrayInputStream(json.getBytes());
@@ -279,6 +277,10 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                         } 
                     }
                     break;
+                case CHANNEL_RECALLSCENE:
+                    tmpString = command.toString();
+                    recallScene(tmpString, zone);
+                    break;
             }  // END Switch Channel          
         }
     }
@@ -293,6 +295,11 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         if (config.config_host.equals("")) {
             logger.info("YXC - No host found");
         } else {
+            Features targetObject = new Features();
+            targetObject = new Gson().fromJson(getFeatures(config.config_host), Features.class);
+            zoneNum = Integer.valueOf(targetObject.getSystem().getZoneNum());
+            logger.debug("Zones found: {}", zoneNum);
+    
             if (config.config_refreshInterval > 0) {
                 startAutomaticRefresh();
             }
@@ -322,7 +329,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         //Not Zone related
         updatePresets();
         fetchOtherDevices();
-        
     }
 
     @Override
@@ -408,7 +414,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     }
 
     private void updatePresets() {
-        inputText = getLastInput(); // Without zone
+        String inputText = getLastInput(); // Without zone
         tmpString = getPresetInfo(); // Without zone
         try {
             JsonElement jsonTree = parser.parse(tmpString);
@@ -526,10 +532,10 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
     }
 
-    private String setPower(String Value, String zone) {
+    private String setPower(String value, String zone) {
         topicAVR = "Power";
         try {
-            httpResponse = HttpUtil.executeUrl("GET", "http://" + config.config_host + "/YamahaExtendedControl/v1/" + zone + "/setPower?power=" + Value, connectionTimeout);
+            httpResponse = HttpUtil.executeUrl("GET", "http://" + config.config_host + "/YamahaExtendedControl/v1/" + zone + "/setPower?power=" + value, connectionTimeout);
             logger.debug(httpResponse);
             return httpResponse;
         } catch (IOException e) {
@@ -538,10 +544,10 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
     }
 
-    private String setMute(String Value, String zone) {
+    private String setMute(String value, String zone) {
         topicAVR = "Mute";
         try {
-            httpResponse = HttpUtil.executeUrl("GET", "http://" + config.config_host + "/YamahaExtendedControl/v1/" + zone + "/setMute?enable=" + Value, connectionTimeout);
+            httpResponse = HttpUtil.executeUrl("GET", "http://" + config.config_host + "/YamahaExtendedControl/v1/" + zone + "/setMute?enable=" + value, connectionTimeout);
             logger.debug(httpResponse);            
             return httpResponse;
         } catch (IOException e) {
@@ -550,10 +556,10 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
     }
 
-    private String setVolume(Integer Value, String zone) {
+    private String setVolume(Integer value, String zone) {
         topicAVR = "Volume";
         try {
-            httpResponse = HttpUtil.executeUrl("GET", "http://" + config.config_host + "/YamahaExtendedControl/v1/" + zone + "/setVolume?volume=" + Value, connectionTimeout);
+            httpResponse = HttpUtil.executeUrl("GET", "http://" + config.config_host + "/YamahaExtendedControl/v1/" + zone + "/setVolume?volume=" + value, connectionTimeout);
             logger.debug(httpResponse);            
             return httpResponse;
         } catch (IOException e) {
@@ -562,10 +568,10 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
     }
 
-    private String setInput(String Value, String zone) {
+    private String setInput(String value, String zone) {
         topicAVR = "setInput";
         try {
-            httpResponse = HttpUtil.executeUrl("GET", "http://" + config.config_host + "/YamahaExtendedControl/v1/" + zone + "/setInput?input=" + Value, connectionTimeout);
+            httpResponse = HttpUtil.executeUrl("GET", "http://" + config.config_host + "/YamahaExtendedControl/v1/" + zone + "/setInput?input=" + value, connectionTimeout);
             logger.debug(httpResponse);
             return httpResponse;
         } catch (IOException e) {
@@ -574,10 +580,10 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
     }
 
-    private String setSoundProgram(String Value, String zone) {
+    private String setSoundProgram(String value, String zone) {
         topicAVR = "setSoundProgram";
         try {
-            httpResponse = HttpUtil.executeUrl("GET", "http://" + config.config_host + "/YamahaExtendedControl/v1/" + zone + "/setSoundProgram?program=" + Value, connectionTimeout);
+            httpResponse = HttpUtil.executeUrl("GET", "http://" + config.config_host + "/YamahaExtendedControl/v1/" + zone + "/setSoundProgram?program=" + value, connectionTimeout);
             logger.debug(httpResponse);            
             return httpResponse;
         } catch (IOException e) {
@@ -586,10 +592,10 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
     }
 
-    private String setPreset(String Value, String zone) {
+    private String setPreset(String value, String zone) {
         topicAVR = "setPreset";
         try {
-            httpResponse = HttpUtil.executeUrl("GET", "http://" + config.config_host + "/YamahaExtendedControl/v1/netusb/recallPreset?zone=" + zone + "&num=" + Value, longConnectionTimeout);
+            httpResponse = HttpUtil.executeUrl("GET", "http://" + config.config_host + "/YamahaExtendedControl/v1/netusb/recallPreset?zone=" + zone + "&num=" + value, longConnectionTimeout);
             logger.debug(httpResponse);
             return httpResponse;
         } catch (IOException e) {
@@ -598,10 +604,10 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
     }
 
-    private String setSleep(String Value, String zone) {
+    private String setSleep(String value, String zone) {
         topicAVR = "setSleep";
         try {
-            httpResponse = HttpUtil.executeUrl("GET", "http://" + config.config_host + "/YamahaExtendedControl/v1/" + zone + "/setSleep?sleep=" + Value, connectionTimeout);
+            httpResponse = HttpUtil.executeUrl("GET", "http://" + config.config_host + "/YamahaExtendedControl/v1/" + zone + "/setSleep?sleep=" + value, connectionTimeout);
             logger.debug(httpResponse);
             return httpResponse;
         } catch (IOException e) {
@@ -610,6 +616,17 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
     }
 
+    private String recallScene(String value, String zone) {
+        topicAVR = "recallScene";
+        try {
+            httpResponse = HttpUtil.executeUrl("GET", "http://" + config.config_host + "/YamahaExtendedControl/v1/" + zone + "/recallScene?num=" + value, connectionTimeout);
+            logger.debug(httpResponse);
+            return httpResponse;
+        } catch (IOException e) {
+            logger.warn("IO Exception - " + topicAVR, e);
+            return "{\"response_code\":\"999\"}";
+        }
+    }
     // End Zone Related
 
     // Start Net Radio/USB Related
@@ -650,10 +667,10 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
     }
 
-    private String setPlayback(String Value) {
+    private String setPlayback(String value) {
         topicAVR = "Playback";
         try {
-            httpResponse = HttpUtil.executeUrl("GET", "http://" + config.config_host + "/YamahaExtendedControl/v1/netusb/setPlayback?playback=" + Value, longConnectionTimeout);
+            httpResponse = HttpUtil.executeUrl("GET", "http://" + config.config_host + "/YamahaExtendedControl/v1/netusb/setPlayback?playback=" + value, longConnectionTimeout);
             logger.debug(httpResponse);
             return httpResponse;
         } catch (IOException e) {
@@ -662,14 +679,28 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
     }
 
+    
+
 
     // End Net Radio/USB Related
 
     // Start Music Cast API calls
-    private String getDistributionInfo(String Value) {
+    private String getDistributionInfo(String host) {
         topicAVR = "DistributionInfo";
         try {
-            httpResponse = HttpUtil.executeUrl("GET", "http://" + Value + "/YamahaExtendedControl/v1/dist/getDistributionInfo", connectionTimeout);
+            httpResponse = HttpUtil.executeUrl("GET", "http://" + host + "/YamahaExtendedControl/v1/dist/getDistributionInfo", connectionTimeout);
+            logger.debug(httpResponse);
+            return httpResponse;
+        } catch (IOException e) {
+            logger.warn("IO Exception - " + topicAVR, e);
+            return "{\"response_code\":\"999\"}";
+        }
+    }
+
+    private String getFeatures(String host) {
+        topicAVR = "Features";
+        try {
+            httpResponse = HttpUtil.executeUrl("GET", "http://" + host + "/YamahaExtendedControl/v1/system/getFeatures", longConnectionTimeout);
             logger.debug(httpResponse);
             return httpResponse;
         } catch (IOException e) {
@@ -703,17 +734,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
     }
 
-    private String getFeatures() {
-        topicAVR = "Features";
-        try {
-            httpResponse = HttpUtil.executeUrl("GET", "http://" + config.config_host + "/YamahaExtendedControl/v1/system/getFeatures", longConnectionTimeout);
-            logger.debug(httpResponse);
-            return httpResponse;
-        } catch (IOException e) {
-            logger.warn("IO Exception - " + topicAVR, e);
-            return "{\"response_code\":\"999\"}";
-        }
-    }
+
 
 
 }

@@ -40,17 +40,14 @@ Thing yamahamusiccast:Device:zone#Living "YXC Living" [config_host="1.2.3.4"]
 | channelSoundProgram  | String | See below for list                                  |
 | channelSelectPreset  | String | Select Netradio/USB preset (favorite)               |
 | channelSleep         | Number | Fixed values for Sleep : 0/30/60/90/120             |
-| channelServer        | String | Device to start Musiccast                           |
-| channelClient1       | String | Linked device for Musiccast                         |
-| channelDistribution  | Switch | Start Musiccast Link                                |
+| channelMCServer      | String | Select your MusicCast Server                        |
+| channelDistribution  | Switch | Start/Stop MusicCast Link on your server            |
 | channelPlayer        | Player | PLAY/PAUSE/NEXT/PREVIOUS/REWIND/FASTFORWARD         |
 
 | Zones                | description                                          |
 |----------------------|------------------------------------------------------|
 | Zone1-4              | Zone 1 to 4 to control Power, Volume, ...            |
 | playerControls       | Separate zone for Play, Pause, ...                   |
-| Link1                | First zone to support Music Cast                     |
-
 
 ## Full Example
 
@@ -86,7 +83,7 @@ disco / standard / spectacle / sci-fi / adventure / drama / talk_show / tv_progr
 mono_movie / movie / enhanced / 2ch_stereo / 5ch_stereo / 7ch_stereo / 9ch_stereo /
 11ch_stereo / stereo / surr_decoder / my_surround / target / straight / off
 
-## Tested Devices
+## Tested Models
 
 RX-D485 / WX-010 / WX-030 / ISX-80 / YSP-1600 / RX-A860 / R-N303D / EX-A1080 / WXA-050 / HTR-4068 (RX-V479)
-MusicCast 20 / WCX-50
+MusicCast 20 / WCX-50 / RX-V6A
