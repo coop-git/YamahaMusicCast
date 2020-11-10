@@ -27,26 +27,6 @@
 				<description>The refresh interval in seconds for polling the receiver (0=disable).</description>
 				<default>60</default>
 			</parameter>
-
-			<parameter name="config_Zone2" type="boolean">
-				<label>Zone 2</label>
-				<description>Is Zone 2 active?</description>
-				<default>false</default>
-				<advanced>true</advanced>
-			</parameter>
-			<parameter name="config_Zone3" type="boolean">
-				<label>Zone 3</label>
-				<description>Is Zone 3 active?</description>
-				<default>false</default>
-				<advanced>true</advanced>
-			</parameter>
-			<parameter name="config_Zone4" type="boolean">
-				<label>Zone 4</label>
-				<description>Is Zone 4 active?</description>
-				<default>false</default>
-				<advanced>true</advanced>
-			</parameter>
-
 		</config-description>
 	</thing-type>
 
@@ -61,6 +41,7 @@
 			<channel id="channelSelectPreset" typeId="channelSelectPreset"/>
 			<channel id="channelSleep" typeId="channelSleep"/>
 			<channel id="channelMCServer" typeId="channelMCServer"/>
+			<channel id="channelUnlinkMCServer" typeId="channelUnlinkMCServer"/>
 			<channel id="channelRecallScene" typeId="channelRecallScene"/>
 		</channels>
 	</channel-group-type>
@@ -76,6 +57,7 @@
 			<channel id="channelSelectPreset" typeId="channelSelectPreset"/>
 			<channel id="channelSleep" typeId="channelSleep"/>
 			<channel id="channelMCServer" typeId="channelMCServer"/>
+			<channel id="channelUnlinkMCServer" typeId="channelUnlinkMCServer"/>
 			<channel id="channelRecallScene" typeId="channelRecallScene"/>
 		</channels>
 	</channel-group-type>
@@ -91,6 +73,7 @@
 			<channel id="channelSelectPreset" typeId="channelSelectPreset"/>
 			<channel id="channelSleep" typeId="channelSleep"/>
 			<channel id="channelMCServer" typeId="channelMCServer"/>
+			<channel id="channelUnlinkMCServer" typeId="channelUnlinkMCServer"/>
 			<channel id="channelRecallScene" typeId="channelRecallScene"/>
 		</channels>
 	</channel-group-type>
@@ -106,6 +89,7 @@
 			<channel id="channelSelectPreset" typeId="channelSelectPreset"/>
 			<channel id="channelSleep" typeId="channelSleep"/>
 			<channel id="channelMCServer" typeId="channelMCServer"/>
+			<channel id="channelUnlinkMCServer" typeId="channelUnlinkMCServer"/>
 			<channel id="channelRecallScene" typeId="channelRecallScene"/>
 		</channels>
 	</channel-group-type>
@@ -175,6 +159,12 @@
 		<label>Server for MusicCast Link</label>
 		<description>Select IP of device to be Server for MusicCast Link - v2</description>
 	</channel-type>
+	<channel-type id="channelUnlinkMCServer">
+		<item-type>Switch</item-type>
+		<label>Deactivate MusicCast Link on Server</label>
+		<description>Deactivate MusicCast Link on Server</description>
+	</channel-type>
+
 	<channel-type id="channelRecallScene">
 		<item-type>Number</item-type>
 		<label>Scene selection</label>

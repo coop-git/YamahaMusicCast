@@ -26,7 +26,4 @@ public class YamahaMusiccastConfiguration {
     public Integer config_refreshInterval;
     public String config_host;
 
-    public boolean config_Zone2;
-    public boolean config_Zone3;
-    public boolean config_Zone4;
 }

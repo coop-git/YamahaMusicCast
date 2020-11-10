@@ -39,5 +39,6 @@ public class YamahaMusiccastBindingConstants {
     public static final String CHANNEL_PLAYER = "channelPlayer";
     public static final String CHANNEL_SLEEP = "channelSleep";
     public static final String CHANNEL_MCSERVER = "channelMCServer";
+    public static final String CHANNEL_UNLINKMCSERVER = "channelUnlinkMCServer";
     public static final String CHANNEL_RECALLSCENE = "channelRecallScene";
 }

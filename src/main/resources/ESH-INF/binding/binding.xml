@@ -4,7 +4,7 @@
 	xsi:schemaLocation="https://openhab.org/schemas/binding/v1.0.0 https://openhab.org/schemas/binding-1.0.0.xsd">
 
 	<name>Yamaha Musiccast Binding</name>
-	<description>This is the binding for Yamaha Musiccast v0.4 (BETA, with zone support)</description>
+	<description>This is the binding for Yamaha Musiccast v0.5 (BETA, with zone support)</description>
 	<author>Lennert Coopman</author>
 
 </binding:binding>
