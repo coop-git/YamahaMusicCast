@@ -305,7 +305,8 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                                 logger.info("setServerInfo unlink : {}", httpResponse);
                             } catch (IOException e) {
                                 logger.info("setServerInfo unlink : {}",e.toString());
-                            }   
+                            }
+                            updateState(channelUID, OnOffType.OFF); 
                         }
                     break;
                 case CHANNEL_RECALLSCENE:

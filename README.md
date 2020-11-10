@@ -23,26 +23,23 @@ N/A
 |------------------------|---------|---------------------------------------------------------|----------|---------------|
 | config_host            | String  | IP address of AVR                                       | false    | true          |
 | config_refreshInterval | Integer | The refresh interval in seconds (0=disable).            | false    | Default=60    |
-| config_Zone2           | Booelan | Is Zone 2 active?                                       | true     | Default=false |
-| config_Zone3           | Boolean | Is Zone 3 active?                                       | true     | Default=false |
-| config_Zone4           | Boolean | Is Zone 4 active?                                       | true     | Default=false |
 
 Thing yamahamusiccast:Device:zone#Living "YXC Living" [config_host="1.2.3.4"]
 
 ## Channels
 
-| channel              | type   | description                                         |
-|----------------------|--------|-----------------------------------------------------|
-| channelPower         | Switch | Power ON/OFF                                        |
-| channelMute          | Switch | Mute ON/OFF                                         |
-| channelVolume        | Dimmer | Volume 0-100 (recalculated based on Max Volume AVR) |
-| channelInput         | String | See below for list                                  |
-| channelSoundProgram  | String | See below for list                                  |
-| channelSelectPreset  | String | Select Netradio/USB preset (favorite)               |
-| channelSleep         | Number | Fixed values for Sleep : 0/30/60/90/120             |
-| channelMCServer      | String | Select your MusicCast Server                        |
-| channelDistribution  | Switch | Start/Stop MusicCast Link on your server            |
-| channelPlayer        | Player | PLAY/PAUSE/NEXT/PREVIOUS/REWIND/FASTFORWARD         |
+| channel               | type   | description                                         |
+|-----------------------|--------|-----------------------------------------------------|
+| channelPower          | Switch | Power ON/OFF                                        |
+| channelMute           | Switch | Mute ON/OFF                                         |
+| channelVolume         | Dimmer | Volume 0-100 (recalculated based on Max Volume AVR) |
+| channelInput          | String | See below for list                                  |
+| channelSoundProgram   | String | See below for list                                  |
+| channelSelectPreset   | String | Select Netradio/USB preset (favorite)               |
+| channelSleep          | Number | Fixed values for Sleep : 0/30/60/90/120             |
+| channelMCServer       | String | Select your MusicCast Server                        |
+| channelUnlinkMCServer | Switch | Deactivate MusicCast Server                         |
+| channelPlayer         | Player | PLAY/PAUSE/NEXT/PREVIOUS/REWIND/FASTFORWARD         |
 
 | Zones                | description                                          |
 |----------------------|------------------------------------------------------|
