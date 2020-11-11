@@ -1,13 +1,13 @@
 # Yamaha MusicCast Binding
 
-Binding to control AV Receiver(s) from Yamaha via their MusicCast protocol (aka Yamaha Extended Control).
-With support for 4 zones : main, zone2, zone3, zone4. Main is always present. Zone2, Zone3, Zone4 to enable.
+Binding to control Yamaha models via their MusicCast protocol (aka Yamaha Extended Control).
+With support for 4 zones : main, zone2, zone3, zone4. Main is always present. Zone2, Zone3, Zone4 are read from the model.
 
-For Music Cast, items need to be created only once for a Thing.
+For Music Cast, the different Things are read via the OpenHAB REST API.
 
 ## Supported Things
 
-Each AV Receiver is a Thing.
+Each model (AV Receiver, ...) is a Thing.
 
 ## Discovery
 
@@ -21,25 +21,25 @@ N/A
 
 | Parameter              | type    | description                                             | Advanced | Required      |
 |------------------------|---------|---------------------------------------------------------|----------|---------------|
-| config_host            | String  | IP address of AVR                                       | false    | true          |
+| config_host            | String  | IP address of the Yamaha model (AVR, ...)               | false    | true          |
 | config_refreshInterval | Integer | The refresh interval in seconds (0=disable).            | false    | Default=60    |
 
 Thing yamahamusiccast:Device:zone#Living "YXC Living" [config_host="1.2.3.4"]
 
 ## Channels
 
-| channel               | type   | description                                         |
-|-----------------------|--------|-----------------------------------------------------|
-| channelPower          | Switch | Power ON/OFF                                        |
-| channelMute           | Switch | Mute ON/OFF                                         |
-| channelVolume         | Dimmer | Volume 0-100 (recalculated based on Max Volume AVR) |
-| channelInput          | String | See below for list                                  |
-| channelSoundProgram   | String | See below for list                                  |
-| channelSelectPreset   | String | Select Netradio/USB preset (favorite)               |
-| channelSleep          | Number | Fixed values for Sleep : 0/30/60/90/120             |
-| channelMCServer       | String | Select your MusicCast Server                        |
-| channelUnlinkMCServer | Switch | Deactivate MusicCast Server                         |
-| channelPlayer         | Player | PLAY/PAUSE/NEXT/PREVIOUS/REWIND/FASTFORWARD         |
+| channel               | type   | description                                           |
+|-----------------------|--------|-------------------------------------------------------|
+| channelPower          | Switch | Power ON/OFF                                          |
+| channelMute           | Switch | Mute ON/OFF                                           |
+| channelVolume         | Dimmer | Volume 0-100 (recalculated based on Max Volume Model) |
+| channelInput          | String | See below for list                                    |
+| channelSoundProgram   | String | See below for list                                    |
+| channelSelectPreset   | String | Select Netradio/USB preset (favorite)                 |
+| channelSleep          | Number | Fixed values for Sleep : 0/30/60/90/120               |
+| channelMCServer       | String | Select your MusicCast Server                          |
+| channelUnlinkMCServer | Switch | Disband MusicCast Link on Master                      |
+| channelPlayer         | Player | PLAY/PAUSE/NEXT/PREVIOUS/REWIND/FASTFORWARD           |
 
 | Zones                | description                                          |
 |----------------------|------------------------------------------------------|
