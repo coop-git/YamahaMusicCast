@@ -52,6 +52,7 @@ import java.util.UUID;
 import java.math.BigDecimal;
 import java.io.IOException;
 import java.io.InputStream;
+
 import java.io.ByteArrayInputStream;
 import java.util.Optional;
 
@@ -114,26 +115,25 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     String url = "";
     String json = "";
     String action= "";
-    Integer zoneNum = 0;
+    Integer zoneNum = 1;
 
     private YamahaMusiccastStateDescriptionProvider stateDescriptionProvider;
     
     public YamahaMusiccastHandler(Thing thing, YamahaMusiccastStateDescriptionProvider stateDescriptionProvider) {
         super(thing);
         this.stateDescriptionProvider = stateDescriptionProvider;
-
     }
 
     @Override
     public void handleCommand(ChannelUID channelUID, Command command) {
         
         if (command instanceof RefreshType) {
-            //refreshProcess();
+            //nothing here
         } else  {
             logger.info("Handling command {} for channel {}", command, channelUID);
             channelWithoutGroup = channelUID.getIdWithoutGroup();
             zone = channelUID.getGroupId();
-            switch (channelWithoutGroup) { //channelUID.getId()
+            switch (channelWithoutGroup) {
                 case CHANNEL_POWER:
                     if (command.equals(OnOffType.ON)) {
                         httpResponse = setPower("on", zone);
@@ -250,7 +250,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                         }   
                     } else if (action.equals("link")) { 
                         json = "{\"group_id\":\"" + groupId + "\", \"zone\":\"" + zone + "\", \"type\":\"add\", \"client_list\":[\"" + config.config_host + "\"]}";
-                        logger.info("group json: {}", json);
+                        logger.info("setServerInfo json: {}", json);
                         is2 = new ByteArrayInputStream(json.getBytes());
                         try {
                             url = "http://" + mclinkSetupServer + "/YamahaExtendedControl/v1/dist/setServerInfo";
@@ -277,7 +277,8 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                                     break;
                             }
                         }
-                        json = "{\"group_id\":\"" + groupId + "\", \"zone\":[\"" + tmpString + "\"]}";
+                        json = "{\"group_id\":\"" + groupId + "\", \"zone\":[" + tmpString + "]}";
+                        logger.info("setClientInfo json: {}", json);
                         is2 = new ByteArrayInputStream(json.getBytes());
                         try {
                             url = "http://" + config.config_host + "/YamahaExtendedControl/v1/dist/setClientInfo";
@@ -327,10 +328,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         if (config.config_host.equals("")) {
             logger.info("YXC - No host found");
         } else {
-            tmpString = getFeatures(config.config_host);
-            Features targetObject = new Features();
-            targetObject = new Gson().fromJson(tmpString, Features.class);
-            zoneNum = Integer.valueOf(targetObject.getSystem().getZoneNum());
+            zoneNum = getNumberOfZones(config.config_host);
             logger.info("YXC - Zones found: {} - {}", zoneNum,thingLabel);
     
             if (config.config_refreshInterval > 0) {
@@ -365,20 +363,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     break;
             }
         }
-          
-
-        // Zone main is always present        
-/*         updateStatusZone("main");
-        if (config.config_Zone2 == true) {
-            updateStatusZone("zone2");
-        }
-        if (config.config_Zone3 == true) {
-            updateStatusZone("zone3");
-        }
-        if (config.config_Zone4 == true) {
-            updateStatusZone("zone4");
-        } */
-        //Not Zone related
         updatePresets();
         fetchOtherDevices();
     }
@@ -481,7 +465,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             for (JsonElement pr : presetsArray) {
                 tmpInteger = tmpInteger + 1;
                 JsonObject presetObject = pr.getAsJsonObject();
-                //String Input = presetObject.get("input").getAsString();
                 String text = presetObject.get("text").getAsString();
                 if (!text.equals("")) {
                     optionsPresets.add(new StateOption(tmpInteger.toString(), text));                
@@ -493,7 +476,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             for (Channel channel : getThing().getChannels()) {
                 ChannelUID channelUID = channel.getUID();
                 channelWithoutGroup = channelUID.getIdWithoutGroup();
-                switch (channelWithoutGroup) { //channelUID.getId()
+                switch (channelWithoutGroup) {
                     case CHANNEL_SELECTPRESET:
                         stateDescriptionProvider.setStateOptions(channelUID, optionsPresets);
                         updateState(channelUID,StringType.valueOf(presetNumber.toString()));
@@ -529,6 +512,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     }
 
     private void fetchOtherDevices() {
+        Integer zonesPerHost = 1;
         try {
             httpResponse = HttpUtil.executeUrl("GET", "http://127.0.0.1:8080/rest/things", longConnectionTimeout);               
             List<StateOption> options = new ArrayList<>();
@@ -541,27 +525,12 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     JsonObject jsonObject = result.getConfiguration();
                     String host = jsonObject.get("config_host").getAsString();
 
-/*                     options.add(new StateOption(host + "#" + "main", label + "#main"));                    
-
-                    Boolean zone2 = jsonObject.get("config_Zone2").getAsBoolean();
-                    if (zone2 == true) {
-                        options.add(new StateOption(host + "#" + "zone2", label + "#zone2"));
-                    }
-                    Boolean zone3 = jsonObject.get("config_Zone3").getAsBoolean();
-                    if (zone3 == true) {
-                        options.add(new StateOption(host + "#" + "zone3", label + "#zone3"));
-                    }
-                    Boolean zone4 = jsonObject.get("config_Zone4").getAsBoolean();
-                    if (zone4 == true) {
-                        options.add(new StateOption(host + "#" + "zone4", label + "#zone4"));
-                    }
- */                    ////////////////
-                    tmpString = getFeatures(host);
-                    Features targetObject = new Features();
-                    targetObject = new Gson().fromJson(tmpString, Features.class);
-                    zoneNum = Integer.valueOf(targetObject.getSystem().getZoneNum());
-
-                    for (int i = 1; i <= zoneNum; i++) {
+                    //tmpString = getFeatures(host);
+                    //Features targetObject = new Features();
+                    //targetObject = new Gson().fromJson(tmpString, Features.class);
+                    //zoneNum = Integer.valueOf(targetObject.getSystem().getZoneNum());
+                    zonesPerHost = getNumberOfZones(host);
+                    for (int i = 1; i <= zonesPerHost; i++) {
                         switch (i) {
                             case 1:
                                 options.add(new StateOption(host + "#" + "main", label + "#main"));                    
@@ -577,12 +546,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                                 break;
                         }
                     }
-                    //////////////////////////////
-
-
-
-
-
                 }
             }
             options.add(new StateOption("", ""));
@@ -601,6 +564,18 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     // API calls to AVR
 
     // Start Zone Related
+
+    private Integer getNumberOfZones(String host) {
+        try {
+            tmpString = getFeatures(host);
+            Features targetObject = new Features();
+            targetObject = new Gson().fromJson(tmpString, Features.class);
+            return Integer.valueOf(targetObject.getSystem().getZoneNum());
+        } catch (Exception e) {
+            logger.warn("Error fetching zones");
+            return 1;
+        }
+    }
 
     private String getStatus(String zone) {
         topicAVR = "Status";
