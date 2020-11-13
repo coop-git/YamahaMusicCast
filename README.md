@@ -40,6 +40,8 @@ Thing yamahamusiccast:Device:zone#Living "YXC Living" [config_host="1.2.3.4"]
 | channelMCServer       | String | Select your MusicCast Server                          |
 | channelUnlinkMCServer | Switch | Disband MusicCast Link on Master                      |
 | channelPlayer         | Player | PLAY/PAUSE/NEXT/PREVIOUS/REWIND/FASTFORWARD           |
+| channelRecallScene    | Number | Select a scene                                        |
+
 
 | Zones                | description                                          |
 |----------------------|------------------------------------------------------|
@@ -83,4 +85,31 @@ mono_movie / movie / enhanced / 2ch_stereo / 5ch_stereo / 7ch_stereo / 9ch_stere
 ## Tested Models
 
 RX-D485 / WX-010 / WX-030 / ISX-80 / YSP-1600 / RX-A860 / R-N303D / EX-A1080 / WXA-050 / HTR-4068 (RX-V479)
-MusicCast 20 / WCX-50 / RX-V6A
+MusicCast 20 / WCX-50 / RX-V6A / YAS-306
+
+## Changelog
+
+###### To Do / Wishlist
+
+- [ ] UDP event push feature
+- [ ] Add Play Info (Artist, track, …)
+- [ ] Autodiscovery
+- [ ] HDMI out selection
+- [ ] Create a pull request for OH3
+
+
+###### v0.50
+
+- Number of zones are read from device, removed this from configuration
+- Support added for Music Cast Link: channelMCServer and channelUnlinkMCServer have been added
+- channelRecallScene has been added to select a Scene
+
+###### v0.40
+
+- Added Zone Support
+- Favorites are fetched and made available as options
+- Various changes under the hood
+
+###### v0.30 / v 0.20 / v0.10
+
+- Initial commits for basic functionality (Power, Mute, Input, ...)

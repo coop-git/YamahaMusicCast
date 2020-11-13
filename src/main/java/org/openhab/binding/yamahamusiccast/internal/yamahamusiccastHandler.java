@@ -736,9 +736,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
     }
 
-    
-
-
     // End Net Radio/USB Related
 
     // Start Music Cast API calls
@@ -754,6 +751,9 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
     }
 
+    // End Music Cast API calls
+
+    // Start General/System API calls
     private String getFeatures(String host) {
         topicAVR = "Features";
         try {
@@ -765,9 +765,10 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             return "{\"response_code\":\"999\"}";
         }
     }
-    // End Music Cast API calls
+    
+    // End General/System API calls
 
-    //Unused API calls to AVR
+    //Unused API calls
     private String getDeviceInfo() {
         topicAVR = "DeviceInfo";
         try {

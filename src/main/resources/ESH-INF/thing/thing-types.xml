@@ -98,6 +98,7 @@
 		<label>player Controls</label>
 		<channels>
 			<channel id="channelPlayer" typeId="channelPlayer"/>
+			<channel id="channelHDMIOut" typeId="channelHDMIOut"/>
 		</channels>
 	</channel-group-type>
 
@@ -170,5 +171,11 @@
 		<label>Scene selection</label>
 		<description>Scene selection (if available)</description>
 	</channel-type>
+	<channel-type id="channelHDMIOut">
+		<item-type>String</item-type>
+		<label>HDMI Out</label>
+		<description>Select your HDMI Output</description>
+	</channel-type>
+
 
 </thing:thing-descriptions>
