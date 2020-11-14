@@ -21,8 +21,8 @@ N/A
 
 | Parameter              | type    | description                                             | Advanced | Required      |
 |------------------------|---------|---------------------------------------------------------|----------|---------------|
-| configHost             | String  | IP address of the Yamaha model (AVR, ...)               | false    | true          |
-| configRefreshInterval  | Integer | The refresh interval in seconds (0=disable).            | false    | Default=60    |
+| config_host             | String  | IP address of the Yamaha model (AVR, ...)               | false    | true          |
+| config_refreshInterval  | Integer | The refresh interval in seconds (0=disable).            | false    | Default=60    |
 
 Thing yamahamusiccast:Device:zone#Living "YXC Living" [config_host="1.2.3.4"]
 
