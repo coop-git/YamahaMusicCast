@@ -23,7 +23,7 @@ public class YamahaMusiccastConfiguration {
     /**
      * Sample configuration parameter. Replace with your own.
      */
-    public Integer config_refreshInterval;
-    public String config_host;
+    public Integer configRefreshInterval;
+    public String configHost;
 
 }

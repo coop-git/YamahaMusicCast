@@ -21,8 +21,8 @@ N/A
 
 | Parameter              | type    | description                                             | Advanced | Required      |
 |------------------------|---------|---------------------------------------------------------|----------|---------------|
-| config_host            | String  | IP address of the Yamaha model (AVR, ...)               | false    | true          |
-| config_refreshInterval | Integer | The refresh interval in seconds (0=disable).            | false    | Default=60    |
+| configHost             | String  | IP address of the Yamaha model (AVR, ...)               | false    | true          |
+| configRefreshInterval  | Integer | The refresh interval in seconds (0=disable).            | false    | Default=60    |
 
 Thing yamahamusiccast:Device:zone#Living "YXC Living" [config_host="1.2.3.4"]
 
@@ -97,6 +97,9 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306
 - [ ] HDMI out selection
 - [ ] Create a pull request for OH3
 
+###### v0.60 - In development
+
+- BREAKING CHANGE: configuration parameters renamed. "config_host" is replaced with "configHost", "config_refreshInterval" is replaced with "configRefreshInterval"
 
 ###### v0.50
 

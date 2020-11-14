@@ -13,11 +13,13 @@
 package org.openhab.binding.yamahamusiccast.internal.model;
 import com.google.gson.annotations.SerializedName;
 
+
 /**
  * This class represents the push request sent to the API.
  *
  * @author Lennert Coopman - Initial contribution
  */
+
 public class Features {
 
     @SerializedName("response_code")

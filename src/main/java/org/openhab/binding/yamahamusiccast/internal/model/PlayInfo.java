@@ -20,35 +20,25 @@ import com.google.gson.annotations.SerializedName;
  * @author Lennert Coopman - Initial contribution
  */
 
-public class DistributionInfo {
+public class PlayInfo {
 
     @SerializedName("response_code")
     private String responseCode;
 
-    @SerializedName("group_id")
-    private String groupId;
-
-    @SerializedName("role")
-    private String role;
-
-    @SerializedName("server_zone")
-    private String serverZone;
+    @SerializedName("playback")
+    private String playback;
 
     public String getResponseCode() {
         return responseCode;
     }
 
-    public String getGroupId() {
-        return groupId;
-    }
+    public String getPlayback() {
+        return playback;
+    }  
 
-    public String getRole() {
-        return role;
-    }
+   
 
-    public String getServerZone() {
-        return serverZone;
-    }
+   
 
 
 }

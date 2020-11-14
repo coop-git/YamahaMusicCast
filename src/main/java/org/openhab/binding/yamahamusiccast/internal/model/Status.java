@@ -18,6 +18,7 @@ import com.google.gson.annotations.SerializedName;
  *
  * @author Lennert Coopman - Initial contribution
  */
+
 public class Status {
 
     @SerializedName("response_code")

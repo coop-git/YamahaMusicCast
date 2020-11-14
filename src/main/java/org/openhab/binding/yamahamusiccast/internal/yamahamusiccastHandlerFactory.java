@@ -57,10 +57,8 @@ public class YamahaMusiccastHandlerFactory extends BaseThingHandlerFactory {
         ThingTypeUID thingTypeUID = thing.getThingTypeUID();
 
         if (THING_DEVICE.equals(thingTypeUID)) {
-            
             return new YamahaMusiccastHandler(thing,stateDescriptionProvider);
         }
-
         return null;
     }
 }

@@ -18,11 +18,11 @@
 		</channel-groups>
 
 		<config-description>
-			<parameter name="config_host" type="text" required="true">
+			<parameter name="configHost" type="text" required="true">
 				<label>Address</label>
 				<description>The address of the AVR to control.</description>
 			</parameter>
-			<parameter name="config_refreshInterval" type="integer">
+			<parameter name="configRefreshInterval" type="integer">
 				<label>Refresh Time Interval</label>
 				<description>The refresh interval in seconds for polling the receiver (0=disable).</description>
 				<default>60</default>
@@ -47,7 +47,7 @@
 	</channel-group-type>
 
 	<channel-group-type id="zone2Controls">
-		<label>Zone 2 (to activate via config)</label>
+		<label>Zone 2 (if available)</label>
 		<channels>
 			<channel id="channelPower" typeId="channelPower"/>
 			<channel id="channelMute" typeId="channelMute"/>
@@ -63,7 +63,7 @@
 	</channel-group-type>
 
 	<channel-group-type id="zone3Controls">
-		<label>Zone 3 (to activate via config)</label>
+		<label>Zone 3 (if available)</label>
 		<channels>
 			<channel id="channelPower" typeId="channelPower"/>
 			<channel id="channelMute" typeId="channelMute"/>
@@ -79,7 +79,7 @@
 	</channel-group-type>
 
 	<channel-group-type id="zone4Controls">
-		<label>Zone 4 (to activate via config)</label>
+		<label>Zone 4 (if available)</label>
 		<channels>
 			<channel id="channelPower" typeId="channelPower"/>
 			<channel id="channelMute" typeId="channelMute"/>

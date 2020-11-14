@@ -13,6 +13,7 @@
 package org.openhab.binding.yamahamusiccast.internal.model;
 import com.google.gson.annotations.SerializedName;
 
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
@@ -26,6 +27,7 @@ import com.google.gson.JsonArray;
  *
  * @author Lennert Coopman - Initial contribution
  */
+
 public class ThingsRest {
 
     @SerializedName("thingTypeUID")
