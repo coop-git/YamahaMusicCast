@@ -41,4 +41,7 @@ public class YamahaMusiccastBindingConstants {
     public static final String CHANNEL_MCSERVER = "channelMCServer";
     public static final String CHANNEL_UNLINKMCSERVER = "channelUnlinkMCServer";
     public static final String CHANNEL_RECALLSCENE = "channelRecallScene";
+    public static final String CHANNEL_ARTIST = "channelArtist";
+    public static final String CHANNEL_TRACK = "channelTrack";
+    public static final String CHANNEL_ALBUM = "channelAlbum";
 }

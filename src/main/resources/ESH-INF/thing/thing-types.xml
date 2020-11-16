@@ -98,7 +98,9 @@
 		<label>player Controls</label>
 		<channels>
 			<channel id="channelPlayer" typeId="channelPlayer"/>
-			<channel id="channelHDMIOut" typeId="channelHDMIOut"/>
+			<channel id="channelArtist" typeId="channelArtist"/>
+			<channel id="channelTrack" typeId="channelTrack"/>
+			<channel id="channelAlbum" typeId="channelAlbum"/>
 		</channels>
 	</channel-group-type>
 
@@ -171,11 +173,19 @@
 		<label>Scene selection</label>
 		<description>Scene selection (if available)</description>
 	</channel-type>
-	<channel-type id="channelHDMIOut">
+	<channel-type id="channelArtist">
 		<item-type>String</item-type>
-		<label>HDMI Out</label>
-		<description>Select your HDMI Output</description>
+		<label>Artist</label>
+		<description>Artist</description>
 	</channel-type>
-
-
+	<channel-type id="channelTrack">
+		<item-type>String</item-type>
+		<label>Track</label>
+		<description>Track</description>
+	</channel-type>
+		<channel-type id="channelAlbum">
+		<item-type>String</item-type>
+		<label>Album</label>
+		<description>Album</description>
+	</channel-type>
 </thing:thing-descriptions>

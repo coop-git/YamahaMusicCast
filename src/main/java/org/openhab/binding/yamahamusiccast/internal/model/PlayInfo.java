@@ -28,6 +28,15 @@ public class PlayInfo {
     @SerializedName("playback")
     private String playback;
 
+    @SerializedName("artist")
+    private String artist;
+
+    @SerializedName("track")
+    private String track;
+
+    @SerializedName("album")
+    private String album;
+
     public String getResponseCode() {
         return responseCode;
     }
@@ -36,6 +45,17 @@ public class PlayInfo {
         return playback;
     }  
 
+    public String getArtist() {
+        return artist;
+    }  
+
+    public String getTrack() {
+        return track;
+    }  
+
+    public String getAlbum() {
+        return album;
+    }  
    
 
    

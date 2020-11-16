@@ -21,10 +21,10 @@ N/A
 
 | Parameter              | type    | description                                             | Advanced | Required      |
 |------------------------|---------|---------------------------------------------------------|----------|---------------|
-| config_host             | String  | IP address of the Yamaha model (AVR, ...)               | false    | true          |
-| config_refreshInterval  | Integer | The refresh interval in seconds (0=disable).            | false    | Default=60    |
+| configHost             | String  | IP address of the Yamaha model (AVR, ...)               | false    | true          |
+| configRefreshInterval  | Integer | The refresh interval in seconds (0=disable).            | false    | Default=60    |
 
-Thing yamahamusiccast:Device:zone#Living "YXC Living" [config_host="1.2.3.4"]
+Thing yamahamusiccast:Device:zone#Living "YXC Living" [configHost="1.2.3.4"]
 
 ## Channels
 
@@ -35,13 +35,15 @@ Thing yamahamusiccast:Device:zone#Living "YXC Living" [config_host="1.2.3.4"]
 | channelVolume         | Dimmer | Volume 0-100 (recalculated based on Max Volume Model) |
 | channelInput          | String | See below for list                                    |
 | channelSoundProgram   | String | See below for list                                    |
-| channelSelectPreset   | String | Select Netradio/USB preset (favorite)                 |
+| channelSelectPreset   | String | Select Netradio/USB preset (fetched from model)       |
 | channelSleep          | Number | Fixed values for Sleep : 0/30/60/90/120               |
 | channelMCServer       | String | Select your MusicCast Server                          |
 | channelUnlinkMCServer | Switch | Disband MusicCast Link on Master                      |
+| channelRecallScene    | Number | Select a scene (create your own dropdown list!)       |
 | channelPlayer         | Player | PLAY/PAUSE/NEXT/PREVIOUS/REWIND/FASTFORWARD           |
-| channelRecallScene    | Number | Select a scene                                        |
-
+| channelArtist         | String | Artist                                                |
+| channelTrack          | String | Track                                                 |
+| channelAlbum          | String | Album                                                 |
 
 | Zones                | description                                          |
 |----------------------|------------------------------------------------------|
@@ -94,12 +96,12 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306
 - [ ] UDP event push feature
 - [ ] Add Play Info (Artist, track, …)
 - [ ] Autodiscovery
-- [ ] HDMI out selection
 - [ ] Create a pull request for OH3
 
 ###### v0.60 - In development
 
 - BREAKING CHANGE: configuration parameters renamed. "config_host" is replaced with "configHost", "config_refreshInterval" is replaced with "configRefreshInterval"
+- Added Artist, Track and Album to the playerControls
 
 ###### v0.50
 

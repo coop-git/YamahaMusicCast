@@ -36,13 +36,25 @@ import org.eclipse.smarthome.core.types.RefreshType;
 import org.eclipse.smarthome.core.types.State;
 import org.eclipse.smarthome.core.types.StateOption;
 import org.eclipse.smarthome.core.types.UnDefType;
+import org.eclipse.smarthome.core.library.types.DateTimeType;
+import org.eclipse.smarthome.core.library.types.DecimalType;
+import org.eclipse.smarthome.core.library.types.StringType;
+import org.eclipse.smarthome.core.library.types.PercentType;
+import org.eclipse.smarthome.core.library.types.OnOffType;
+import org.eclipse.smarthome.core.library.types.PlayPauseType;
+import org.eclipse.smarthome.core.library.types.NextPreviousType;
+import org.eclipse.smarthome.core.library.types.RewindFastforwardType;
+import org.eclipse.smarthome.core.common.ThreadPoolManager;
+import org.eclipse.smarthome.io.net.http.HttpRequestBuilder;
+import org.eclipse.smarthome.io.net.http.HttpUtil;
+import org.eclipse.smarthome.config.core.Configuration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledExecutorService;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -57,19 +69,6 @@ import java.io.InputStream;
 import java.io.ByteArrayInputStream;
 import java.util.Optional;
 
-import org.eclipse.smarthome.config.core.Configuration;
-import org.eclipse.smarthome.core.library.types.DateTimeType;
-import org.eclipse.smarthome.core.library.types.DecimalType;
-import org.eclipse.smarthome.core.library.types.StringType;
-import org.eclipse.smarthome.core.library.types.PercentType;
-
-
-
-import org.eclipse.smarthome.core.library.types.OnOffType;
-import org.eclipse.smarthome.core.library.types.PlayPauseType;
-import org.eclipse.smarthome.core.library.types.NextPreviousType;
-import org.eclipse.smarthome.core.library.types.RewindFastforwardType;
-import org.eclipse.smarthome.io.net.http.HttpUtil;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -77,8 +76,6 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonArray;
-
-
 
 /**
  * The {@link yamahamusiccastHandler} is responsible for handling commands, which are
@@ -91,6 +88,10 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
 
     private Logger logger = LoggerFactory.getLogger(YamahaMusiccastHandler.class);
     private @Nullable ScheduledFuture<?> refreshTask;
+    
+
+
+
     private @NonNullByDefault({}) YamahaMusiccastConfiguration config;
     private @NonNullByDefault({}) String httpResponse;
     
@@ -109,6 +110,9 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     String soundProgramState = "";
     Integer sleepState = 0;
     String playbackState = "";
+    String artistState = "";
+    String trackState = "";
+    String albumState = "";
     String topicAVR = "";
     @NonNullByDefault({}) String zone = "main";
     String channelWithoutGroup = "";
@@ -364,6 +368,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
         updatePresets();
         fetchOtherDevices();
+        updateNetUSBPlayer();
     }
 
     @Override
@@ -495,6 +500,9 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             targetObject = new Gson().fromJson(tmpString, PlayInfo.class);
             responseCode = targetObject.getResponseCode();
             playbackState = targetObject.getPlayback();
+            artistState = targetObject.getArtist();
+            trackState = targetObject.getTrack();
+            albumState = targetObject.getAlbum();
         } catch (Exception e) {
             responseCode = "999";
         }        
@@ -504,14 +512,31 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             switch (playbackState) {
                 case "play":
                     updateState(testchannel,PlayPauseType.PLAY);
+                    break;
                 case "stop":
                     updateState(testchannel,PlayPauseType.PAUSE);
+                    break;
                 case "pause":
                     updateState(testchannel,PlayPauseType.PAUSE);
+                    break;
                 case "fast_reverse":
                     updateState(testchannel,RewindFastforwardType.REWIND);
+                    break;
                 case "fast_forward":
                     updateState(testchannel,RewindFastforwardType.FASTFORWARD);
+                    break;
+            }
+            testchannel = new ChannelUID(getThing().getUID(), "playerControls", "channelArtist");
+            if (isLinked(testchannel)){
+                updateState(testchannel, StringType.valueOf(artistState));
+            }
+            testchannel = new ChannelUID(getThing().getUID(), "playerControls", "channelTrack");
+            if (isLinked(testchannel)){
+                updateState(testchannel, StringType.valueOf(trackState));
+            }
+            testchannel = new ChannelUID(getThing().getUID(), "playerControls", "channelAlbum");
+            if (isLinked(testchannel)){
+                updateState(testchannel, StringType.valueOf(albumState));
             }
         }
 
@@ -825,6 +850,17 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
     }
     
+    private String callWithUPDHeaders() {
+        try {
+            return HttpRequestBuilder.getFrom("http://" + config.configHost + "/YamahaExtendedControl/v1/system/getDeviceInfo")
+            .withHeader("X-AppName", "MusicCast/1")
+            .withHeader("X-AppPort", "41100")
+            .getContentAsString();
+        } catch (IOException e) {
+            return "";
+        }
+    }
+
     // End General/System API calls
 
     //Unused API calls
