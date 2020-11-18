@@ -97,11 +97,13 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306
 - [ ] Add Play Info (Artist, track, …)
 - [ ] Autodiscovery
 - [ ] Create a pull request for OH3
+- [ ] Add common Volume/Mute for linked models when Music Cast is active
 
 ###### v0.60 - In development
 
 - BREAKING CHANGE: configuration parameters renamed. "config_host" is replaced with "configHost", "config_refreshInterval" is replaced with "configRefreshInterval"
 - Added Artist, Track and Album to the playerControls
+- When error occurs, 1 lines is saved instead of whole stacktrace
 
 ###### v0.50
 
