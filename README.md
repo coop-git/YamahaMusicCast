@@ -101,9 +101,10 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306
 
 ###### v0.60 - In development
 
-- BREAKING CHANGE: configuration parameters renamed. "config_host" is replaced with "configHost", "config_refreshInterval" is replaced with "configRefreshInterval"
+- **BREAKING CHANGE**: configuration parameters renamed. "config_host" is replaced with "configHost", "config_refreshInterval" is replaced with "configRefreshInterval"
 - Added Artist, Track and Album to the playerControls
 - When error occurs, 1 lines is saved instead of whole stacktrace
+- Presets are now shown with a number
 
 ###### v0.50
 
