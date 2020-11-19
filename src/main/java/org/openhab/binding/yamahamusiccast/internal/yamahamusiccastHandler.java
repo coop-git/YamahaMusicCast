@@ -470,7 +470,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                 JsonObject presetObject = pr.getAsJsonObject();
                 String text = presetObject.get("text").getAsString();
                 if (!text.equals("")) {
-                    optionsPresets.add(new StateOption(tmpInteger.toString(), text));                
+                    optionsPresets.add(new StateOption(tmpInteger.toString(), "#" + tmpInteger.toString() + " " + text));                
                     if (inputText.equals(text)) {
                         presetNumber = tmpInteger;
                     }
