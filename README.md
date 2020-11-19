@@ -121,3 +121,7 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306
 ###### v0.30 / v 0.20 / v0.10
 
 - Initial commits for basic functionality (Power, Mute, Input, ...)
+
+###### v0.01
+
+- Started from skeleton
