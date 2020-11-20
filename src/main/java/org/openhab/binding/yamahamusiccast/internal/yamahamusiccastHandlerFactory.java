@@ -42,10 +42,12 @@ public class YamahaMusiccastHandlerFactory extends BaseThingHandlerFactory {
 
     private static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Collections.singleton(THING_DEVICE);
     private final YamahaMusiccastStateDescriptionProvider stateDescriptionProvider;
+    private final UdpService udpService;
 
     @Activate
-    public YamahaMusiccastHandlerFactory(@Reference YamahaMusiccastStateDescriptionProvider stateDescriptionProvider) {
+    public YamahaMusiccastHandlerFactory(@Reference YamahaMusiccastStateDescriptionProvider stateDescriptionProvider, @Reference UdpService udpService) {
         this.stateDescriptionProvider = stateDescriptionProvider;
+        this.udpService = udpService;
     }
     @Override
     public boolean supportsThingType(ThingTypeUID thingTypeUID) {
@@ -57,7 +59,7 @@ public class YamahaMusiccastHandlerFactory extends BaseThingHandlerFactory {
         ThingTypeUID thingTypeUID = thing.getThingTypeUID();
 
         if (THING_DEVICE.equals(thingTypeUID)) {
-            return new YamahaMusiccastHandler(thing,stateDescriptionProvider);
+            return new YamahaMusiccastHandler(thing,stateDescriptionProvider, udpService);
         }
         return null;
     }

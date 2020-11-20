@@ -89,7 +89,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     private Logger logger = LoggerFactory.getLogger(YamahaMusiccastHandler.class);
     private @Nullable ScheduledFuture<?> refreshTask;
     
-
+    private final UdpService udpService;
 
 
     private @NonNullByDefault({}) YamahaMusiccastConfiguration config;
@@ -125,9 +125,11 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
 
     private YamahaMusiccastStateDescriptionProvider stateDescriptionProvider;
     
-    public YamahaMusiccastHandler(Thing thing, YamahaMusiccastStateDescriptionProvider stateDescriptionProvider) {
+    public YamahaMusiccastHandler(Thing thing, YamahaMusiccastStateDescriptionProvider stateDescriptionProvider, UdpService udpService) {
         super(thing);
         this.stateDescriptionProvider = stateDescriptionProvider;
+        this.udpService = udpService;
+        
     }
 
     @Override
