@@ -77,6 +77,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonArray;
 
+import org.openhab.binding.yamahamusiccast.internal.UdpListener2;
+
 /**
  * The {@link yamahamusiccastHandler} is responsible for handling commands, which are
  * sent to one of the channels.
@@ -89,7 +91,12 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     private Logger logger = LoggerFactory.getLogger(YamahaMusiccastHandler.class);
     private @Nullable ScheduledFuture<?> refreshTask;
     
-    private final UdpService udpService;
+    private final ScheduledExecutorService UdpScheduler = ThreadPoolManager
+            .getScheduledPool("YamahaMusiccastListener" + "-" + thing.getUID().getId());
+    private @Nullable ScheduledFuture<?> listenerJob;
+    private final UdpListener2 udpListener;
+
+    //private final UdpService udpService;
 
 
     private @NonNullByDefault({}) YamahaMusiccastConfiguration config;
@@ -125,10 +132,11 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
 
     private YamahaMusiccastStateDescriptionProvider stateDescriptionProvider;
     
-    public YamahaMusiccastHandler(Thing thing, YamahaMusiccastStateDescriptionProvider stateDescriptionProvider, UdpService udpService) {
+    public YamahaMusiccastHandler(Thing thing, YamahaMusiccastStateDescriptionProvider stateDescriptionProvider) {
         super(thing);
         this.stateDescriptionProvider = stateDescriptionProvider;
-        this.udpService = udpService;
+        //this.udpService = udpService;
+        udpListener = new UdpListener2(this);
         
     }
 
@@ -327,6 +335,9 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
 
     @Override
     public void initialize() {
+        startUDPListenerJob();
+
+
         thingLabel = thing.getLabel();
         logger.info("YXC - Start initializing! - {}", thingLabel);
         this.config = getConfigAs(YamahaMusiccastConfiguration.class);
@@ -344,6 +355,21 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             logger.info("YXC - Finished initializing! - {}", thingLabel);    
         }
     }
+
+
+    private void startUDPListenerJob() {
+        logger.debug("Listener job is scheduled to start in 5 seconds");
+        listenerJob = UdpScheduler.schedule(udpListener, 5, TimeUnit.SECONDS);
+    }
+
+    private void stopUDPListenerJob() {
+        if (listenerJob != null) {
+            listenerJob.cancel(true);
+            udpListener.shutdown();
+            logger.debug("Canceling listener job");
+        }
+    }
+
 
 
     private void startAutomaticRefresh() {
@@ -376,6 +402,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     @Override
     public void dispose() { 
         refreshTask.cancel(true);
+        stopUDPListenerJob();
     }
     // Various functions 
     private void updateStatusZone(String zoneToUpdate) {

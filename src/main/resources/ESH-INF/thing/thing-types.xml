@@ -6,6 +6,9 @@
 
 
 	<thing-type id="Device">
+		<supported-bridge-type-refs>
+			<bridge-type-ref id="bridge"/>
+		</supported-bridge-type-refs>
 		<label>Yamaha MusicCast Binding Thing</label>
 		<description>Thing for Yamaha MusicCast Binding</description>
 

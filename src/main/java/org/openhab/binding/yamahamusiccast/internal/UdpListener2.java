@@ -13,54 +13,66 @@
 package org.openhab.binding.yamahamusiccast.internal;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.eclipse.jdt.annotation.NonNullByDefault;
-import org.eclipse.jdt.annotation.Nullable;
-import org.eclipse.smarthome.config.core.Configuration;
-//import org.osgi.service.component.annotations.Activate;
-//import org.osgi.service.component.annotations.Component;
-//import org.osgi.service.component.annotations.Deactivate;
-//import org.osgi.service.component.annotations.Modified;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.util.Arrays;
+
+import org.eclipse.jdt.annotation.NonNullByDefault;
+import org.eclipse.jdt.annotation.Nullable;
+import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
- * The {@link UdpServiceImpl} implements UdpService
- * handlers.
+ * The {@link DoorbirdUdpListener} is responsible for receiving
+ * UDP braodcasts from the Doorbird doorbell.
  *
  * @author Lennert Coopman - Initial contribution
  */
-
 @NonNullByDefault
-
-public class UdpServiceImpl implements UdpService {
-    private final Logger logger = LoggerFactory.getLogger(UdpServiceImpl.class);
-
+public class UdpListener2 extends Thread {
+    // Doorbird devices report status on a UDP port
     private static final int UDP_PORT = 41100;
-    private static final int SOCKET_TIMEOUT_MILLISECONDS = 3000;
-    private static final int BUFFER_SIZE = 5120;
-    private @Nullable DatagramSocket socket;
-    //private InetAddress inetAddress;
 
-    //@Activate
-    public UdpServiceImpl() {
-        modified();
+    // How long to wait in milliseconds for a UDP packet
+    private static final int SOCKET_TIMEOUT_MILLISECONDS = 3000;
+
+    private static final int BUFFER_SIZE = 5120;
+
+    private final Logger logger = LoggerFactory.getLogger(UdpListener2.class);
+
+    
+
+    private final YamahaMusiccastHandler thingHandler;
+
+    // UDP socket used to receive status events from doorbell
+    private @Nullable DatagramSocket socket;
+
+    private byte @Nullable [] lastData;
+    private int lastDataLength;
+    private long lastDataTime;
+
+    public UdpListener2(YamahaMusiccastHandler thingHandler) {
+        this.thingHandler = thingHandler;
     }
 
-    //@Modified
-    protected void modified() {
-        logger.info("modified started");
-        
+    @Override
+    public void run() {
+        receivePackets();
+    }
+
+    public void shutdown() {
+        if (socket != null) {
+            socket.close();
+            logger.debug("Listener closing listener socket");
+            socket = null;
+        }
+    }
+
+    private void receivePackets() {
         try {
             DatagramSocket s = new DatagramSocket(null);
             s.setSoTimeout(SOCKET_TIMEOUT_MILLISECONDS);
@@ -89,21 +101,6 @@ public class UdpServiceImpl implements UdpService {
             }
         }
         logger.debug("Listener exiting");
-
     }
 
-    //@Deactivate
-    public void deactivate() {
-        logger.info("deactivate");
-        if (socket != null) {
-            socket.close();
-            logger.debug("Listener closing listener socket");
-            socket = null;
-        }
-    }
-
-    //@Override
-    public void doSomething() {
-        logger.info("doSomehting");
-    }
 }
