@@ -28,6 +28,7 @@ public class YamahaMusiccastBindingConstants {
 
     // List of all Thing Type UIDs
     public static final ThingTypeUID THING_DEVICE = new ThingTypeUID(BINDING_ID, "Device");
+    public static final ThingTypeUID THING_TYPE_BRIDGE = new ThingTypeUID(BINDING_ID, "bridge");
 
     // List of all Channel ids
     public static final String CHANNEL_POWER = "channelPower";
