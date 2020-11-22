@@ -15,7 +15,9 @@ package org.openhab.binding.yamahamusiccast.internal;
 import static org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastBindingConstants.*;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
+
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
@@ -43,7 +45,15 @@ import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastStateDescript
 @Component(configurationPid = "binding.yamahamusiccast", service = ThingHandlerFactory.class)
 public class YamahaMusiccastHandlerFactory extends BaseThingHandlerFactory {
 
-    private static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Collections.singleton(THING_DEVICE);
+    //private static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Collections.singleton(THING_DEVICE);
+
+    private static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = new HashSet<>();
+    static {
+        SUPPORTED_THING_TYPES_UIDS.add(YamahaMusiccastBindingConstants.THING_DEVICE);
+        SUPPORTED_THING_TYPES_UIDS.add(YamahaMusiccastBindingConstants.THING_TYPE_BRIDGE);
+    }
+
+
     private final YamahaMusiccastStateDescriptionProvider stateDescriptionProvider;
     //private final UdpService udpService;
 
@@ -54,7 +64,8 @@ public class YamahaMusiccastHandlerFactory extends BaseThingHandlerFactory {
     }
     @Override
     public boolean supportsThingType(ThingTypeUID thingTypeUID) {
-        return THING_TYPE_BRIDGE.equals(thingTypeUID) || SUPPORTED_THING_TYPES_UIDS.contains(thingTypeUID);
+        //return THING_TYPE_BRIDGE.equals(thingTypeUID) || SUPPORTED_THING_TYPES_UIDS.contains(thingTypeUID);
+        return SUPPORTED_THING_TYPES_UIDS.contains(thingTypeUID);
     }
 
     @Override
@@ -62,8 +73,9 @@ public class YamahaMusiccastHandlerFactory extends BaseThingHandlerFactory {
         ThingTypeUID thingTypeUID = thing.getThingTypeUID();
 
         if (thingTypeUID.equals(THING_TYPE_BRIDGE)) {
-            YamahaMusiccastBridgeHandler bridgeHandler = new YamahaMusiccastBridgeHandler(thing);
-            return bridgeHandler;
+            //YamahaMusiccastBridgeHandler bridgeHandler = new YamahaMusiccastBridgeHandler(thing);
+            //return bridgeHandler;
+            return new YamahaMusiccastBridgeHandler((Bridge) thing);
         } else if (THING_DEVICE.equals(thingTypeUID)) {
             return new YamahaMusiccastHandler(thing,stateDescriptionProvider);
         } 

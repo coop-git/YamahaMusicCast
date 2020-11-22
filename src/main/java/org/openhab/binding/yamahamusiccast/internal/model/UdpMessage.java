@@ -10,24 +10,24 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.openhab.binding.yamahamusiccast.internal;
+package org.openhab.binding.yamahamusiccast.internal.model;
+import com.google.gson.annotations.SerializedName;
 
-import java.io.IOException;
-
-import org.eclipse.jdt.annotation.NonNullByDefault;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
- * The {@link UdpService} is responsible for UDP communication
- * handlers.
+ * This class represents the push request sent to the API.
  *
  * @author Lennert Coopman - Initial contribution
  */
 
-@NonNullByDefault
-public interface UdpService {
+public class UdpMessage {
 
-    public void doSomething();
+    @SerializedName("device_id")
+    private String deviceId;
 
- 
+    public String getDeviceId() {
+        return deviceId;
+    }
 }
+
+

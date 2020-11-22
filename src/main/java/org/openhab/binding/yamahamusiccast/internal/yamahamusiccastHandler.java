@@ -15,6 +15,7 @@ package org.openhab.binding.yamahamusiccast.internal;
 import static org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastBindingConstants.*;
 import org.openhab.binding.yamahamusiccast.internal.model.Status;
 import org.openhab.binding.yamahamusiccast.internal.model.ThingsRest;
+import org.openhab.binding.yamahamusiccast.internal.model.DeviceInfo;
 import org.openhab.binding.yamahamusiccast.internal.model.DistributionInfo;
 import org.openhab.binding.yamahamusiccast.internal.model.Features;
 import org.openhab.binding.yamahamusiccast.internal.model.PlayInfo;
@@ -77,8 +78,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonArray;
 
-import org.openhab.binding.yamahamusiccast.internal.UdpListener2;
-
 /**
  * The {@link yamahamusiccastHandler} is responsible for handling commands, which are
  * sent to one of the channels.
@@ -91,14 +90,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     private Logger logger = LoggerFactory.getLogger(YamahaMusiccastHandler.class);
     private @Nullable ScheduledFuture<?> refreshTask;
     
-    private final ScheduledExecutorService UdpScheduler = ThreadPoolManager
-            .getScheduledPool("YamahaMusiccastListener" + "-" + thing.getUID().getId());
-    private @Nullable ScheduledFuture<?> listenerJob;
-    private final UdpListener2 udpListener;
-
-    //private final UdpService udpService;
-
-
     private @NonNullByDefault({}) YamahaMusiccastConfiguration config;
     private @NonNullByDefault({}) String httpResponse;
     
@@ -129,15 +120,13 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     String json = "";
     String action= "";
     Integer zoneNum = 1;
+    public String deviceId = "";
 
     private YamahaMusiccastStateDescriptionProvider stateDescriptionProvider;
     
     public YamahaMusiccastHandler(Thing thing, YamahaMusiccastStateDescriptionProvider stateDescriptionProvider) {
         super(thing);
-        this.stateDescriptionProvider = stateDescriptionProvider;
-        //this.udpService = udpService;
-        udpListener = new UdpListener2(this);
-        
+        this.stateDescriptionProvider = stateDescriptionProvider;       
     }
 
     @Override
@@ -335,9 +324,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
 
     @Override
     public void initialize() {
-        startUDPListenerJob();
-
-
         thingLabel = thing.getLabel();
         logger.info("YXC - Start initializing! - {}", thingLabel);
         this.config = getConfigAs(YamahaMusiccastConfiguration.class);
@@ -347,7 +333,8 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         } else {
             zoneNum = getNumberOfZones(config.configHost);
             logger.info("YXC - Zones found: {} - {}", zoneNum,thingLabel);
-    
+            deviceId = getDeviceId();
+            
             if (config.configRefreshInterval > 0) {
                 startAutomaticRefresh();
             }
@@ -355,22 +342,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             logger.info("YXC - Finished initializing! - {}", thingLabel);    
         }
     }
-
-
-    private void startUDPListenerJob() {
-        logger.debug("Listener job is scheduled to start in 5 seconds");
-        listenerJob = UdpScheduler.schedule(udpListener, 5, TimeUnit.SECONDS);
-    }
-
-    private void stopUDPListenerJob() {
-        if (listenerJob != null) {
-            listenerJob.cancel(true);
-            udpListener.shutdown();
-            logger.debug("Canceling listener job");
-        }
-    }
-
-
 
     private void startAutomaticRefresh() {
         refreshTask = scheduler.scheduleWithFixedDelay(this::refreshProcess, 10, config.configRefreshInterval,TimeUnit.SECONDS);
@@ -402,7 +373,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     @Override
     public void dispose() { 
         refreshTask.cancel(true);
-        stopUDPListenerJob();
     }
     // Various functions 
     private void updateStatusZone(String zoneToUpdate) {
@@ -672,12 +642,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         return UUID.randomUUID().toString().replace("-","").substring(0,32);
     }
 
-    // End Various functions
-
-    // API calls to AVR
-
-    // Start Zone Related
-
     private Integer getNumberOfZones(String host) {
         try {
             tmpString = getFeatures(host);
@@ -689,6 +653,25 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             return 1;
         }
     }
+
+    public String getDeviceId() {
+        try {
+            tmpString = getDeviceInfo();
+            DeviceInfo targetObject = new DeviceInfo();
+            targetObject = new Gson().fromJson(tmpString, DeviceInfo.class);
+            return targetObject.getDeviceId();
+        } catch (Exception e) {
+            logger.warn("Error fetching Device Id");
+            return "";
+        }
+
+    }
+    // End Various functions
+
+    // API calls to AVR
+
+    // Start Zone Related
+
 
     private String getStatus(String zone) {
         topicAVR = "Status";
@@ -879,6 +862,18 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
     }
     
+    private String getDeviceInfo() {
+        topicAVR = "DeviceInfo";
+        try {
+            httpResponse = HttpUtil.executeUrl("GET", "http://" + config.configHost + "/YamahaExtendedControl/v1/system/getDeviceInfo", connectionTimeout);
+            logger.debug("{}", httpResponse);
+            return httpResponse;
+        } catch (IOException e) {
+            logger.warn("IO Exception - {}", topicAVR, e.toString());
+            return "{\"response_code\":\"999\"}";
+        }
+    }
+
     private String callWithUPDHeaders() {
         try {
             return HttpRequestBuilder.getFrom("http://" + config.configHost + "/YamahaExtendedControl/v1/system/getDeviceInfo")
@@ -893,17 +888,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     // End General/System API calls
 
     //Unused API calls
-    private String getDeviceInfo() {
-        topicAVR = "DeviceInfo";
-        try {
-            httpResponse = HttpUtil.executeUrl("GET", "http://" + config.configHost + "/YamahaExtendedControl/v1/system/getDeviceInfo", connectionTimeout);
-            logger.debug("{}", httpResponse);
-            return httpResponse;
-        } catch (IOException e) {
-            logger.warn("IO Exception - {}", topicAVR, e.toString());
-            return "{\"response_code\":\"999\"}";
-        }
-    }
     private String storePreset() {
         topicAVR = "storePreset";
         try {
@@ -915,8 +899,5 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             return "{\"response_code\":\"999\"}";
         }
     }
-
-
-
-
 }
+ 

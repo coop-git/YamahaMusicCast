@@ -23,6 +23,7 @@ import java.util.Arrays;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastHandler;
+import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastBridgeHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +34,7 @@ import org.slf4j.LoggerFactory;
  * @author Lennert Coopman - Initial contribution
  */
 @NonNullByDefault
-public class UdpListener2 extends Thread {
+public class UdpListener extends Thread {
     // Doorbird devices report status on a UDP port
     private static final int UDP_PORT = 41100;
 
@@ -42,11 +43,11 @@ public class UdpListener2 extends Thread {
 
     private static final int BUFFER_SIZE = 5120;
 
-    private final Logger logger = LoggerFactory.getLogger(UdpListener2.class);
+    private final Logger logger = LoggerFactory.getLogger(UdpListener.class);
 
     
 
-    private final YamahaMusiccastHandler thingHandler;
+    private final YamahaMusiccastBridgeHandler bridgeHandler;
 
     // UDP socket used to receive status events from doorbell
     private @Nullable DatagramSocket socket;
@@ -55,8 +56,8 @@ public class UdpListener2 extends Thread {
     private int lastDataLength;
     private long lastDataTime;
 
-    public UdpListener2(YamahaMusiccastHandler thingHandler) {
-        this.thingHandler = thingHandler;
+    public UdpListener(YamahaMusiccastBridgeHandler bridgeHandler) {
+        this.bridgeHandler = bridgeHandler;
     }
 
     @Override
@@ -92,7 +93,8 @@ public class UdpListener2 extends Thread {
             try {
                 socket.receive(packet);
                 String received = new String(packet.getData(), 0, packet.getLength());
-                logger.info("received packet: {}", received);
+                logger.debug("YXC - Received packet: {}", received);
+                bridgeHandler.handleUDPEvent(received);
             } catch (SocketTimeoutException e) {
                 // Nothing to do on socket timeout
             } catch (IOException e) {
