@@ -9,8 +9,8 @@
 		<supported-bridge-type-refs>
 			<bridge-type-ref id="bridge"/>
 		</supported-bridge-type-refs>
-		<label>Yamaha MusicCast Binding Thing</label>
-		<description>Thing for Yamaha MusicCast Binding</description>
+		<label>Yamaha MusicCast Model</label>
+		<description>Your Yamaha model with MusicCast functionality</description>
 
 		<channel-groups>
 			<channel-group id="main" typeId="mainControls"/>
@@ -23,7 +23,7 @@
 		<config-description>
 			<parameter name="configHost" type="text" required="true">
 				<label>Address</label>
-				<description>The address of the AVR to control.</description>
+				<description>The IP address of the AVR to control.</description>
 			</parameter>
 			<parameter name="configRefreshInterval" type="integer">
 				<label>Refresh Time Interval</label>

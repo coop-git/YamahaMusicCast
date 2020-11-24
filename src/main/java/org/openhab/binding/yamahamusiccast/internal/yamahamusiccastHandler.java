@@ -19,6 +19,7 @@ import org.openhab.binding.yamahamusiccast.internal.model.DeviceInfo;
 import org.openhab.binding.yamahamusiccast.internal.model.DistributionInfo;
 import org.openhab.binding.yamahamusiccast.internal.model.Features;
 import org.openhab.binding.yamahamusiccast.internal.model.PlayInfo;
+import org.openhab.binding.yamahamusiccast.internal.model.UdpMessage;
 import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastStateDescriptionProvider;
 import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastConfiguration;
 
@@ -69,6 +70,7 @@ import java.io.InputStream;
 
 import java.io.ByteArrayInputStream;
 import java.util.Optional;
+import java.util.Properties;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -89,6 +91,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
 
     private Logger logger = LoggerFactory.getLogger(YamahaMusiccastHandler.class);
     private @Nullable ScheduledFuture<?> refreshTask;
+    private @Nullable ScheduledFuture<?> keepUdpEventsAliveTask;
     
     private @NonNullByDefault({}) YamahaMusiccastConfiguration config;
     private @NonNullByDefault({}) String httpResponse;
@@ -344,8 +347,11 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     }
 
     private void startAutomaticRefresh() {
+        
         refreshTask = scheduler.scheduleWithFixedDelay(this::refreshProcess, 10, config.configRefreshInterval,TimeUnit.SECONDS);
         logger.info("YXC - Start automatic refresh ({} seconds - {}) ", config.configRefreshInterval,thingLabel);
+        keepUdpEventsAliveTask = scheduler.scheduleWithFixedDelay(this::keepUdpEventsAlive, 20, 300,TimeUnit.SECONDS);
+        logger.info("YXC - Start Keep Alive UDP events (5 minutes - {}) ", thingLabel);
     }
 
     private void refreshProcess() {
@@ -375,6 +381,71 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         refreshTask.cancel(true);
     }
     // Various functions 
+    public void processUDPEvent (String json) {
+        logger.info("UDP package: {}", json);
+        UdpMessage targetObject = new UdpMessage();
+        ChannelUID channel;
+        String zoneToUpdate;
+        String jsonMain;
+        String jsonZone2;
+        String jsonZone3;
+        String jsonZone4;
+
+        targetObject = new Gson().fromJson(json, UdpMessage.class);
+        try {
+            jsonMain = targetObject.getMain().toString();
+        } catch (Exception e) {
+            jsonMain = "";
+        }
+
+        try {
+            jsonZone2 = targetObject.getZone2().toString();
+        } catch (Exception e) {
+            jsonZone2 = "";
+        }
+
+        try {
+            jsonZone3 = targetObject.getZone3().toString();
+        } catch (Exception e) {
+            jsonZone3 = "";
+        }
+
+        try {
+            jsonZone4 = targetObject.getZone4().toString();
+        } catch (Exception e) {
+            jsonZone4 = "";
+        }
+
+        if (!jsonMain.equals("")) {
+            zoneToUpdate = "main";
+            powerState = targetObject.getMain().getPower();
+            channel = new ChannelUID(getThing().getUID(), zoneToUpdate, "channelPower");
+            if (isLinked(channel)) {
+                if (powerState.equals("on")) {                  
+                    updateState(channel, OnOffType.ON); 
+                } else if (powerState.equals("standby")) {
+                    updateState(channel, OnOffType.OFF);
+                }
+            }
+        } else if (!jsonZone2.equals("")) {
+            zoneToUpdate = "zone2";
+            powerState = targetObject.getMain().getPower();
+            channel = new ChannelUID(getThing().getUID(), zoneToUpdate, "channelPower");
+            if (isLinked(channel)) {
+                if (powerState.equals("on")) {                  
+                    updateState(channel, OnOffType.ON); 
+                } else if (powerState.equals("standby")) {
+                    updateState(channel, OnOffType.OFF);
+                }
+            }
+        } else if (!jsonZone3.equals("")) {
+            powerState = targetObject.getZone3().getPower();
+        } else if (!jsonZone4.equals("")) {
+            powerState = targetObject.getZone4().getPower();
+        }
+    }
+
+
     private void updateStatusZone(String zoneToUpdate) {
         tmpString = getStatus(zoneToUpdate);
         try {
@@ -874,30 +945,18 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
     }
 
-    private String callWithUPDHeaders() {
+    private void keepUdpEventsAlive() {
+        Properties appProps = new Properties();
+        appProps.setProperty("X-AppName", "MusicCast/1");
+        appProps.setProperty("X-AppPort", "41100");
         try {
-            return HttpRequestBuilder.getFrom("http://" + config.configHost + "/YamahaExtendedControl/v1/system/getDeviceInfo")
-            .withHeader("X-AppName", "MusicCast/1")
-            .withHeader("X-AppPort", "41100")
-            .getContentAsString();
+            httpResponse = HttpUtil.executeUrl("GET", "http://" + config.configHost + "/YamahaExtendedControl/v1/system/getDeviceInfo", appProps, null, "",connectionTimeout);
+            logger.debug(httpResponse);
         } catch (IOException e) {
-            return "";
+            logger.warn("UDP refresh failed: {}", e.toString());
         }
     }
 
     // End General/System API calls
-
-    //Unused API calls
-    private String storePreset() {
-        topicAVR = "storePreset";
-        try {
-            httpResponse = HttpUtil.executeUrl("GET", "http://" + config.configHost + "/YamahaExtendedControl/v1/netusb/storePreset?num=1", longConnectionTimeout);
-            logger.debug("{}", httpResponse);
-            return httpResponse;
-        } catch (IOException e) {
-            logger.warn("IO Exception - {}", topicAVR, e.toString());
-            return "{\"response_code\":\"999\"}";
-        }
-    }
 }
  
