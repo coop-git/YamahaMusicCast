@@ -52,10 +52,6 @@ public class UdpListener extends Thread {
     // UDP socket used to receive status events from doorbell
     private @Nullable DatagramSocket socket;
 
-    private byte @Nullable [] lastData;
-    private int lastDataLength;
-    private long lastDataTime;
-
     public UdpListener(YamahaMusiccastBridgeHandler bridgeHandler) {
         this.bridgeHandler = bridgeHandler;
     }

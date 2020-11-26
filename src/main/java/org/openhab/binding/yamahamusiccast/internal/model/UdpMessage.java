@@ -30,77 +30,56 @@ public class UdpMessage {
     }
 
     @SerializedName("main")
-    private Main main;
+    private Zone main;
     @SerializedName("zone2")
-    private Zone2 zone2;
+    private Zone zone2;
     @SerializedName("zone3")
-    private Zone3 zone3;
+    private Zone zone3;
     @SerializedName("zone4")
-    private Zone4 zone4;
+    private Zone zone4;
 
 
-    public Main getMain() {
+    public Zone getMain() {
         return main;
     }
-    public Zone2 getZone2() {
+    public Zone getZone2() {
         return zone2;
     }
-    public Zone3 getZone3() {
+    public Zone getZone3() {
         return zone3;
     }
-    public Zone4 getZone4() {
+    public Zone getZone4() {
         return zone4;
     }
 
 
 
-    public class Main {
+    public class Zone {
         @SerializedName("power")
         private String power;
+        @SerializedName("volume")
+        private Integer volume = Integer.valueOf(0);
+        @SerializedName("mute")
+        private String mute;
+        @SerializedName("input")
+        private String input;
 
         public String getPower() {
+            if (power==null) {power = "";}
             return power;
         }
-
-    }
-
-    public class Zone2 {
-        @SerializedName("power")
-        private String power;
-
-        public String getPower() {
-            return power;
+        public String getMute() {
+            if (mute==null) {mute = "";}
+            return mute;
         }
-
-    }
-
-    public class Zone3 {
-        @SerializedName("power")
-        private String power;
-
-        public String getPower() {
-            return power;
+        public String getInput() {
+            if (input==null) {input = "";}
+            return input;
         }
-
-    }
-
-    public class Zone4 {
-        @SerializedName("power")
-        private String power;
-
-        public String getPower() {
-            return power;
+        public Integer getVolume() {
+            return volume;
         }
-
     }
-
-
-
-
-
-
-
-
 }
 
 

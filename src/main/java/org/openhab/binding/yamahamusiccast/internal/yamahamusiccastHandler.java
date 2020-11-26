@@ -382,7 +382,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     }
     // Various functions 
     public void processUDPEvent (String json) {
-        logger.info("UDP package: {}", json);
+        //logger.info("UDP package: {}", json);
         UdpMessage targetObject = new UdpMessage();
         ChannelUID channel;
         String zoneToUpdate;
@@ -394,57 +394,130 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         targetObject = new Gson().fromJson(json, UdpMessage.class);
         try {
             jsonMain = targetObject.getMain().toString();
+            if (!jsonMain.equals("")) {
+                updateStateFromUDPEvent("main", targetObject);
+            }
         } catch (Exception e) {
-            jsonMain = "";
+            //logger.warn("Could not update state via UDP event");
         }
 
         try {
             jsonZone2 = targetObject.getZone2().toString();
+            if (!jsonZone2.equals("")) {
+                updateStateFromUDPEvent("zone2", targetObject);
+            }
         } catch (Exception e) {
-            jsonZone2 = "";
+            //logger.warn("Could not update state via UDP event");
         }
 
         try {
             jsonZone3 = targetObject.getZone3().toString();
+            if (!jsonZone3.equals("")) {
+                updateStateFromUDPEvent("zone3", targetObject);
+            }
         } catch (Exception e) {
-            jsonZone3 = "";
+            //logger.warn("Could not update state via UDP event");
         }
 
         try {
             jsonZone4 = targetObject.getZone4().toString();
+            if (!jsonZone4.equals("")) {
+                updateStateFromUDPEvent("zone4", targetObject);
+            }
         } catch (Exception e) {
-            jsonZone4 = "";
-        }
-
-        if (!jsonMain.equals("")) {
-            zoneToUpdate = "main";
-            powerState = targetObject.getMain().getPower();
-            channel = new ChannelUID(getThing().getUID(), zoneToUpdate, "channelPower");
-            if (isLinked(channel)) {
-                if (powerState.equals("on")) {                  
-                    updateState(channel, OnOffType.ON); 
-                } else if (powerState.equals("standby")) {
-                    updateState(channel, OnOffType.OFF);
-                }
-            }
-        } else if (!jsonZone2.equals("")) {
-            zoneToUpdate = "zone2";
-            powerState = targetObject.getMain().getPower();
-            channel = new ChannelUID(getThing().getUID(), zoneToUpdate, "channelPower");
-            if (isLinked(channel)) {
-                if (powerState.equals("on")) {                  
-                    updateState(channel, OnOffType.ON); 
-                } else if (powerState.equals("standby")) {
-                    updateState(channel, OnOffType.OFF);
-                }
-            }
-        } else if (!jsonZone3.equals("")) {
-            powerState = targetObject.getZone3().getPower();
-        } else if (!jsonZone4.equals("")) {
-            powerState = targetObject.getZone4().getPower();
+            //logger.warn("Could not update state via UDP event");
         }
     }
 
+    private void updateStateFromUDPEvent(String zoneToUpdate, UdpMessage targetObject) {
+        ChannelUID channel;     
+        logger.info("handling {}", zoneToUpdate);
+        
+        switch (zoneToUpdate) {
+            case "main":
+                powerState = targetObject.getMain().getPower();
+                muteState = targetObject.getMain().getMute();
+                inputState = targetObject.getMain().getMute();
+                volumeState = targetObject.getMain().getVolume();
+                logger.info("power: {}", powerState);
+                logger.info("mute: {}", muteState);
+                logger.info("input: {}", inputState);
+                logger.info("volume: {}", volumeState);
+                logger.info("max volume: {}", maxVolumeState);
+                break;
+            case "zone2":
+                powerState = targetObject.getZone2().getPower();
+                muteState = targetObject.getZone2().getMute();
+                inputState = targetObject.getZone2().getMute();
+                volumeState = targetObject.getZone2().getVolume();
+                logger.info("power: {}", powerState);
+                logger.info("mute: {}", muteState);
+                logger.info("input: {}", inputState);
+                logger.info("volume: {}", volumeState);
+                logger.info("max volume: {}", maxVolumeState);
+                break;
+            case "zone3":
+                powerState = targetObject.getZone3().getPower();
+                muteState = targetObject.getZone3().getMute();
+                inputState = targetObject.getZone3().getMute();
+                volumeState = targetObject.getZone3().getVolume();
+                logger.info("power: {}", powerState);
+                logger.info("mute: {}", muteState);
+                logger.info("input: {}", inputState);
+                logger.info("volume: {}", volumeState);
+                logger.info("max volume: {}", maxVolumeState);
+                break;
+            case "zone4":
+                powerState = targetObject.getZone4().getPower();
+                muteState = targetObject.getZone4().getMute();
+                inputState = targetObject.getZone4().getMute();
+                volumeState = targetObject.getZone4().getVolume();
+                logger.info("power: {}", powerState);
+                logger.info("mute: {}", muteState);
+                logger.info("input: {}", inputState);
+                logger.info("volume: {}", volumeState);
+                logger.info("max volume: {}", maxVolumeState);
+                break;
+        }
+
+     
+
+        if (!powerState.equals("")) {
+            channel = new ChannelUID(getThing().getUID(), zoneToUpdate, "channelPower");
+            if (isLinked(channel)) {
+                if (powerState.equals("on")) {                  
+                    updateState(channel, OnOffType.ON); 
+                } else if (powerState.equals("standby")) {
+                    updateState(channel, OnOffType.OFF);
+                }
+            }
+        }
+
+        if (!muteState.equals("")) {
+            channel = new ChannelUID(getThing().getUID(), zoneToUpdate, "channelMute");
+            if (isLinked(channel)) {
+                if (muteState.equals("true")) {                  
+                    updateState(channel, OnOffType.ON); 
+                } else if (muteState.equals("false")) {
+                    updateState(channel, OnOffType.OFF);
+                }
+            }
+        }
+
+        if (!inputState.equals("")) {
+            channel = new ChannelUID(getThing().getUID(), zoneToUpdate, "channelInput");
+            if (isLinked(channel)) {
+                updateState(channel, StringType.valueOf(inputState)); 
+            }
+        }
+
+        if (!volumeState.equals(0)) {
+            channel = new ChannelUID(getThing().getUID(), zoneToUpdate, "channelVolume");
+            if (isLinked(channel)) {
+                updateState(channel, new PercentType((volumeState * 100) / maxVolumeState));
+            }
+        }
+    } 
 
     private void updateStatusZone(String zoneToUpdate) {
         tmpString = getStatus(zoneToUpdate);

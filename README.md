@@ -94,10 +94,10 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306
 ###### To Do / Wishlist
 
 - [ ] UDP event push feature
-- [ ] Add Play Info (Artist, track, …)
 - [ ] Autodiscovery
 - [ ] Create a pull request for OH3
 - [ ] Add common Volume/Mute for linked models when Music Cast is active
+- [ ] Add second volume channel for absolute value instead of percentage
 
 ###### v0.60 - In development
 

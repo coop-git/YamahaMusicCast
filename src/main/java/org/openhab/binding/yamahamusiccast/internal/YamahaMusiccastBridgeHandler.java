@@ -12,17 +12,11 @@
  */
 package org.openhab.binding.yamahamusiccast.internal;
 
-import static org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastBindingConstants.*;
 import org.openhab.binding.yamahamusiccast.internal.model.UdpMessage;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jdt.annotation.NonNullByDefault;
