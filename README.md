@@ -24,7 +24,6 @@ N/A
 | configHost             | String  | IP address of the Yamaha model (AVR, ...)               | false    | true          |
 | configRefreshInterval  | Integer | The refresh interval in seconds (0=disable).            | false    | Default=60    |
 
-Thing yamahamusiccast:Device:zone#Living "YXC Living" [configHost="1.2.3.4"]
 
 ## Channels
 
@@ -52,7 +51,15 @@ Thing yamahamusiccast:Device:zone#Living "YXC Living" [configHost="1.2.3.4"]
 
 ## Full Example
 
-N/A
+###### v0.70: Bridge
+
+Bridge yamahamusiccast:bridge:bridge "YXC Bridge" {
+Thing yamahamusiccast:Device:Living "YXC Living" [configHost="192.168.90.15"]
+}
+
+###### v0.60: Thing only
+
+Thing yamahamusiccast:Device:zone#Living "YXC Living" [configHost="1.2.3.4"]
 
 ## Input List
 
@@ -98,6 +105,11 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306
 - [ ] Create a pull request for OH3
 - [ ] Add common Volume/Mute for linked models when Music Cast is active
 - [ ] Add second volume channel for absolute value instead of percentage
+
+###### v0.70 - In development
+
+- **BREAKING CHANGE**: Added a bridge to receive UDP events by your OpenHAB instance from various devices. Each Thing will keep the connection alive. UDP events will be dispatched to the corresponding Thing. 
+- **BREAKING CHANGE**: channelSelectPreset no longer available per zone but now part of playerControls.
 
 ###### v0.60 - In development
 

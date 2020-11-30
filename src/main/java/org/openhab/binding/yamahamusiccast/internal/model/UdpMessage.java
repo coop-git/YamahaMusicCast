@@ -37,6 +37,8 @@ public class UdpMessage {
     private Zone zone3;
     @SerializedName("zone4")
     private Zone zone4;
+    @SerializedName("netusb")
+    private NetUSB netusb;
 
 
     public Zone getMain() {
@@ -51,7 +53,9 @@ public class UdpMessage {
     public Zone getZone4() {
         return zone4;
     }
-
+    public NetUSB getNetUSB() {
+        return netusb;
+    }
 
 
     public class Zone {
@@ -63,6 +67,8 @@ public class UdpMessage {
         private String mute;
         @SerializedName("input")
         private String input;
+        @SerializedName("netusb")
+        private NetUSB netusb;
 
         public String getPower() {
             if (power==null) {power = "";}
@@ -80,6 +86,44 @@ public class UdpMessage {
             return volume;
         }
     }
+
+    public class NetUSB {
+        @SerializedName("preset_control")
+        private PresetControl presetControl;
+        @SerializedName("play_info_updated")
+        private String playInfoUpdated;
+        
+        public PresetControl getPresetControl() {
+            return presetControl;
+        }
+        public String getPlayInfoUpdated() {
+            if (playInfoUpdated==null) {playInfoUpdated = "";}
+            return playInfoUpdated;
+        }
+    }
+
+    public class PresetControl {
+        @SerializedName("type")
+        private String type;
+        @SerializedName("num")
+        private Integer num = Integer.valueOf(1);
+        @SerializedName("result")
+        private String result;  
+
+        public String getType() {
+            if (type==null) {type = "";}
+            return type;
+        }
+        public String getResult() {
+            if (result==null) {result = "";}
+            return result;
+        }
+        public Integer getNum() {
+            return num;
+        }
+
+    }
+
 }
 
 

@@ -41,7 +41,6 @@
 			<channel id="channelVolume" typeId="channelVolume"/>
 			<channel id="channelInput" typeId="channelInput"/>
 			<channel id="channelSoundProgram" typeId="channelSoundProgram"/>
-			<channel id="channelSelectPreset" typeId="channelSelectPreset"/>
 			<channel id="channelSleep" typeId="channelSleep"/>
 			<channel id="channelMCServer" typeId="channelMCServer"/>
 			<channel id="channelUnlinkMCServer" typeId="channelUnlinkMCServer"/>
@@ -57,7 +56,6 @@
 			<channel id="channelVolume" typeId="channelVolume"/>
 			<channel id="channelInput" typeId="channelInput"/>
 			<channel id="channelSoundProgram" typeId="channelSoundProgram"/>
-			<channel id="channelSelectPreset" typeId="channelSelectPreset"/>
 			<channel id="channelSleep" typeId="channelSleep"/>
 			<channel id="channelMCServer" typeId="channelMCServer"/>
 			<channel id="channelUnlinkMCServer" typeId="channelUnlinkMCServer"/>
@@ -73,7 +71,6 @@
 			<channel id="channelVolume" typeId="channelVolume"/>
 			<channel id="channelInput" typeId="channelInput"/>
 			<channel id="channelSoundProgram" typeId="channelSoundProgram"/>
-			<channel id="channelSelectPreset" typeId="channelSelectPreset"/>
 			<channel id="channelSleep" typeId="channelSleep"/>
 			<channel id="channelMCServer" typeId="channelMCServer"/>
 			<channel id="channelUnlinkMCServer" typeId="channelUnlinkMCServer"/>
@@ -89,7 +86,6 @@
 			<channel id="channelVolume" typeId="channelVolume"/>
 			<channel id="channelInput" typeId="channelInput"/>
 			<channel id="channelSoundProgram" typeId="channelSoundProgram"/>
-			<channel id="channelSelectPreset" typeId="channelSelectPreset"/>
 			<channel id="channelSleep" typeId="channelSleep"/>
 			<channel id="channelMCServer" typeId="channelMCServer"/>
 			<channel id="channelUnlinkMCServer" typeId="channelUnlinkMCServer"/>
@@ -101,6 +97,7 @@
 		<label>player Controls</label>
 		<channels>
 			<channel id="channelPlayer" typeId="channelPlayer"/>
+			<channel id="channelSelectPreset" typeId="channelSelectPreset"/>
 			<channel id="channelArtist" typeId="channelArtist"/>
 			<channel id="channelTrack" typeId="channelTrack"/>
 			<channel id="channelAlbum" typeId="channelAlbum"/>
