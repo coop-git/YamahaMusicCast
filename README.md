@@ -51,10 +51,10 @@ N/A
 
 ## Full Example
 
-###### v0.70: Bridge
+###### v0.70: Bridge + Thing
 
 Bridge yamahamusiccast:bridge:bridge "YXC Bridge" {
-Thing yamahamusiccast:Device:Living "YXC Living" [configHost="192.168.90.15"]
+Thing yamahamusiccast:Device:Living "YXC Living" [configHost="1.2.3.4"]
 }
 
 ###### v0.60: Thing only
@@ -100,7 +100,6 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306
 
 ###### To Do / Wishlist
 
-- [ ] UDP event push feature
 - [ ] Autodiscovery
 - [ ] Create a pull request for OH3
 - [ ] Add common Volume/Mute for linked models when Music Cast is active
@@ -111,7 +110,7 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306
 - **BREAKING CHANGE**: Added a bridge to receive UDP events by your OpenHAB instance from various devices. Each Thing will keep the connection alive. UDP events will be dispatched to the corresponding Thing. 
 - **BREAKING CHANGE**: channelSelectPreset no longer available per zone but now part of playerControls.
 
-###### v0.60 - In development
+###### v0.60
 
 - **BREAKING CHANGE**: configuration parameters renamed. "config_host" is replaced with "configHost", "config_refreshInterval" is replaced with "configRefreshInterval"
 - Added Artist, Track and Album to the playerControls

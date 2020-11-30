@@ -450,48 +450,27 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                 muteState = targetObject.getMain().getMute();
                 inputState = targetObject.getMain().getInput();
                 volumeState = targetObject.getMain().getVolume();
-                logger.info("power: {}", powerState);
-                logger.info("mute: {}", muteState);
-                logger.info("input: {}", inputState);
-                logger.info("volume: {}", volumeState);
-                logger.info("max volume: {}", maxVolumeState);
                 break;
             case "zone2":
                 powerState = targetObject.getZone2().getPower();
                 muteState = targetObject.getZone2().getMute();
                 inputState = targetObject.getZone2().getInput();
                 volumeState = targetObject.getZone2().getVolume();
-                logger.info("power: {}", powerState);
-                logger.info("mute: {}", muteState);
-                logger.info("input: {}", inputState);
-                logger.info("volume: {}", volumeState);
-                logger.info("max volume: {}", maxVolumeState);
                 break;
             case "zone3":
                 powerState = targetObject.getZone3().getPower();
                 muteState = targetObject.getZone3().getMute();
                 inputState = targetObject.getZone3().getInput();
                 volumeState = targetObject.getZone3().getVolume();
-                logger.info("power: {}", powerState);
-                logger.info("mute: {}", muteState);
-                logger.info("input: {}", inputState);
-                logger.info("volume: {}", volumeState);
-                logger.info("max volume: {}", maxVolumeState);
                 break;
             case "zone4":
                 powerState = targetObject.getZone4().getPower();
                 muteState = targetObject.getZone4().getMute();
                 inputState = targetObject.getZone4().getInput();
                 volumeState = targetObject.getZone4().getVolume();
-                logger.info("power: {}", powerState);
-                logger.info("mute: {}", muteState);
-                logger.info("input: {}", inputState);
-                logger.info("volume: {}", volumeState);
-                logger.info("max volume: {}", maxVolumeState);
                 break;
             case "netUsb":
                 presetNumber = targetObject.getNetUSB().getPresetControl().getNum();
-                logger.info("preset: {}", presetNumber);
                 break;
         }
 
