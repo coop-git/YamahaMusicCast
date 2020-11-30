@@ -12,17 +12,11 @@
  */
 package org.openhab.binding.yamahamusiccast.internal;
 
-import static org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastBindingConstants.*;
 import org.openhab.binding.yamahamusiccast.internal.model.UdpMessage;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jdt.annotation.NonNullByDefault;
@@ -112,7 +106,7 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
         Bridge bridge = (Bridge) thing;
         for (Thing thing : bridge.getThings()) {
             YamahaMusiccastHandler handler = (YamahaMusiccastHandler) thing.getHandler();
-            logger.info("UDP: {} - {} ({})", json, handler.getDeviceId(), thing.getLabel());
+            logger.debug("UDP: {} - {} ({})", json, handler.getDeviceId(), thing.getLabel());
             try {
                 UdpMessage targetObject = new UdpMessage();
                 targetObject = new Gson().fromJson(json, UdpMessage.class);
@@ -122,7 +116,8 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
                 udpDeviceId = "";
             }
             if (udpDeviceId.equals(handler.getDeviceId())) {
-                logger.info("package for {}", thing.getLabel());
+                //logger.info("package for {}", thing.getLabel());
+                handler.processUDPEvent(json);
             }
         }
     }

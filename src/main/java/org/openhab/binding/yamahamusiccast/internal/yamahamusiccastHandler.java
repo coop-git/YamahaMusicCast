@@ -19,6 +19,7 @@ import org.openhab.binding.yamahamusiccast.internal.model.DeviceInfo;
 import org.openhab.binding.yamahamusiccast.internal.model.DistributionInfo;
 import org.openhab.binding.yamahamusiccast.internal.model.Features;
 import org.openhab.binding.yamahamusiccast.internal.model.PlayInfo;
+import org.openhab.binding.yamahamusiccast.internal.model.UdpMessage;
 import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastStateDescriptionProvider;
 import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastConfiguration;
 
@@ -69,6 +70,7 @@ import java.io.InputStream;
 
 import java.io.ByteArrayInputStream;
 import java.util.Optional;
+import java.util.Properties;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -89,6 +91,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
 
     private Logger logger = LoggerFactory.getLogger(YamahaMusiccastHandler.class);
     private @Nullable ScheduledFuture<?> refreshTask;
+    private @Nullable ScheduledFuture<?> keepUdpEventsAliveTask;
     
     private @NonNullByDefault({}) YamahaMusiccastConfiguration config;
     private @NonNullByDefault({}) String httpResponse;
@@ -181,16 +184,13 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     }                    
                     break;
                 case CHANNEL_INPUT:
-                    tmpString = command.toString();
-                    setInput(tmpString, zone);
+                    setInput(command.toString(), zone);
                     break;
                 case CHANNEL_SOUNDPROGRAM:
-                    tmpString = command.toString();
-                    setSoundProgram(tmpString, zone);
+                    setSoundProgram(command.toString(), zone);
                     break;
                 case CHANNEL_SELECTPRESET:
-                    tmpString = command.toString();
-                    setPreset(tmpString, zone);
+                    setPreset(command.toString(), zone);
                     break;
                 case CHANNEL_PLAYER:
                     if (command.equals(PlayPauseType.PLAY)) {
@@ -208,8 +208,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     }
                     break;
                 case CHANNEL_SLEEP:
-                    tmpString = command.toString();
-                    setSleep(tmpString, zone);
+                    setSleep(command.toString(), zone);
                     break;
                 case CHANNEL_MCSERVER:
                     String groupId = "";
@@ -315,8 +314,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                         }
                     break;
                 case CHANNEL_RECALLSCENE:
-                    tmpString = command.toString();
-                    recallScene(tmpString, zone);
+                    recallScene(command.toString(), zone);
                     break;
             }  // END Switch Channel          
         }
@@ -324,6 +322,11 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
 
     @Override
     public void initialize() {
+        //Needed as extra parameters
+        // * Max Volume
+        // * Number of Zones
+        // * Presets
+
         thingLabel = thing.getLabel();
         logger.info("YXC - Start initializing! - {}", thingLabel);
         this.config = getConfigAs(YamahaMusiccastConfiguration.class);
@@ -344,8 +347,11 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     }
 
     private void startAutomaticRefresh() {
+        
         refreshTask = scheduler.scheduleWithFixedDelay(this::refreshProcess, 10, config.configRefreshInterval,TimeUnit.SECONDS);
         logger.info("YXC - Start automatic refresh ({} seconds - {}) ", config.configRefreshInterval,thingLabel);
+        keepUdpEventsAliveTask = scheduler.scheduleWithFixedDelay(this::keepUdpEventsAlive, 20, 300,TimeUnit.SECONDS);
+        logger.info("YXC - Start Keep Alive UDP events (5 minutes - {}) ", thingLabel);
     }
 
     private void refreshProcess() {
@@ -375,6 +381,167 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         refreshTask.cancel(true);
     }
     // Various functions 
+    public void processUDPEvent (String json) {
+        logger.info("UDP package: {}", json);
+        UdpMessage targetObject = new UdpMessage();
+        ChannelUID channel;
+        String zoneToUpdate;
+        String jsonMain;
+        String jsonZone2;
+        String jsonZone3;
+        String jsonZone4;
+        String netUsb;
+
+        targetObject = new Gson().fromJson(json, UdpMessage.class);
+        try {
+            jsonMain = targetObject.getMain().toString();
+            if (!jsonMain.equals("")) {
+                updateStateFromUDPEvent("main", targetObject);
+            }
+        } catch (Exception e) {
+            //logger.warn("Could not update state via UDP event");
+        }
+
+        try {
+            jsonZone2 = targetObject.getZone2().toString();
+            if (!jsonZone2.equals("")) {
+                updateStateFromUDPEvent("zone2", targetObject);
+            }
+        } catch (Exception e) {
+            //logger.warn("Could not update state via UDP event");
+        }
+
+        try {
+            jsonZone3 = targetObject.getZone3().toString();
+            if (!jsonZone3.equals("")) {
+                updateStateFromUDPEvent("zone3", targetObject);
+            }
+        } catch (Exception e) {
+            //logger.warn("Could not update state via UDP event");
+        }
+
+        try {
+            jsonZone4 = targetObject.getZone4().toString();
+            if (!jsonZone4.equals("")) {
+                updateStateFromUDPEvent("zone4", targetObject);
+            }
+        } catch (Exception e) {
+            //logger.warn("Could not update state via UDP event");
+        }
+
+        try {
+            netUsb = targetObject.getNetUSB().toString();
+            if (!netUsb.equals("")) {
+                updateStateFromUDPEvent("netUsb", targetObject);
+            }
+        } catch (Exception e) {
+            //logger.warn("Could not update state via UDP event");
+        }
+
+    }
+
+    private void updateStateFromUDPEvent(String zoneToUpdate, UdpMessage targetObject) {
+        ChannelUID channel;     
+        logger.info("YXC - Handling UDP for {}", zoneToUpdate);
+        
+        switch (zoneToUpdate) {
+            case "main":
+                powerState = targetObject.getMain().getPower();
+                muteState = targetObject.getMain().getMute();
+                inputState = targetObject.getMain().getInput();
+                volumeState = targetObject.getMain().getVolume();
+                logger.info("power: {}", powerState);
+                logger.info("mute: {}", muteState);
+                logger.info("input: {}", inputState);
+                logger.info("volume: {}", volumeState);
+                logger.info("max volume: {}", maxVolumeState);
+                break;
+            case "zone2":
+                powerState = targetObject.getZone2().getPower();
+                muteState = targetObject.getZone2().getMute();
+                inputState = targetObject.getZone2().getInput();
+                volumeState = targetObject.getZone2().getVolume();
+                logger.info("power: {}", powerState);
+                logger.info("mute: {}", muteState);
+                logger.info("input: {}", inputState);
+                logger.info("volume: {}", volumeState);
+                logger.info("max volume: {}", maxVolumeState);
+                break;
+            case "zone3":
+                powerState = targetObject.getZone3().getPower();
+                muteState = targetObject.getZone3().getMute();
+                inputState = targetObject.getZone3().getInput();
+                volumeState = targetObject.getZone3().getVolume();
+                logger.info("power: {}", powerState);
+                logger.info("mute: {}", muteState);
+                logger.info("input: {}", inputState);
+                logger.info("volume: {}", volumeState);
+                logger.info("max volume: {}", maxVolumeState);
+                break;
+            case "zone4":
+                powerState = targetObject.getZone4().getPower();
+                muteState = targetObject.getZone4().getMute();
+                inputState = targetObject.getZone4().getInput();
+                volumeState = targetObject.getZone4().getVolume();
+                logger.info("power: {}", powerState);
+                logger.info("mute: {}", muteState);
+                logger.info("input: {}", inputState);
+                logger.info("volume: {}", volumeState);
+                logger.info("max volume: {}", maxVolumeState);
+                break;
+            case "netUsb":
+                presetNumber = targetObject.getNetUSB().getPresetControl().getNum();
+                logger.info("preset: {}", presetNumber);
+                break;
+        }
+
+     
+
+        if (!powerState.equals("")) {
+            channel = new ChannelUID(getThing().getUID(), zoneToUpdate, "channelPower");
+            if (isLinked(channel)) {
+                if (powerState.equals("on")) {                  
+                    updateState(channel, OnOffType.ON); 
+                } else if (powerState.equals("standby")) {
+                    updateState(channel, OnOffType.OFF);
+                }
+            }
+        }
+
+        if (!muteState.equals("")) {
+            channel = new ChannelUID(getThing().getUID(), zoneToUpdate, "channelMute");
+            if (isLinked(channel)) {
+                if (muteState.equals("true")) {                  
+                    updateState(channel, OnOffType.ON); 
+                } else if (muteState.equals("false")) {
+                    updateState(channel, OnOffType.OFF);
+                }
+            }
+        }
+
+        if (!inputState.equals("")) {
+            channel = new ChannelUID(getThing().getUID(), zoneToUpdate, "channelInput");
+            if (isLinked(channel)) {
+                updateState(channel, StringType.valueOf(inputState)); 
+            }
+        }
+
+        if (!volumeState.equals(0)) {
+            channel = new ChannelUID(getThing().getUID(), zoneToUpdate, "channelVolume");
+            if (isLinked(channel)) {
+                updateState(channel, new PercentType((volumeState * 100) / maxVolumeState));
+            }
+        }
+
+        if (!presetNumber.equals(0)) {
+            channel = new ChannelUID(getThing().getUID(), "playerControls", "channelSelectPreset");
+            if (isLinked(channel)) {
+                updateState(channel, StringType.valueOf(presetNumber.toString()));
+            }
+        }
+
+    } 
+
     private void updateStatusZone(String zoneToUpdate) {
         tmpString = getStatus(zoneToUpdate);
         try {
@@ -874,30 +1041,18 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
     }
 
-    private String callWithUPDHeaders() {
+    private void keepUdpEventsAlive() {
+        Properties appProps = new Properties();
+        appProps.setProperty("X-AppName", "MusicCast/1");
+        appProps.setProperty("X-AppPort", "41100");
         try {
-            return HttpRequestBuilder.getFrom("http://" + config.configHost + "/YamahaExtendedControl/v1/system/getDeviceInfo")
-            .withHeader("X-AppName", "MusicCast/1")
-            .withHeader("X-AppPort", "41100")
-            .getContentAsString();
+            httpResponse = HttpUtil.executeUrl("GET", "http://" + config.configHost + "/YamahaExtendedControl/v1/system/getDeviceInfo", appProps, null, "",connectionTimeout);
+            logger.debug(httpResponse);
         } catch (IOException e) {
-            return "";
+            logger.warn("UDP refresh failed: {}", e.toString());
         }
     }
 
     // End General/System API calls
-
-    //Unused API calls
-    private String storePreset() {
-        topicAVR = "storePreset";
-        try {
-            httpResponse = HttpUtil.executeUrl("GET", "http://" + config.configHost + "/YamahaExtendedControl/v1/netusb/storePreset?num=1", longConnectionTimeout);
-            logger.debug("{}", httpResponse);
-            return httpResponse;
-        } catch (IOException e) {
-            logger.warn("IO Exception - {}", topicAVR, e.toString());
-            return "{\"response_code\":\"999\"}";
-        }
-    }
 }
  

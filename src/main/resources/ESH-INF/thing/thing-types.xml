@@ -9,8 +9,8 @@
 		<supported-bridge-type-refs>
 			<bridge-type-ref id="bridge"/>
 		</supported-bridge-type-refs>
-		<label>Yamaha MusicCast Binding Thing</label>
-		<description>Thing for Yamaha MusicCast Binding</description>
+		<label>Yamaha MusicCast Model</label>
+		<description>Your Yamaha model with MusicCast functionality</description>
 
 		<channel-groups>
 			<channel-group id="main" typeId="mainControls"/>
@@ -23,7 +23,7 @@
 		<config-description>
 			<parameter name="configHost" type="text" required="true">
 				<label>Address</label>
-				<description>The address of the AVR to control.</description>
+				<description>The IP address of the AVR to control.</description>
 			</parameter>
 			<parameter name="configRefreshInterval" type="integer">
 				<label>Refresh Time Interval</label>
@@ -34,14 +34,13 @@
 	</thing-type>
 
 	<channel-group-type id="mainControls">
-		<label>Main Zone (default zone)</label>
+		<label>Main Zone (default)</label>
 		<channels>
 			<channel id="channelPower" typeId="channelPower"/>
 			<channel id="channelMute" typeId="channelMute"/>
 			<channel id="channelVolume" typeId="channelVolume"/>
 			<channel id="channelInput" typeId="channelInput"/>
 			<channel id="channelSoundProgram" typeId="channelSoundProgram"/>
-			<channel id="channelSelectPreset" typeId="channelSelectPreset"/>
 			<channel id="channelSleep" typeId="channelSleep"/>
 			<channel id="channelMCServer" typeId="channelMCServer"/>
 			<channel id="channelUnlinkMCServer" typeId="channelUnlinkMCServer"/>
@@ -50,14 +49,13 @@
 	</channel-group-type>
 
 	<channel-group-type id="zone2Controls">
-		<label>Zone 2 (if available)</label>
+		<label>Zone 2</label>
 		<channels>
 			<channel id="channelPower" typeId="channelPower"/>
 			<channel id="channelMute" typeId="channelMute"/>
 			<channel id="channelVolume" typeId="channelVolume"/>
 			<channel id="channelInput" typeId="channelInput"/>
 			<channel id="channelSoundProgram" typeId="channelSoundProgram"/>
-			<channel id="channelSelectPreset" typeId="channelSelectPreset"/>
 			<channel id="channelSleep" typeId="channelSleep"/>
 			<channel id="channelMCServer" typeId="channelMCServer"/>
 			<channel id="channelUnlinkMCServer" typeId="channelUnlinkMCServer"/>
@@ -66,14 +64,13 @@
 	</channel-group-type>
 
 	<channel-group-type id="zone3Controls">
-		<label>Zone 3 (if available)</label>
+		<label>Zone 3</label>
 		<channels>
 			<channel id="channelPower" typeId="channelPower"/>
 			<channel id="channelMute" typeId="channelMute"/>
 			<channel id="channelVolume" typeId="channelVolume"/>
 			<channel id="channelInput" typeId="channelInput"/>
 			<channel id="channelSoundProgram" typeId="channelSoundProgram"/>
-			<channel id="channelSelectPreset" typeId="channelSelectPreset"/>
 			<channel id="channelSleep" typeId="channelSleep"/>
 			<channel id="channelMCServer" typeId="channelMCServer"/>
 			<channel id="channelUnlinkMCServer" typeId="channelUnlinkMCServer"/>
@@ -82,14 +79,13 @@
 	</channel-group-type>
 
 	<channel-group-type id="zone4Controls">
-		<label>Zone 4 (if available)</label>
+		<label>Zone 4</label>
 		<channels>
 			<channel id="channelPower" typeId="channelPower"/>
 			<channel id="channelMute" typeId="channelMute"/>
 			<channel id="channelVolume" typeId="channelVolume"/>
 			<channel id="channelInput" typeId="channelInput"/>
 			<channel id="channelSoundProgram" typeId="channelSoundProgram"/>
-			<channel id="channelSelectPreset" typeId="channelSelectPreset"/>
 			<channel id="channelSleep" typeId="channelSleep"/>
 			<channel id="channelMCServer" typeId="channelMCServer"/>
 			<channel id="channelUnlinkMCServer" typeId="channelUnlinkMCServer"/>
@@ -101,6 +97,7 @@
 		<label>player Controls</label>
 		<channels>
 			<channel id="channelPlayer" typeId="channelPlayer"/>
+			<channel id="channelSelectPreset" typeId="channelSelectPreset"/>
 			<channel id="channelArtist" typeId="channelArtist"/>
 			<channel id="channelTrack" typeId="channelTrack"/>
 			<channel id="channelAlbum" typeId="channelAlbum"/>
