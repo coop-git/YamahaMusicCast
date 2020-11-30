@@ -7,7 +7,7 @@ For Music Cast, the different Things are read via the OpenHAB REST API.
 
 ## Supported Things
 
-Each model (AV Receiver, ...) is a Thing.
+Each model (AV Receiver, ...) is a Thing. Things are linked to a Bridge for receiving UDP events.
 
 ## Discovery
 
