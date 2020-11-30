@@ -7,7 +7,7 @@ For Music Cast, the different Things are read via the OpenHAB REST API.
 
 ## Supported Things
 
-Each model (AV Receiver, ...) is a Thing.
+Each model (AV Receiver, ...) is a Thing. Things are linked to a Bridge for receiving UDP events.
 
 ## Discovery
 
@@ -100,10 +100,10 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306
 
 ###### To Do / Wishlist
 
-- [ ] Autodiscovery
+- [ ] Add second volume channel for absolute value instead of percentage
 - [ ] Create a pull request for OH3
 - [ ] Add common Volume/Mute for linked models when Music Cast is active
-- [ ] Add second volume channel for absolute value instead of percentage
+- [ ] Autodiscovery (no plans yet)
 
 ###### v0.70 - In development
 
