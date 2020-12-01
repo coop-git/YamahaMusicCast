@@ -107,8 +107,7 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306
 
 ###### v0.70 - In development
 
-- **BREAKING CHANGE**: Added a bridge to receive UDP events by your OpenHAB instance from various devices. Each Thing will keep the connection alive. UDP events will be dispatched to the corresponding Thing. 
-- **BREAKING CHANGE**: channelSelectPreset no longer available per zone but now part of playerControls.
+- **BREAKING CHANGE**: Added a bridge to receive UDP events by your OpenHAB instance from various devices. Each Thing will keep the connection alive. UDP events will be dispatched to the corresponding Thing.
 
 ###### v0.60
 

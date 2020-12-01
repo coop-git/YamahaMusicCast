@@ -432,7 +432,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         try {
             netUsb = targetObject.getNetUSB().toString();
             if (!netUsb.equals("")) {
-                updateStateFromUDPEvent("netUsb", targetObject);
+                updateStateFromUDPEvent("netusb", targetObject);
             }
         } catch (Exception e) {
             //logger.warn("Could not update state via UDP event");
@@ -469,8 +469,9 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                 inputState = targetObject.getZone4().getInput();
                 volumeState = targetObject.getZone4().getVolume();
                 break;
-            case "netUsb":
+            case "netusb":
                 presetNumber = targetObject.getNetUSB().getPresetControl().getNum();
+                logger.info("preset detected: {}", presetNumber);
                 break;
         }
 
@@ -513,8 +514,10 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
 
         if (!presetNumber.equals(0)) {
+            logger.info("handling preset: {}", presetNumber);
             channel = new ChannelUID(getThing().getUID(), "playerControls", "channelSelectPreset");
             if (isLinked(channel)) {
+                logger.info("handling preset with channel: {}", presetNumber);
                 updateState(channel, StringType.valueOf(presetNumber.toString()));
             }
         }
