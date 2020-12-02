@@ -46,6 +46,7 @@
 			<channel id="channelMCServer" typeId="channelMCServer"/>
 			<channel id="channelUnlinkMCServer" typeId="channelUnlinkMCServer"/>
 			<channel id="channelRecallScene" typeId="channelRecallScene"/>
+			<channel id="channelVolumeAbs" typeId="channelVolumeAbs"/>
 		</channels>
 	</channel-group-type>
 
@@ -62,6 +63,7 @@
 			<channel id="channelMCServer" typeId="channelMCServer"/>
 			<channel id="channelUnlinkMCServer" typeId="channelUnlinkMCServer"/>
 			<channel id="channelRecallScene" typeId="channelRecallScene"/>
+			<channel id="channelVolumeAbs" typeId="channelVolumeAbs"/>
 		</channels>
 	</channel-group-type>
 
@@ -78,6 +80,7 @@
 			<channel id="channelMCServer" typeId="channelMCServer"/>
 			<channel id="channelUnlinkMCServer" typeId="channelUnlinkMCServer"/>
 			<channel id="channelRecallScene" typeId="channelRecallScene"/>
+			<channel id="channelVolumeAbs" typeId="channelVolumeAbs"/>
 		</channels>
 	</channel-group-type>
 
@@ -94,6 +97,7 @@
 			<channel id="channelMCServer" typeId="channelMCServer"/>
 			<channel id="channelUnlinkMCServer" typeId="channelUnlinkMCServer"/>
 			<channel id="channelRecallScene" typeId="channelRecallScene"/>
+			<channel id="channelVolumeAbs" typeId="channelVolumeAbs"/>
 		</channels>
 	</channel-group-type>
 
@@ -123,8 +127,13 @@
 	<channel-type id="channelVolume">
 		<item-type>Dimmer</item-type>
 		<label>Volume</label>
-		<description>Volume channel</description>
+		<description>Volume channel - percentage</description>
 		<state min="0" max="100"/>
+	</channel-type>
+	<channel-type id="channelVolumeAbs">
+		<item-type>Number</item-type>
+		<label>Volume</label>
+		<description>Volume channel - Absolute value</description>
 	</channel-type>
 	<channel-type id="channelInput">
 		<item-type>String</item-type>

@@ -31,7 +31,8 @@ N/A
 |-----------------------|--------|-------------------------------------------------------|
 | channelPower          | Switch | Power ON/OFF                                          |
 | channelMute           | Switch | Mute ON/OFF                                           |
-| channelVolume         | Dimmer | Volume 0-100 (recalculated based on Max Volume Model) |
+| channelVolume         | Dimmer | Volume as % (recalculated based on Max Volume Model)  |
+| channelVolumeAbs      | Number | Volume as absolute value                              |
 | channelInput          | String | See below for list                                    |
 | channelSoundProgram   | String | See below for list                                    |
 | channelSelectPreset   | String | Select Netradio/USB preset (fetched from model)       |
@@ -51,7 +52,7 @@ N/A
 
 ## Full Example
 
-###### v0.70: Bridge + Thing
+###### v0.7x: Bridge + Thing
 
 Bridge yamahamusiccast:bridge:bridge "YXC Bridge" {
 Thing yamahamusiccast:Device:Living "YXC Living" [configHost="1.2.3.4"]
@@ -100,14 +101,14 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306
 
 ###### To Do / Wishlist
 
-- [ ] Add second volume channel for absolute value instead of percentage
 - [ ] Create a pull request for OH3
 - [ ] Add common Volume/Mute for linked models when Music Cast is active
 - [ ] Autodiscovery (no plans yet)
 
-###### v0.70 - In development
+###### v0.7x - In development
 
-- **BREAKING CHANGE**: Added a bridge to receive UDP events by your OpenHAB instance from various devices. Each Thing will keep the connection alive. UDP events will be dispatched to the corresponding Thing.
+- **BREAKING CHANGE**: Added a bridge to receive UDP events by your OpenHAB instance from various devices. Each Thing will keep the connection alive. UDP events will be dispatched to the corresponding Thing (v0.70).
+- channelVolumeAbs has been added to allow to set Volume in absolute value (v0.71).
 
 ###### v0.60
 

@@ -34,6 +34,7 @@ public class YamahaMusiccastBindingConstants {
     public static final String CHANNEL_POWER = "channelPower";
     public static final String CHANNEL_MUTE = "channelMute";
     public static final String CHANNEL_VOLUME = "channelVolume";
+    public static final String CHANNEL_VOLUMEABS = "channelVolumeAbs";
     public static final String CHANNEL_INPUT = "channelInput";
     public static final String CHANNEL_SOUNDPROGRAM = "channelSoundProgram";
     public static final String CHANNEL_SELECTPRESET = "channelSelectPreset";

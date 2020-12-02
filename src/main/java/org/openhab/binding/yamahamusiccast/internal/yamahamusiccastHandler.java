@@ -183,6 +183,16 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                         //Wait for refresh
                     }                    
                     break;
+                case CHANNEL_VOLUMEABS:
+                    tmpString = command.toString();
+                    tmpString = tmpString.replace(".0","");
+                    try {
+                        tmpInteger = Integer.parseInt(tmpString);
+                        setVolume(tmpInteger, zone);
+                    } catch (Exception e) {
+                        //Wait for refresh
+                    }                    
+                    break;
                 case CHANNEL_INPUT:
                     setInput(command.toString(), zone);
                     break;
@@ -341,6 +351,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             if (config.configRefreshInterval > 0) {
                 startAutomaticRefresh();
             }
+            fetchOtherDevices();
             updateStatus(ThingStatus.ONLINE);
             logger.info("YXC - Finished initializing! - {}", thingLabel);    
         }
@@ -372,7 +383,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             }
         }
         updatePresets();
-        fetchOtherDevices();
+        //fetchOtherDevices();
         updateNetUSBPlayer();
     }
 
@@ -382,7 +393,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     }
     // Various functions 
     public void processUDPEvent (String json) {
-        logger.info("UDP package: {}", json);
+        logger.debug("UDP package: {}", json);
         UdpMessage targetObject = new UdpMessage();
         ChannelUID channel;
         String zoneToUpdate;
@@ -442,7 +453,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
 
     private void updateStateFromUDPEvent(String zoneToUpdate, UdpMessage targetObject) {
         ChannelUID channel;     
-        logger.info("YXC - Handling UDP for {}", zoneToUpdate);
+        logger.debug("YXC - Handling UDP for {}", zoneToUpdate);
         
         switch (zoneToUpdate) {
             case "main":
@@ -471,7 +482,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                 break;
             case "netusb":
                 presetNumber = targetObject.getNetUSB().getPresetControl().getNum();
-                logger.info("preset detected: {}", presetNumber);
+                //logger.info("preset detected: {}", presetNumber);
                 break;
         }
 
@@ -511,17 +522,19 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             if (isLinked(channel)) {
                 updateState(channel, new PercentType((volumeState * 100) / maxVolumeState));
             }
-        }
-
-        if (!presetNumber.equals(0)) {
-            logger.info("handling preset: {}", presetNumber);
-            channel = new ChannelUID(getThing().getUID(), "playerControls", "channelSelectPreset");
+            channel = new ChannelUID(getThing().getUID(), zoneToUpdate, "channelVolumeAbs");
             if (isLinked(channel)) {
-                logger.info("handling preset with channel: {}", presetNumber);
-                updateState(channel, StringType.valueOf(presetNumber.toString()));
+                updateState(channel, new DecimalType(volumeState));
             }
         }
 
+        // if (!integerValue.equals(0)) {
+        //     channel = new ChannelUID(getThing().getUID(), "main", "channelSelectPreset");
+        //     if (isLinked(channel)) {
+        //         //logger.info("handling preset with channel integervalue: {}", integerValue);
+        //         updateState(channel, StringType.valueOf(integerValue.toString()));
+        //     }
+        // }
     } 
 
     private void updateStatusZone(String zoneToUpdate) {
@@ -577,6 +590,11 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                                     updateState(channelUID, new PercentType((volumeState * 100) / maxVolumeState));
                                 }   
                                 break;
+                            case CHANNEL_VOLUMEABS:
+                                if (zone.equals(zoneToUpdate)) {
+                                    updateState(channelUID, new DecimalType(volumeState));
+                                }   
+                                break;                                
                             case CHANNEL_INPUT:
                                 if (zone.equals(zoneToUpdate)) {
                                     updateState(channelUID, StringType.valueOf(inputState));
