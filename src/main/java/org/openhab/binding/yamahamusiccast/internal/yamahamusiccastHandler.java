@@ -253,25 +253,27 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     
                     if (action.equals("unlink")) {
                         json = "{\"group_id\":\"\"}";
-                        is2 = new ByteArrayInputStream(json.getBytes());
-                        try {
-                            url = "http://" + config.configHost + "/YamahaExtendedControl/v1/dist/setClientInfo";
-                            httpResponse = HttpUtil.executeUrl("POST", url, is2, "", longConnectionTimeout);               
-                            logger.info("setClientInfo unlink : {}", httpResponse);
-                        } catch (IOException e) {
-                            logger.info("setClientInfo unlink : {}",e.toString());
-                        }   
+                        // is2 = new ByteArrayInputStream(json.getBytes());
+                        // try {
+                        //     url = "http://" + config.configHost + "/YamahaExtendedControl/v1/dist/setClientInfo";
+                        //     httpResponse = HttpUtil.executeUrl("POST", url, is2, "", longConnectionTimeout);               
+                        //     logger.info("setClientInfo unlink : {}", httpResponse);
+                        // } catch (IOException e) {
+                        //     logger.info("setClientInfo unlink : {}",e.toString());
+                        // }   
+                        httpResponse = setClientInfo(config.configHost,json);
                     } else if (action.equals("link")) { 
                         json = "{\"group_id\":\"" + groupId + "\", \"zone\":\"" + zone + "\", \"type\":\"add\", \"client_list\":[\"" + config.configHost + "\"]}";
-                        logger.info("setServerInfo json: {}", json);
-                        is2 = new ByteArrayInputStream(json.getBytes());
-                        try {
-                            url = "http://" + mclinkSetupServer + "/YamahaExtendedControl/v1/dist/setServerInfo";
-                            httpResponse = HttpUtil.executeUrl("POST", url, is2, "", longConnectionTimeout);               
-                            logger.info("setServerInfo : {}", httpResponse);
-                        } catch (IOException e) {
-                            logger.info("setServerInfo : {}",e.toString());
-                        }
+                        // logger.info("setServerInfo json: {}", json);
+                        // is2 = new ByteArrayInputStream(json.getBytes());
+                        // try {
+                        //     url = "http://" + mclinkSetupServer + "/YamahaExtendedControl/v1/dist/setServerInfo";
+                        //     httpResponse = HttpUtil.executeUrl("POST", url, is2, "", longConnectionTimeout);               
+                        //     logger.info("setServerInfo : {}", httpResponse);
+                        // } catch (IOException e) {
+                        //     logger.info("setServerInfo : {}",e.toString());
+                        // }
+                        httpResponse = setServerInfo(mclinkSetupServer, json);
                         // All zones of Model are required for MC Link
                         tmpString = "";
                         for (int i = 1; i <= zoneNum; i++) {
@@ -292,34 +294,37 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                         }
                         json = "{\"group_id\":\"" + groupId + "\", \"zone\":[" + tmpString + "]}";
                         logger.info("setClientInfo json: {}", json);
-                        is2 = new ByteArrayInputStream(json.getBytes());
-                        try {
-                            url = "http://" + config.configHost + "/YamahaExtendedControl/v1/dist/setClientInfo";
-                            httpResponse = HttpUtil.executeUrl("POST", url, is2, "", longConnectionTimeout);               
-                            logger.info("setClientInfo link : {}", httpResponse);
-                        } catch (IOException e) {
-                            logger.info("setClientInfo link : {}",e.toString());
-                        }   
-                        try {
-                            url = "http://" + mclinkSetupServer + "/YamahaExtendedControl/v1/dist/startDistribution?num=1";
-                            httpResponse = HttpUtil.executeUrl("GET", url, longConnectionTimeout);               
-                            logger.info("start distribution: {}", httpResponse);
-                        } catch (IOException e) {
-                            logger.info("start distribution: {}",e.toString());
-                        } 
+                        // is2 = new ByteArrayInputStream(json.getBytes());
+                        // try {
+                        //     url = "http://" + config.configHost + "/YamahaExtendedControl/v1/dist/setClientInfo";
+                        //     httpResponse = HttpUtil.executeUrl("POST", url, is2, "", longConnectionTimeout);               
+                        //     logger.info("setClientInfo link : {}", httpResponse);
+                        // } catch (IOException e) {
+                        //     logger.info("setClientInfo link : {}",e.toString());
+                        // }   
+                        httpResponse = setClientInfo(config.configHost, json);
+                        // try {
+                        //     url = "http://" + mclinkSetupServer + "/YamahaExtendedControl/v1/dist/startDistribution?num=1";
+                        //     httpResponse = HttpUtil.executeUrl("GET", url, longConnectionTimeout);               
+                        //     logger.info("start distribution: {}", httpResponse);
+                        // } catch (IOException e) {
+                        //     logger.info("start distribution: {}",e.toString());
+                        // } 
+                        httpResponse = startDistribution(mclinkSetupServer);
                     }
                     break;
                 case CHANNEL_UNLINKMCSERVER:
                         if (command.equals(OnOffType.ON)) {
                             json = "{\"group_id\":\"\"}";
-                            is2 = new ByteArrayInputStream(json.getBytes());
-                            try {
-                                url = "http://" + config.configHost + "/YamahaExtendedControl/v1/dist/setServerInfo";
-                                httpResponse = HttpUtil.executeUrl("POST", url, is2, "", longConnectionTimeout);               
-                                logger.info("setServerInfo unlink : {}", httpResponse);
-                            } catch (IOException e) {
-                                logger.info("setServerInfo unlink : {}",e.toString());
-                            }
+                            // is2 = new ByteArrayInputStream(json.getBytes());
+                            // try {
+                            //     url = "http://" + config.configHost + "/YamahaExtendedControl/v1/dist/setServerInfo";
+                            //     httpResponse = HttpUtil.executeUrl("POST", url, is2, "", longConnectionTimeout);               
+                            //     logger.info("setServerInfo unlink : {}", httpResponse);
+                            // } catch (IOException e) {
+                            //     logger.info("setServerInfo unlink : {}",e.toString());
+                            // }
+                            httpResponse = setServerInfo(config.configHost, json);
                             updateState(channelUID, OnOffType.OFF); 
                         }
                     break;
@@ -1007,6 +1012,47 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         try {
             httpResponse = HttpUtil.executeUrl("GET", "http://" + host + "/YamahaExtendedControl/v1/dist/getDistributionInfo", connectionTimeout);
             logger.debug("{}", httpResponse);
+            return httpResponse;
+        } catch (IOException e) {
+            logger.warn("IO Exception - {}", topicAVR, e.toString());
+            return "{\"response_code\":\"999\"}";
+        }
+    }
+
+    private String setServerInfo(String host, String json) {
+        InputStream is = new ByteArrayInputStream(json.getBytes());
+        topicAVR = "SetServerInfo";
+        try {
+            url = "http://" + host + "/YamahaExtendedControl/v1/dist/setServerInfo";
+            httpResponse = HttpUtil.executeUrl("POST", url, is, "", longConnectionTimeout); 
+            logger.debug("MC Link/Unlink Server {}", httpResponse);
+            return httpResponse;
+        } catch (IOException e) {
+            logger.warn("IO Exception - {}", topicAVR, e.toString());
+            return "{\"response_code\":\"999\"}";
+        }
+    }
+    
+    private String setClientInfo(String host, String json) {
+        InputStream is = new ByteArrayInputStream(json.getBytes());
+        topicAVR = "SetClientInfo";
+        try {
+            url = "http://" + host + "/YamahaExtendedControl/v1/dist/setClientInfo";
+            httpResponse = HttpUtil.executeUrl("POST", url, is, "", longConnectionTimeout); 
+            logger.debug("MC Link/Unlink Client {}", httpResponse);
+            return httpResponse;
+        } catch (IOException e) {
+            logger.warn("IO Exception - {}", topicAVR, e.toString());
+            return "{\"response_code\":\"999\"}";
+        }
+    }
+
+    private String startDistribution(String host) {
+        topicAVR = "StartDistribution";
+        try {
+            url = "http://" + host + "/YamahaExtendedControl/v1/dist/startDistribution?num=1";
+            httpResponse = HttpUtil.executeUrl("GET", url, longConnectionTimeout);
+            logger.debug("MC Start Distribution {}", httpResponse);
             return httpResponse;
         } catch (IOException e) {
             logger.warn("IO Exception - {}", topicAVR, e.toString());
