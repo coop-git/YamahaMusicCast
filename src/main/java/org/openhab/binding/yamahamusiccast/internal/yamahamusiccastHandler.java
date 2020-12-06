@@ -124,6 +124,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     String action= "";
     Integer zoneNum = 1;
     public String deviceId = "";
+    
 
     private YamahaMusiccastStateDescriptionProvider stateDescriptionProvider;
     
@@ -398,7 +399,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     }
     // Various functions 
     public void processUDPEvent (String json) {
-        logger.debug("UDP package: {}", json);
+        logger.info("UDP package: {}", json);
         UdpMessage targetObject = new UdpMessage();
         ChannelUID channel;
         String zoneToUpdate;
@@ -457,7 +458,8 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     }
 
     private void updateStateFromUDPEvent(String zoneToUpdate, UdpMessage targetObject) {
-        ChannelUID channel;     
+        ChannelUID channel;
+        String playInfoUpdated = "";   
         logger.debug("YXC - Handling UDP for {}", zoneToUpdate);
         
         switch (zoneToUpdate) {
@@ -487,7 +489,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                 break;
             case "netusb":
                 presetNumber = targetObject.getNetUSB().getPresetControl().getNum();
-                //logger.info("preset detected: {}", presetNumber);
+                playInfoUpdated = targetObject.getNetUSB().getPlayInfoUpdated();
                 break;
         }
 
@@ -533,13 +535,9 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             }
         }
 
-        // if (!integerValue.equals(0)) {
-        //     channel = new ChannelUID(getThing().getUID(), "main", "channelSelectPreset");
-        //     if (isLinked(channel)) {
-        //         //logger.info("handling preset with channel integervalue: {}", integerValue);
-        //         updateState(channel, StringType.valueOf(integerValue.toString()));
-        //     }
-        // }
+        if (playInfoUpdated.equals("true")) {
+            updateNetUSBPlayer();
+        }
     } 
 
     private void updateStatusZone(String zoneToUpdate) {
@@ -885,7 +883,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         topicAVR = "Volume";
         try {
             httpResponse = HttpUtil.executeUrl("GET", "http://" + config.configHost + "/YamahaExtendedControl/v1/" + zone + "/setVolume?volume=" + value, connectionTimeout);
-            logger.debug("{}", httpResponse);            
+            logger.info("{}", httpResponse);            
             return httpResponse;
         } catch (IOException e) {
             logger.warn("IO Exception - {}", topicAVR, e.toString());

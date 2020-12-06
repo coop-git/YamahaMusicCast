@@ -3,6 +3,12 @@
 Binding to control Yamaha models via their MusicCast protocol (aka Yamaha Extended Control).
 With support for 4 zones : main, zone2, zone3, zone4. Main is always present. Zone2, Zone3, Zone4 are read from the model.
 
+UDP events are captured to reflect changes in the binding for
+- Power
+- Mute
+- Volume
+- Input
+
 For Music Cast, the different Things are read via the OpenHAB REST API.
 
 ## Supported Things
@@ -101,8 +107,8 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306
 
 ###### To Do / Wishlist
 
-- [ ] Create a pull request for OH3
 - [ ] Add common Volume/Mute for linked models when Music Cast is active
+- [ ] Create a pull request for OH3
 - [ ] Autodiscovery (no plans yet)
 
 ###### v0.7x - In development
