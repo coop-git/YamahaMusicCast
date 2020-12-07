@@ -399,7 +399,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     }
     // Various functions 
     public void processUDPEvent (String json) {
-        logger.info("UDP package: {}", json);
+        logger.debug("UDP package: {}", json);
         UdpMessage targetObject = new UdpMessage();
         ChannelUID channel;
         String zoneToUpdate;
@@ -459,41 +459,116 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
 
     private void updateStateFromUDPEvent(String zoneToUpdate, UdpMessage targetObject) {
         ChannelUID channel;
-        String playInfoUpdated = "";   
-        logger.debug("YXC - Handling UDP for {}", zoneToUpdate);
-        
+        String playInfoUpdated = "";
+        String powerState = "";
+        String muteState="";
+        String inputState = "";
+        Integer volumeState = 0;
+        Integer presetNumber = 0;
+        logger.debug("YXC - Handling UDP for {}", zoneToUpdate);       
         switch (zoneToUpdate) {
             case "main":
-                powerState = targetObject.getMain().getPower();
-                muteState = targetObject.getMain().getMute();
-                inputState = targetObject.getMain().getInput();
-                volumeState = targetObject.getMain().getVolume();
+                try {
+                    powerState = targetObject.getMain().getPower();
+                } catch (Exception e) {
+                    powerState = "";
+                }
+                try {
+                    muteState = targetObject.getMain().getMute();
+                } catch (Exception e) {
+                    muteState = "";
+                }
+                try {
+                    inputState = targetObject.getMain().getInput();
+                } catch (Exception e) {
+                    inputState = "";
+                }
+                try {
+                    volumeState = targetObject.getMain().getVolume();
+                } catch (Exception e) {
+                    volumeState = 0;
+                }
                 break;
             case "zone2":
-                powerState = targetObject.getZone2().getPower();
-                muteState = targetObject.getZone2().getMute();
-                inputState = targetObject.getZone2().getInput();
-                volumeState = targetObject.getZone2().getVolume();
+                try {
+                    powerState = targetObject.getZone2().getPower();
+                } catch (Exception e) {
+                    powerState = "";
+                }
+                try {
+                    muteState = targetObject.getZone2().getMute();
+                } catch (Exception e) {
+                    muteState = "";
+                }
+                try {
+                    inputState = targetObject.getZone2().getInput();
+                } catch (Exception e) {
+                    inputState = "";
+                }
+                try {
+                    volumeState = targetObject.getZone2().getVolume();
+                } catch (Exception e) {
+                    volumeState = 0;
+                }                
                 break;
             case "zone3":
-                powerState = targetObject.getZone3().getPower();
-                muteState = targetObject.getZone3().getMute();
-                inputState = targetObject.getZone3().getInput();
-                volumeState = targetObject.getZone3().getVolume();
+                try {
+                    powerState = targetObject.getZone3().getPower();
+                } catch (Exception e) {
+                    powerState = "";
+                }
+                try {
+                    muteState = targetObject.getZone3().getMute();
+                } catch (Exception e) {
+                    muteState = "";
+                }
+                try {
+                    inputState = targetObject.getZone3().getInput();
+                } catch (Exception e) {
+                    inputState = "";
+                }
+                try {
+                    volumeState = targetObject.getZone3().getVolume();
+                } catch (Exception e) {
+                    volumeState = 0;
+                }                
                 break;
             case "zone4":
-                powerState = targetObject.getZone4().getPower();
-                muteState = targetObject.getZone4().getMute();
-                inputState = targetObject.getZone4().getInput();
-                volumeState = targetObject.getZone4().getVolume();
+                try {
+                    powerState = targetObject.getZone4().getPower();
+                } catch (Exception e) {
+                    powerState = "";
+                }
+                try {
+                    muteState = targetObject.getZone4().getMute();
+                } catch (Exception e) {
+                    muteState = "";
+                }
+                try {
+                    inputState = targetObject.getZone4().getInput();
+                } catch (Exception e) {
+                    inputState = "";
+                }
+                try {
+                    volumeState = targetObject.getZone4().getVolume();
+                } catch (Exception e) {
+                    volumeState = 0;
+                }                
                 break;
             case "netusb":
-                presetNumber = targetObject.getNetUSB().getPresetControl().getNum();
-                playInfoUpdated = targetObject.getNetUSB().getPlayInfoUpdated();
+                try {
+                    presetNumber = targetObject.getNetUSB().getPresetControl().getNum();
+                } catch (Exception e) {
+                    presetNumber = 0;
+                }
+                try {
+                    playInfoUpdated = targetObject.getNetUSB().getPlayInfoUpdated();
+                    logger.info("netusb case: {}", playInfoUpdated);
+                } catch (Exception e) {
+                    playInfoUpdated = "";
+                }
                 break;
         }
-
-     
 
         if (!powerState.equals("")) {
             channel = new ChannelUID(getThing().getUID(), zoneToUpdate, "channelPower");
@@ -536,6 +611,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
 
         if (playInfoUpdated.equals("true")) {
+            logger.info("run update netusb");
             updateNetUSBPlayer();
         }
     } 
