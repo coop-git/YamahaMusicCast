@@ -563,7 +563,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                 }
                 try {
                     playInfoUpdated = targetObject.getNetUSB().getPlayInfoUpdated();
-                    logger.info("netusb case: {}", playInfoUpdated);
+                    //logger.info("netusb case: {}", playInfoUpdated);
                 } catch (Exception e) {
                     playInfoUpdated = "";
                 }
@@ -611,7 +611,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
 
         if (playInfoUpdated.equals("true")) {
-            logger.info("run update netusb");
+            //logger.info("run update netusb");
             updateNetUSBPlayer();
         }
     } 

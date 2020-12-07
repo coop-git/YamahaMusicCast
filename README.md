@@ -113,9 +113,10 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306
 
 ###### v0.7x - In development
 
-- **BREAKING CHANGE**: Added a bridge to receive UDP events by your OpenHAB instance from various devices. Each Thing will keep the connection alive. UDP events will be dispatched to the corresponding Thing (v0.70).
+- **BREAKING CHANGE**: Added a bridge to receive UDP events (Power, Mute, Volume, Input) by your OpenHAB instance from various devices. Each Thing will keep the connection alive. UDP events will be dispatched to the corresponding Thing (v0.70).
 - channelVolumeAbs has been added to allow to set Volume in absolute value (v0.71).
 - Code clean up for Music Cast Link to support common Volume for linked models (v0.72).
+- UDP events now support PLAY/PAUSE/FFW/REW/Artist/Track/Album (v0.72).
 
 ###### v0.60
 
