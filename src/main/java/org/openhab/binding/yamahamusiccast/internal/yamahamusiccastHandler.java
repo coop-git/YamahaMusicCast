@@ -352,26 +352,17 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         } else {
             zoneNum = getNumberOfZones(config.configHost);
             logger.info("YXC - Zones found: {} - {}", zoneNum,thingLabel);
-            deviceId = getDeviceId();
-            
-            if (config.configRefreshInterval > 0) {
-                startAutomaticRefresh();
-            }
-            fetchOtherDevices();
+                        
+            refreshOnStartup();
+            keepUdpEventsAliveTask = scheduler.scheduleWithFixedDelay(this::keepUdpEventsAlive, 5, 300,TimeUnit.SECONDS);
+            logger.info("YXC - Start Keep Alive UDP events (5 minutes - {}) ", thingLabel);
+                            
             updateStatus(ThingStatus.ONLINE);
             logger.info("YXC - Finished initializing! - {}", thingLabel);    
         }
     }
 
-    private void startAutomaticRefresh() {
-        
-        refreshTask = scheduler.scheduleWithFixedDelay(this::refreshProcess, 10, config.configRefreshInterval,TimeUnit.SECONDS);
-        logger.info("YXC - Start automatic refresh ({} seconds - {}) ", config.configRefreshInterval,thingLabel);
-        keepUdpEventsAliveTask = scheduler.scheduleWithFixedDelay(this::keepUdpEventsAlive, 20, 300,TimeUnit.SECONDS);
-        logger.info("YXC - Start Keep Alive UDP events (5 minutes - {}) ", thingLabel);
-    }
-
-    private void refreshProcess() {
+    private void refreshOnStartup() {
         for (int i = 1; i <= zoneNum; i++) {
             switch (i) {
                 case 1:
@@ -388,8 +379,8 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     break;
             }
         }
-        updatePresets();
-        //fetchOtherDevices();
+        updatePresets(0);
+        fetchOtherDevices();
         updateNetUSBPlayer();
     }
 
@@ -460,6 +451,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     private void updateStateFromUDPEvent(String zoneToUpdate, UdpMessage targetObject) {
         ChannelUID channel;
         String playInfoUpdated = "";
+        String statusUpdated = "";
         String powerState = "";
         String muteState="";
         String inputState = "";
@@ -488,6 +480,11 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                 } catch (Exception e) {
                     volumeState = 0;
                 }
+                try {
+                    statusUpdated = targetObject.getMain().getstatusUpdated();
+                } catch (Exception e) {
+                    statusUpdated = "";
+                }
                 break;
             case "zone2":
                 try {
@@ -509,7 +506,12 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     volumeState = targetObject.getZone2().getVolume();
                 } catch (Exception e) {
                     volumeState = 0;
-                }                
+                }    
+                try {
+                    statusUpdated = targetObject.getZone2().getstatusUpdated();
+                } catch (Exception e) {
+                    statusUpdated = "";
+                }            
                 break;
             case "zone3":
                 try {
@@ -531,7 +533,12 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     volumeState = targetObject.getZone3().getVolume();
                 } catch (Exception e) {
                     volumeState = 0;
-                }                
+                }
+                try {
+                    statusUpdated = targetObject.getZone3().getstatusUpdated();
+                } catch (Exception e) {
+                    statusUpdated = "";
+                }                         
                 break;
             case "zone4":
                 try {
@@ -553,7 +560,12 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     volumeState = targetObject.getZone4().getVolume();
                 } catch (Exception e) {
                     volumeState = 0;
-                }                
+                }
+                try {
+                    statusUpdated = targetObject.getZone4().getstatusUpdated();
+                } catch (Exception e) {
+                    statusUpdated = "";
+                }                         
                 break;
             case "netusb":
                 try {
@@ -610,9 +622,17 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             }
         }
 
+        if (!presetNumber.equals(0)) {
+            logger.debug("Preset detected: {}", presetNumber);
+            updatePresets(presetNumber);
+        }
+
         if (playInfoUpdated.equals("true")) {
-            //logger.info("run update netusb");
             updateNetUSBPlayer();
+        }
+
+        if (!statusUpdated.equals("")) {
+            updateStatusZone(zoneToUpdate);
         }
     } 
 
@@ -699,28 +719,29 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
     }
 
-    private void updatePresets() {
-        String inputText = getLastInput(); // Without zone
+    private void updatePresets(Integer value) {
+        String inputText = "";
         tmpString = getPresetInfo(); // Without zone
+        Integer presetCounter = 0;
+        Integer currentPreset = 0;
         try {
             JsonElement jsonTree = parser.parse(tmpString);
             JsonObject jsonObject = jsonTree.getAsJsonObject();
             JsonArray presetsArray = jsonObject.getAsJsonArray("preset_info");
-            tmpInteger = 0;
-            tmpString = "";
-            presetNumber = 0;
             List<StateOption> optionsPresets = new ArrayList<>();
+            inputText = getLastInput(); // Without zone
             for (JsonElement pr : presetsArray) {
-                tmpInteger = tmpInteger + 1;
+                presetCounter = presetCounter + 1;
                 JsonObject presetObject = pr.getAsJsonObject();
                 String text = presetObject.get("text").getAsString();
                 if (!text.equals("")) {
-                    optionsPresets.add(new StateOption(tmpInteger.toString(), "#" + tmpInteger.toString() + " " + text));                
+                    optionsPresets.add(new StateOption(presetCounter.toString(), "#" + presetCounter.toString() + " " + text));                
                     if (inputText.equals(text)) {
-                        presetNumber = tmpInteger;
+                        currentPreset = presetCounter;
                     }
                 }
             }
+            if (!value.equals(0)) {currentPreset = value;}
             for (Channel channel : getThing().getChannels()) {
                 ChannelUID channelUID = channel.getUID();
                 channelWithoutGroup = channelUID.getIdWithoutGroup();
@@ -728,7 +749,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     switch (channelWithoutGroup) {
                         case CHANNEL_SELECTPRESET:
                             stateDescriptionProvider.setStateOptions(channelUID, optionsPresets);
-                            updateState(channelUID,StringType.valueOf(presetNumber.toString()));
+                            updateState(channelUID,StringType.valueOf(currentPreset.toString()));
                             break;
                     }
                 }

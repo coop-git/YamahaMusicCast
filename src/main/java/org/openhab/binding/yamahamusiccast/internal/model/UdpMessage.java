@@ -67,8 +67,9 @@ public class UdpMessage {
         private String mute;
         @SerializedName("input")
         private String input;
-        @SerializedName("netusb")
-        private NetUSB netusb;
+        @SerializedName("status_updated")
+        private String statusUpdated;
+
 
         public String getPower() {
             if (power==null) {power = "";}
@@ -84,6 +85,10 @@ public class UdpMessage {
         }
         public Integer getVolume() {
             return volume;
+        }
+        public String getstatusUpdated() {
+            if (statusUpdated==null) {statusUpdated = "";}
+            return statusUpdated;
         }
     }
 

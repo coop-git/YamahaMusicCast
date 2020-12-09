@@ -8,6 +8,11 @@ UDP events are captured to reflect changes in the binding for
 - Mute
 - Volume
 - Input
+- Presets
+- Sleep
+- Artist
+- Track
+- Album
 
 For Music Cast, the different Things are read via the OpenHAB REST API.
 
@@ -117,6 +122,7 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306
 - channelVolumeAbs has been added to allow to set Volume in absolute value (v0.71).
 - Code clean up for Music Cast Link to support common Volume for linked models (v0.72).
 - UDP events now support PLAY/PAUSE/FFW/REW/Artist/Track/Album (v0.72).
+- Removed refreshjob as UDP events now support Presets/Sleep (v0.73).
 
 ###### v0.60
 
