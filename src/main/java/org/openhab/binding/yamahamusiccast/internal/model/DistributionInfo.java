@@ -34,6 +34,9 @@ public class DistributionInfo {
     @SerializedName("server_zone")
     private String serverZone;
 
+    @SerializedName("client_list")
+    private ClientList clientList;
+
     public String getResponseCode() {
         return responseCode;
     }
@@ -50,6 +53,19 @@ public class DistributionInfo {
         return serverZone;
     }
 
+    public ClientList getClientList() {
+        return clientList;
+    }
+
+    public class ClientList {
+        @SerializedName("ip_address")
+        private String ipaddress;
+
+        public String getIpaddress() {
+            if (ipaddress==null) {ipaddress = "";}
+            return ipaddress;
+        } 
+    }
 
 }
 

@@ -25,10 +25,11 @@
 				<label>Address</label>
 				<description>The IP address of the AVR to control.</description>
 			</parameter>
-			<parameter name="configRefreshInterval" type="integer">
-				<label>Refresh Time Interval</label>
-				<description>The refresh interval in seconds for polling the receiver (0=disable).</description>
-				<default>60</default>
+			<parameter name="configSyncVolume" type="boolean">
+				<label>Sync Volume for Music Cast</label>
+				<description>Sync Volume across linked Music Cast models</description>
+				<default>false</default>
+				<advanced>true</advanced>
 			</parameter>
 		</config-description>
 	</thing-type>
@@ -195,7 +196,7 @@
 		<label>Track</label>
 		<description>Track</description>
 	</channel-type>
-		<channel-type id="channelAlbum">
+	<channel-type id="channelAlbum">
 		<item-type>String</item-type>
 		<label>Album</label>
 		<description>Album</description>

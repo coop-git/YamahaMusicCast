@@ -101,15 +101,15 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     Integer tmpInteger = 0;
     Integer connectionTimeout = 5000;
     Integer longConnectionTimeout = 60000;
-    String responseCode = "";
-    String powerState = "";
-    String muteState = "";
-    Integer volumeState = 0;
-    Integer maxVolumeState = 0;
-    String inputState = "";
-    Integer presetNumber = 0;
-    String soundProgramState = "";
-    Integer sleepState = 0;
+    @Nullable String responseCode = "";
+    @Nullable String powerState = "";
+    @Nullable String muteState = "";
+    @Nullable Integer volumeState = 0;
+    @Nullable Integer maxVolumeState = 0;
+    @Nullable String inputState = "";
+    @Nullable Integer presetNumber = 0;
+    @Nullable String soundProgramState = "";
+    @Nullable Integer sleepState = 0;
     String playbackState = "";
     String artistState = "";
     String trackState = "";
@@ -123,6 +123,9 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     String json = "";
     String action= "";
     Integer zoneNum = 1;
+    String groupId = "";
+    String role = "";
+
     public String deviceId = "";
     
 
@@ -180,6 +183,17 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                         tmpInteger = (maxVolumeState * tmpInteger)/100;
                         logger.debug("Pushed Volume:{} - Calculated Volume:{}", tmpString, tmpInteger);
                         setVolume(tmpInteger, zone);
+                        if (config.configSyncVolume == true ) {
+                            tmpString = getDistributionInfo(config.configHost);
+                            DistributionInfo targetObject = new DistributionInfo();
+                            targetObject = new Gson().fromJson(tmpString, DistributionInfo.class);
+                            role = targetObject.getRole();
+                            if (role.equals("server")) {
+                                //Volume Sync for mc_link to come here 
+                            }
+                        } // END configSyncVolume
+                        
+
                     } catch (Exception e) {
                         //Wait for refresh
                     }                    
@@ -222,8 +236,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     setSleep(command.toString(), zone);
                     break;
                 case CHANNEL_MCSERVER:
-                    String groupId = "";
-                    String role = "";
                     action = "";
                     json = "";
                     InputStream is2 = new ByteArrayInputStream(json.getBytes());
@@ -947,7 +959,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             logger.debug("{}", httpResponse);
             return httpResponse;
         } catch (IOException e) {
-            logger.warn("IO Exception - {}", topicAVR, e.toString());
+            logger.warn("IO Exception - {} - {}", topicAVR, e.toString());
             return "{\"response_code\":\"999\"}";
         }
     }
@@ -959,7 +971,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             logger.debug("{}", httpResponse);
             return httpResponse;
         } catch (IOException e) {
-            logger.warn("IO Exception - {}", topicAVR, e.toString());
+            logger.warn("IO Exception - {} - {}", topicAVR, e.toString());
             return "{\"response_code\":\"999\"}";
         }
     }
@@ -971,7 +983,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             logger.debug("{}", httpResponse);            
             return httpResponse;
         } catch (IOException e) {
-            logger.warn("IO Exception - {}", topicAVR, e.toString());
+            logger.warn("IO Exception - {} - {}", topicAVR, e.toString());
             return "{\"response_code\":\"999\"}";
         }
     }
@@ -983,7 +995,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             logger.info("{}", httpResponse);            
             return httpResponse;
         } catch (IOException e) {
-            logger.warn("IO Exception - {}", topicAVR, e.toString());
+            logger.warn("IO Exception - {} - {}", topicAVR, e.toString());
             return "{\"response_code\":\"999\"}";
         }
     }
@@ -995,7 +1007,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             logger.debug("{}", httpResponse);
             return httpResponse;
         } catch (IOException e) {
-            logger.warn("IO Exception - {}", topicAVR, e.toString());
+            logger.warn("IO Exception - {} - {}", topicAVR, e.toString());
             return "{\"response_code\":\"999\"}";
         }
     }
@@ -1007,7 +1019,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             logger.debug("{}", httpResponse);            
             return httpResponse;
         } catch (IOException e) {
-            logger.warn("IO Exception - {}", topicAVR, e.toString());
+            logger.warn("IO Exception - {} - {}", topicAVR, e.toString());
             return "{\"response_code\":\"999\"}";
         }
     }
@@ -1019,7 +1031,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             logger.debug("{}", httpResponse);
             return httpResponse;
         } catch (IOException e) {
-            logger.warn("IO Exception - {}", topicAVR, e.toString());
+            logger.warn("IO Exception - {} - {}", topicAVR, e.toString());
             return "{\"response_code\":\"999\"}";
         }
     }
@@ -1031,7 +1043,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             logger.debug("{}", httpResponse);
             return httpResponse;
         } catch (IOException e) {
-            logger.warn("IO Exception - {}", topicAVR, e.toString());
+            logger.warn("IO Exception - {} - {}", topicAVR, e.toString());
             return "{\"response_code\":\"999\"}";
         }
     }
@@ -1043,7 +1055,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             logger.debug("{}", httpResponse);
             return httpResponse;
         } catch (IOException e) {
-            logger.warn("IO Exception - {}", topicAVR, e.toString());
+            logger.warn("IO Exception - {} - {}", topicAVR, e.toString());
             return "{\"response_code\":\"999\"}";
         }
     }
@@ -1058,7 +1070,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             logger.debug("{}", httpResponse);
             return httpResponse; 
         } catch (IOException e) {
-            logger.warn("IO Exception - {}", topicAVR, e.toString());
+            logger.warn("IO Exception - {} - {}", topicAVR, e.toString());
             return "{\"response_code\":\"999\"}";
         }
     }
@@ -1070,7 +1082,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             logger.debug("{}", httpResponse);
             return httpResponse;
         } catch (IOException e) {
-            logger.warn("IO Exception - {}", topicAVR, e.toString());
+            logger.warn("IO Exception - {} - {}", topicAVR, e.toString());
             return "{\"response_code\":\"999\"}";
         }
     }
@@ -1082,7 +1094,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             logger.debug("{}", httpResponse);
             return httpResponse;
         } catch (IOException e) {
-            logger.warn("IO Exception - {}", topicAVR, e.toString());
+            logger.warn("IO Exception - {} - {}", topicAVR, e.toString());
             return "{\"response_code\":\"999\"}";
         }
     }
@@ -1094,7 +1106,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             logger.debug("{}", httpResponse);
             return httpResponse;
         } catch (IOException e) {
-            logger.warn("IO Exception - {}", topicAVR, e.toString());
+            logger.warn("IO Exception - {} - {}", topicAVR, e.toString());
             return "{\"response_code\":\"999\"}";
         }
     }
@@ -1109,7 +1121,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             logger.debug("{}", httpResponse);
             return httpResponse;
         } catch (IOException e) {
-            logger.warn("IO Exception - {}", topicAVR, e.toString());
+            logger.warn("IO Exception - {} - {}", topicAVR, e.toString());
             return "{\"response_code\":\"999\"}";
         }
     }
@@ -1123,7 +1135,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             logger.debug("MC Link/Unlink Server {}", httpResponse);
             return httpResponse;
         } catch (IOException e) {
-            logger.warn("IO Exception - {}", topicAVR, e.toString());
+            logger.warn("IO Exception - {} - {}", topicAVR, e.toString());
             return "{\"response_code\":\"999\"}";
         }
     }
@@ -1137,7 +1149,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             logger.debug("MC Link/Unlink Client {}", httpResponse);
             return httpResponse;
         } catch (IOException e) {
-            logger.warn("IO Exception - {}", topicAVR, e.toString());
+            logger.warn("IO Exception - {} - {}", topicAVR, e.toString());
             return "{\"response_code\":\"999\"}";
         }
     }
@@ -1150,7 +1162,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             logger.debug("MC Start Distribution {}", httpResponse);
             return httpResponse;
         } catch (IOException e) {
-            logger.warn("IO Exception - {}", topicAVR, e.toString());
+            logger.warn("IO Exception - {} - {}", topicAVR, e.toString());
             return "{\"response_code\":\"999\"}";
         }
     }
@@ -1165,7 +1177,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             logger.debug("{}", httpResponse);
             return httpResponse;
         } catch (IOException e) {
-            logger.warn("IO Exception - {}", topicAVR, e.toString());
+            logger.warn("IO Exception - {} - {}", topicAVR, e.toString());
             return "{\"response_code\":\"999\"}";
         }
     }
@@ -1177,7 +1189,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             logger.debug("{}", httpResponse);
             return httpResponse;
         } catch (IOException e) {
-            logger.warn("IO Exception - {}", topicAVR, e.toString());
+            logger.warn("IO Exception - {} - {}", topicAVR, e.toString());
             return "{\"response_code\":\"999\"}";
         }
     }
@@ -1188,9 +1200,9 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         appProps.setProperty("X-AppPort", "41100");
         try {
             httpResponse = HttpUtil.executeUrl("GET", "http://" + config.configHost + "/YamahaExtendedControl/v1/system/getDeviceInfo", appProps, null, "",connectionTimeout);
-            logger.debug(httpResponse);
+            logger.debug("{}", httpResponse);
         } catch (IOException e) {
-            logger.warn("UDP refresh failed: {}", e.toString());
+            logger.warn("UDP refresh failed - {}", e.toString());
         }
     }
 

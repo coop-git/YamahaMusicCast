@@ -12,69 +12,70 @@
  */
 package org.openhab.binding.yamahamusiccast.internal.model;
 import com.google.gson.annotations.SerializedName;
+import org.eclipse.jdt.annotation.*;
 
 /**
  * This class represents the push request sent to the API.
  *
  * @author Lennert Coopman - Initial contribution
  */
-
+@NonNullByDefault
 public class Status {
 
     @SerializedName("response_code")
-    private String responseCode;
+    private @Nullable String responseCode;
 
     @SerializedName("power")
-    private String power;
+    private @Nullable String power;
 
     @SerializedName("mute")
-    private String mute;
+    private @Nullable String mute;
 
     @SerializedName("volume")
-    private Integer volume;
+    private @Nullable Integer volume;
 
     @SerializedName("max_volume")
-    private Integer maxVolume;
+    private @Nullable Integer maxVolume;
 
     @SerializedName("input")
-    private String input;
+    private @Nullable String input;
 
     @SerializedName("sound_program")
-    private String soundProgram;
+    private @Nullable String soundProgram;
 
     @SerializedName("sleep")
-    private Integer sleep = Integer.valueOf(0);
+    private @Nullable Integer sleep = Integer.valueOf(0);
 
 
-    public String getResponseCode() {
+    public @Nullable String getResponseCode() {
         return responseCode;
     }
 
-    public String getPower() {
+    public @Nullable String getPower() {
         return power;
     }
 
-    public String getMute() {
+    public @Nullable String getMute() {
         return mute;
     }
 
-    public Integer getVolume() {
+    public @Nullable Integer getVolume() {
         return volume;
     }
 
-    public Integer getMaxVolume() {
+    public @Nullable Integer getMaxVolume() {
         return maxVolume;
     }
 
-    public String getInput() {
+    public @Nullable String getInput() {
         return input;
     }
 
-    public String getSoundProgram() {
+    public @Nullable String getSoundProgram() {
         return soundProgram;
     }
 
-    public Integer getSleep() {
+    public @Nullable Integer getSleep() {
         return sleep;
     }
 

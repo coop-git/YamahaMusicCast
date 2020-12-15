@@ -4,6 +4,7 @@ Binding to control Yamaha models via their MusicCast protocol (aka Yamaha Extend
 With support for 4 zones : main, zone2, zone3, zone4. Main is always present. Zone2, Zone3, Zone4 are read from the model.
 
 UDP events are captured to reflect changes in the binding for
+
 - Power
 - Mute
 - Volume
@@ -38,23 +39,23 @@ N/A
 
 ## Channels
 
-| channel               | type   | description                                           |
-|-----------------------|--------|-------------------------------------------------------|
-| channelPower          | Switch | Power ON/OFF                                          |
-| channelMute           | Switch | Mute ON/OFF                                           |
-| channelVolume         | Dimmer | Volume as % (recalculated based on Max Volume Model)  |
-| channelVolumeAbs      | Number | Volume as absolute value                              |
-| channelInput          | String | See below for list                                    |
-| channelSoundProgram   | String | See below for list                                    |
-| channelSelectPreset   | String | Select Netradio/USB preset (fetched from model)       |
-| channelSleep          | Number | Fixed values for Sleep : 0/30/60/90/120               |
-| channelMCServer       | String | Select your MusicCast Server                          |
-| channelUnlinkMCServer | Switch | Disband MusicCast Link on Master                      |
-| channelRecallScene    | Number | Select a scene (create your own dropdown list!)       |
-| channelPlayer         | Player | PLAY/PAUSE/NEXT/PREVIOUS/REWIND/FASTFORWARD           |
-| channelArtist         | String | Artist                                                |
-| channelTrack          | String | Track                                                 |
-| channelAlbum          | String | Album                                                 |
+| channel               | type   | description                                                        |
+|-----------------------|--------|--------------------------------------------------------------------|
+| channelPower          | Switch | Power ON/OFF                                                       |
+| channelMute           | Switch | Mute ON/OFF                                                        |
+| channelVolume         | Dimmer | Volume as % (recalculated based on Max Volume Model)               |
+| channelVolumeAbs      | Number | Volume as absolute value                                           |
+| channelInput          | String | See below for list                                                 |
+| channelSoundProgram   | String | See below for list                                                 |
+| channelSelectPreset   | String | Select Netradio/USB preset (fetched from model)                    |
+| channelSleep          | Number | Fixed values for Sleep : 0/30/60/90/120                            |
+| channelMCServer       | String | Select your MusicCast Server (empty to remove client from MC Link) |
+| channelUnlinkMCServer | Switch | Disband MusicCast Link on Master                                   |
+| channelRecallScene    | Number | Select a scene (create your own dropdown list!)                    |
+| channelPlayer         | Player | PLAY/PAUSE/NEXT/PREVIOUS/REWIND/FASTFORWARD                        |
+| channelArtist         | String | Artist                                                             |
+| channelTrack          | String | Track                                                              |
+| channelAlbum          | String | Album                                                              |
 
 | Zones                | description                                          |
 |----------------------|------------------------------------------------------|
@@ -112,6 +113,8 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306
 
 ###### To Do / Wishlist
 
+- [ ] Add channel for AlbumArt
+- [ ] Add Shuffle and Repeat
 - [ ] Add common Volume/Mute for linked models when Music Cast is active
 - [ ] Create a pull request for OH3
 - [ ] Autodiscovery (no plans yet)
