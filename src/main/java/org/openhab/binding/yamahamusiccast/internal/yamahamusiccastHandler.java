@@ -90,7 +90,7 @@ import com.google.gson.JsonArray;
 public class YamahaMusiccastHandler extends BaseThingHandler {
 
     private Logger logger = LoggerFactory.getLogger(YamahaMusiccastHandler.class);
-    private @Nullable ScheduledFuture<?> refreshTask;
+    //private @Nullable ScheduledFuture<?> refreshTask;
     private @Nullable ScheduledFuture<?> keepUdpEventsAliveTask;
     
     private @NonNullByDefault({}) YamahaMusiccastConfiguration config;
@@ -364,13 +364,18 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         } else {
             zoneNum = getNumberOfZones(config.configHost);
             logger.info("YXC - Zones found: {} - {}", zoneNum,thingLabel);
-                        
-            refreshOnStartup();
-            keepUdpEventsAliveTask = scheduler.scheduleWithFixedDelay(this::keepUdpEventsAlive, 5, 300,TimeUnit.SECONDS);
-            logger.info("YXC - Start Keep Alive UDP events (5 minutes - {}) ", thingLabel);
-                            
-            updateStatus(ThingStatus.ONLINE);
-            logger.info("YXC - Finished initializing! - {}", thingLabel);    
+            
+            if (zoneNum > 0) {
+                refreshOnStartup();
+                keepUdpEventsAliveTask = scheduler.scheduleWithFixedDelay(this::keepUdpEventsAlive, 5, 300,TimeUnit.SECONDS);
+                logger.info("YXC - Start Keep Alive UDP events (5 minutes - {}) ", thingLabel);
+                                
+                updateStatus(ThingStatus.ONLINE);
+                logger.info("YXC - Finished initializing! - {}", thingLabel);    
+            } else {
+                updateStatus(ThingStatus.OFFLINE);
+                logger.info("YXC - Not initialized! - {}", thingLabel);        
+            }
         }
     }
 
@@ -398,7 +403,10 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
 
     @Override
     public void dispose() { 
-        refreshTask.cancel(true);
+        if (keepUdpEventsAliveTask != null) {
+            keepUdpEventsAliveTask.cancel(true);
+        }
+        
     }
     // Various functions 
     public void processUDPEvent (String json) {
