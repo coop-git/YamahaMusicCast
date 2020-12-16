@@ -109,6 +109,7 @@
 			<channel id="channelArtist" typeId="channelArtist"/>
 			<channel id="channelTrack" typeId="channelTrack"/>
 			<channel id="channelAlbum" typeId="channelAlbum"/>
+			<channel id="channelAlbumArt" typeId="channelAlbumArt"/>
 		</channels>
 	</channel-group-type>
 
@@ -200,5 +201,10 @@
 		<item-type>String</item-type>
 		<label>Album</label>
 		<description>Album</description>
+	</channel-type>
+	<channel-type id="channelAlbumArt">
+		<item-type>String</item-type>
+		<label>Album Art</label>
+		<description>Album Art</description>
 	</channel-type>
 </thing:thing-descriptions>

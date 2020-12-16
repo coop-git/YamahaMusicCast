@@ -122,7 +122,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     String url = "";
     String json = "";
     String action= "";
-    Integer zoneNum = 1;
+    Integer zoneNum = 0;
     String groupId = "";
     String role = "";
 
@@ -864,11 +864,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     String label = result.getLabel();
                     JsonObject jsonObject = result.getConfiguration();
                     String host = jsonObject.get("configHost").getAsString();
-
-                    //tmpString = getFeatures(host);
-                    //Features targetObject = new Features();
-                    //targetObject = new Gson().fromJson(tmpString, Features.class);
-                    //zoneNum = Integer.valueOf(targetObject.getSystem().getZoneNum());
                     zonesPerHost = getNumberOfZones(host);
                     for (int i = 1; i <= zonesPerHost; i++) {
                         switch (i) {
@@ -937,7 +932,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             return Integer.valueOf(targetObject.getSystem().getZoneNum());
         } catch (Exception e) {
             logger.warn("Error fetching zones");
-            return 1;
+            return 0;
         }
     }
 

@@ -34,7 +34,6 @@ N/A
 | Parameter              | type    | description                                             | Advanced | Required      |
 |------------------------|---------|---------------------------------------------------------|----------|---------------|
 | configHost             | String  | IP address of the Yamaha model (AVR, ...)               | false    | true          |
-| configRefreshInterval  | Integer | The refresh interval in seconds (0=disable).            | false    | Default=60    |
 
 
 ## Channels
@@ -64,15 +63,9 @@ N/A
 
 ## Full Example
 
-###### v0.7x: Bridge + Thing
-
 Bridge yamahamusiccast:bridge:bridge "YXC Bridge" {
 Thing yamahamusiccast:Device:Living "YXC Living" [configHost="1.2.3.4"]
 }
-
-###### v0.60: Thing only
-
-Thing yamahamusiccast:Device:zone#Living "YXC Living" [configHost="1.2.3.4"]
 
 ## Input List
 
