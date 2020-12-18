@@ -1114,6 +1114,30 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
     }
 
+    private String setRepeat(String value) {
+        topicAVR = "Repeat";
+        try {
+            httpResponse = HttpUtil.executeUrl("GET", "http://" + config.configHost + "/YamahaExtendedControl/v1/netusb/setRepeat?mode=" + value, longConnectionTimeout);
+            logger.debug("{}", httpResponse);
+            return httpResponse;
+        } catch (IOException e) {
+            logger.warn("IO Exception - {} - {}", topicAVR, e.toString());
+            return "{\"response_code\":\"999\"}";
+        }
+    }
+
+    private String setShuffle(String value) {
+        topicAVR = "Shuffle";
+        try {
+            httpResponse = HttpUtil.executeUrl("GET", "http://" + config.configHost + "/YamahaExtendedControl/v1/netusb/setShuffle?mode=" + value, longConnectionTimeout);
+            logger.debug("{}", httpResponse);
+            return httpResponse;
+        } catch (IOException e) {
+            logger.warn("IO Exception - {} - {}", topicAVR, e.toString());
+            return "{\"response_code\":\"999\"}";
+        }
+    }
+
     // End Net Radio/USB Related
 
     // Start Music Cast API calls

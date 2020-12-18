@@ -110,6 +110,8 @@
 			<channel id="channelTrack" typeId="channelTrack"/>
 			<channel id="channelAlbum" typeId="channelAlbum"/>
 			<channel id="channelAlbumArt" typeId="channelAlbumArt"/>
+			<channel id="channelRepeat" typeId="channelRepeat"/>
+			<channel id="channelShuffle" typeId="channelShuffle"/>
 		</channels>
 	</channel-group-type>
 
@@ -206,5 +208,30 @@
 		<item-type>String</item-type>
 		<label>Album Art</label>
 		<description>Album Art</description>
+	</channel-type>
+	<channel-type id="channelRepeat">
+		<item-type>String</item-type>
+		<label>Repeat</label>
+		<description>Repeat mode</description>
+		<state>
+			<options>
+				<option value="off">Off</option>
+				<option value="one">One</option>
+				<option value="all">All</option>
+			</options>
+		</state>
+	</channel-type>
+	<channel-type id="channelShuffle">
+		<item-type>String</item-type>
+		<label>Shuffle</label>
+		<description>Shuffle mode</description>
+		<state>
+			<options>
+				<option value="off">Off</option>
+				<option value="on">On</option>
+				<option value="songs">Songs</option>
+				<option value="albums">Albums</option>
+			</options>
+		</state>
 	</channel-type>
 </thing:thing-descriptions>

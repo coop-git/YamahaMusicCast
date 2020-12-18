@@ -46,4 +46,7 @@ public class YamahaMusiccastBindingConstants {
     public static final String CHANNEL_ARTIST = "channelArtist";
     public static final String CHANNEL_TRACK = "channelTrack";
     public static final String CHANNEL_ALBUM = "channelAlbum";
+    public static final String CHANNEL_ALBUMART = "channelAlbumArt";
+    public static final String CHANNEL_REPEAT = "channelRepeat";
+    public static final String CHANNEL_SHUFFLE = "channelShuffle";
 }
