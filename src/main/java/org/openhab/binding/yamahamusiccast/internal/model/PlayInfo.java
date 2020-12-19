@@ -37,6 +37,16 @@ public class PlayInfo {
     @SerializedName("album")
     private String album;
 
+    @SerializedName("albumart_url")
+    private String albumarturl;
+
+    @SerializedName("repeat")
+    private String repeat;
+
+    @SerializedName("shuffle")
+    private String shuffle;
+
+
     public String getResponseCode() {
         return responseCode;
     }
@@ -57,7 +67,17 @@ public class PlayInfo {
         return album;
     }  
    
+    public String getAlbumArtUrl() {
+        return albumarturl;
+    }  
 
+    public String getRepeat() {
+        return repeat;
+    }  
+
+    public String getShuffle() {
+        return shuffle;
+    }  
    
 
 
