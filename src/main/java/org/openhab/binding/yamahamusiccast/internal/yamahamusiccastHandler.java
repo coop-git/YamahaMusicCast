@@ -31,6 +31,9 @@ import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingStatus;
 import org.eclipse.smarthome.core.thing.ThingStatusDetail;
+import org.eclipse.smarthome.core.thing.Bridge;
+import org.eclipse.smarthome.core.thing.binding.BridgeHandler;
+import org.eclipse.smarthome.core.thing.binding.ThingHandler;
 import org.eclipse.smarthome.core.thing.binding.BaseThingHandler;
 import org.eclipse.smarthome.core.thing.binding.BaseBridgeHandler;
 import org.eclipse.smarthome.core.thing.Channel;
@@ -143,7 +146,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
 
     @Override
     public void handleCommand(ChannelUID channelUID, Command command) { 
-        //if (command instanceof RefreshType) {
+        if (!command.equals(RefreshType.REFRESH)) {
             //nothing here
         //} else  {
             logger.info("Handling command {} for channel {}", command, channelUID);
@@ -316,7 +319,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     setShuffle(command.toString());
                     break;
             }  // END Switch Channel          
-        //}
+        }
     }
 
     @Override
@@ -368,9 +371,9 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             }
         }
         updatePresets(0);
-        fetchOtherDevices();
+        //fetchOtherDevices();
         updateNetUSBPlayer();
-        fetchOhterDevices2();
+        fetchOtherDevicesViaBridge();
     }
 
     @Override
@@ -801,7 +804,9 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             }
             testchannel = new ChannelUID(getThing().getUID(), "playerControls", "channelAlbumArt");
             if (isLinked(testchannel)){
-                albumArtUrlState = "http://" + config.configHost + albumArtUrlState;
+                if (!albumArtUrlState.equals("")) {
+                    albumArtUrlState = "http://" + config.configHost + albumArtUrlState;    
+                }
                 updateState(testchannel, StringType.valueOf(albumArtUrlState));
             }
             testchannel = new ChannelUID(getThing().getUID(), "playerControls", "channelRepeat");
@@ -839,12 +844,64 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         return text;
     }
 
-    private void fetchOhterDevices2 () {
-        // Bridge bridge = thing.getBridge();
-        // for (Thing thing : bridge.getThings()) {
-        //     YamahaMusiccastHandler handler = (YamahaMusiccastHandler) thing.getHandler();
-        //     logger.info("Bridge: {} - {})", handler.getDeviceId(), thing.getLabel());
-        // }
+    private void fetchOtherDevicesViaBridge () {      
+        Bridge bridge = getBridge();
+        String host = "";
+        String label = "";
+        Integer zonesPerHost = 1;
+        List<StateOption> options = new ArrayList<>();
+        for (Thing thing : bridge.getThings()) {
+            label = thing.getLabel();
+            host = getThing().getConfiguration().get("configHost").toString();
+            logger.debug("Thing found on Bridge: {} - {}", label, host);
+            zonesPerHost = getNumberOfZones(host);
+            for (int i = 1; i <= zonesPerHost; i++) {
+                switch (i) {
+                    case 1:
+                        options.add(new StateOption(host + "#" + "main", label + "#main"));                    
+                        break;
+                    case 2:
+                        options.add(new StateOption(host + "#" + "zone2", label + "#zone2"));
+                        break;
+                    case 3:
+                        options.add(new StateOption(host + "#" + "zone3", label + "#zone3"));
+                        break;
+                    case 4:
+                        options.add(new StateOption(host + "#" + "zone4", label + "#zone4"));
+                        break;
+                }
+            }
+        }
+        options.add(new StateOption("", ""));
+        //for each zone of the device set all the possible combinations
+        for (int i = 1; i <= zoneNum; i++) {
+            switch (i) {
+                case 1:
+                    ChannelUID testchannel = new ChannelUID(getThing().getUID(), "main", "channelMCServer");
+                    if (isLinked(testchannel)) {
+                        stateDescriptionProvider.setStateOptions(testchannel, options);
+                    }
+                    break;
+                case 2:
+                    testchannel = new ChannelUID(getThing().getUID(), "zone2", "channelMCServer");
+                    if (isLinked(testchannel)) {
+                        stateDescriptionProvider.setStateOptions(testchannel, options);
+                    }
+                    break;
+                case 3:
+                    testchannel = new ChannelUID(getThing().getUID(), "zone3", "channelMCServer");
+                    if (isLinked(testchannel)) {
+                        stateDescriptionProvider.setStateOptions(testchannel, options);
+                    }
+                    break;
+                case 4:
+                    testchannel = new ChannelUID(getThing().getUID(), "zone4", "channelMCServer");
+                    if (isLinked(testchannel)) {
+                        stateDescriptionProvider.setStateOptions(testchannel, options);
+                    }
+                    break;
+            }
+        }
     }
 
     private void fetchOtherDevices() {
