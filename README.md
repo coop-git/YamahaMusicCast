@@ -14,6 +14,9 @@ UDP events are captured to reflect changes in the binding for
 - Artist
 - Track
 - Album
+- Album Art
+- Repeat
+- Shuffle
 
 For Music Cast, the different Things are read via the OpenHAB REST API.
 
@@ -55,6 +58,10 @@ N/A
 | channelArtist         | String | Artist                                                             |
 | channelTrack          | String | Track                                                              |
 | channelAlbum          | String | Album                                                              |
+| channelAlbumArt       | Image  | Album Art                                                          |
+| channelRepeat         | String | Toggle Repeat. Values: Off, One, All                               |
+| channelShuffle        | String | Toggle Shuffle. Values: Off, On, Songs, Album                      |
+
 
 | Zones                | description                                          |
 |----------------------|------------------------------------------------------|
@@ -106,8 +113,6 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306
 
 ###### To Do / Wishlist
 
-- [ ] Add channel for AlbumArt
-- [ ] Add Shuffle and Repeat
 - [ ] Add common Volume/Mute for linked models when Music Cast is active
 - [ ] Create a pull request for OH3
 - [ ] Autodiscovery (no plans yet)
@@ -119,6 +124,9 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306
 - Code clean up for Music Cast Link to support common Volume for linked models (v0.72).
 - UDP events now support PLAY/PAUSE/FFW/REW/Artist/Track/Album (v0.72).
 - Removed refreshjob as UDP events now support Presets/Sleep (v0.73).
+- Removed configuration for refreshInterval (v0.74).
+- Added channel for AlbumArt/Shuffle/Repeat (v0.74).
+- Fixed error which occured when updating Thing (v0.74).
 
 ###### v0.60
 

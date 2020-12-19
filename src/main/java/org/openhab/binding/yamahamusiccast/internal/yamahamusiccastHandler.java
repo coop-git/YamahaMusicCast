@@ -194,7 +194,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                             targetObject = new Gson().fromJson(tmpString, DistributionInfo.class);
                             role = targetObject.getRole();
                             if (role.equals("server")) {
-                                logger.info("Volume mc_link: {}", tmpstring);
+                                logger.info("Volume mc_link: {}", tmpString);
                             }
                         } // END configSyncVolume
                         
@@ -382,7 +382,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     }
     // Various functions 
     public void processUDPEvent (String json) {
-        logger.info("UDP package: {}", json);
+        logger.debug("UDP package: {}", json);
         UdpMessage targetObject = new UdpMessage();
         ChannelUID channel;
         String zoneToUpdate;
