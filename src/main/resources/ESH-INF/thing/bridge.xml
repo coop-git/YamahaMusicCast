@@ -8,8 +8,6 @@
 	<bridge-type id="bridge">
 		<label>Yamaha MusicCast Virtual Bridge</label>
 		<description>Virtual Bridge to receive updates</description>
-
-		<config-description-ref uri="bridge-type:yamahamusiccast:bridge"/>
 	</bridge-type>
 
 </thing:thing-descriptions>

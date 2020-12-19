@@ -62,7 +62,7 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
 
     private final Logger logger = LoggerFactory.getLogger(YamahaMusiccastBridgeHandler.class);
 
-    private final ScheduledExecutorService UdpScheduler = ThreadPoolManager
+    private final ScheduledExecutorService udpScheduler = ThreadPoolManager
     .getScheduledPool("YamahaMusiccastListener" + "-" + thing.getUID().getId());
     private @Nullable ScheduledFuture<?> listenerJob;
     private final UdpListener udpListener;
@@ -90,7 +90,7 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
 
     private void startUDPListenerJob() {
         logger.info("YXC - Bridge Listener to start in 5 seconds");
-        listenerJob = UdpScheduler.schedule(udpListener, 5, TimeUnit.SECONDS);
+        listenerJob = udpScheduler.schedule(udpListener, 5, TimeUnit.SECONDS);
     }
 
     private void stopUDPListenerJob() {

@@ -143,9 +143,9 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
 
     @Override
     public void handleCommand(ChannelUID channelUID, Command command) { 
-        if (command instanceof RefreshType) {
+        //if (command instanceof RefreshType) {
             //nothing here
-        } else  {
+        //} else  {
             logger.info("Handling command {} for channel {}", command, channelUID);
             channelWithoutGroup = channelUID.getIdWithoutGroup();
             zone = channelUID.getGroupId();
@@ -188,7 +188,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                         tmpInteger = (maxVolumeState * tmpInteger)/100;
                         logger.debug("Pushed Volume:{} - Calculated Volume:{}", tmpString, tmpInteger);
                         setVolume(tmpInteger, zone);
-                        if (config.configSyncVolume == true ) {
+                        if (config.configSyncVolume) {
                             tmpString = getDistributionInfo(config.configHost);
                             DistributionInfo targetObject = new DistributionInfo();
                             targetObject = new Gson().fromJson(tmpString, DistributionInfo.class);
@@ -316,7 +316,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     setShuffle(command.toString());
                     break;
             }  // END Switch Channel          
-        }
+        //}
     }
 
     @Override
@@ -845,7 +845,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         //     YamahaMusiccastHandler handler = (YamahaMusiccastHandler) thing.getHandler();
         //     logger.info("Bridge: {} - {})", handler.getDeviceId(), thing.getLabel());
         // }
-
     }
 
     private void fetchOtherDevices() {
