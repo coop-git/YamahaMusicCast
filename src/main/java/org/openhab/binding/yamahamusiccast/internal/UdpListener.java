@@ -18,12 +18,9 @@ import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.util.Arrays;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
-import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastHandler;
-import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastBridgeHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,8 +41,6 @@ public class UdpListener extends Thread {
     private static final int BUFFER_SIZE = 5120;
 
     private final Logger logger = LoggerFactory.getLogger(UdpListener.class);
-
-    
 
     private final YamahaMusiccastBridgeHandler bridgeHandler;
 
@@ -100,5 +95,4 @@ public class UdpListener extends Thread {
         }
         logger.debug("Listener exiting");
     }
-
 }

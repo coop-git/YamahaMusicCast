@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.openhab.binding.yamahamusiccast.internal.model;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -45,7 +46,6 @@ public class Status {
     @SerializedName("sleep")
     private Integer sleep = Integer.valueOf(0);
 
-
     public String getResponseCode() {
         return responseCode;
     }
@@ -77,7 +77,4 @@ public class Status {
     public Integer getSleep() {
         return sleep;
     }
-
 }
-
-

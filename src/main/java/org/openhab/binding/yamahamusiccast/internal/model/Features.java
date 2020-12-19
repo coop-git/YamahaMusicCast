@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.openhab.binding.yamahamusiccast.internal.model;
-import com.google.gson.annotations.SerializedName;
 
+import com.google.gson.annotations.SerializedName;
 
 /**
  * This class represents the push request sent to the API.
@@ -43,10 +43,5 @@ public class Features {
         public String getZoneNum() {
             return zoneNum;
         }
-
     }
-
-
 }
-
-

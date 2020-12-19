@@ -11,16 +11,9 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.openhab.binding.yamahamusiccast.internal.model;
-import com.google.gson.annotations.SerializedName;
 
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParser;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonArray;
-
+import com.google.gson.annotations.SerializedName;
 
 /**
  * This class represents the push request sent to the API.
@@ -32,18 +25,17 @@ public class ThingsRest {
 
     @SerializedName("thingTypeUID")
     private String thingTypeUID;
-    
+
     @SerializedName("label")
     private String label;
 
     @SerializedName("configuration")
     private JsonObject configuration;
 
-
     public String getThingTypeUID() {
         return thingTypeUID;
     }
-    
+
     public String getLabel() {
         return label;
     }
@@ -51,6 +43,4 @@ public class ThingsRest {
     public JsonObject getConfiguration() {
         return configuration;
     }
-
-
 }

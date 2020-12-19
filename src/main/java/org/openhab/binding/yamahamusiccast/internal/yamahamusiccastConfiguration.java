@@ -25,5 +25,4 @@ public class YamahaMusiccastConfiguration {
      */
     public Integer configRefreshInterval;
     public String configHost;
-
 }

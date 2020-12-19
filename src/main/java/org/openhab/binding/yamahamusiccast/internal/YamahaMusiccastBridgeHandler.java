@@ -12,44 +12,21 @@
  */
 package org.openhab.binding.yamahamusiccast.internal;
 
-import org.openhab.binding.yamahamusiccast.internal.model.UdpMessage;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
-import org.eclipse.jetty.client.HttpClient;
-import org.eclipse.jetty.client.api.ContentResponse;
-import org.eclipse.jetty.client.api.Request;
-import org.eclipse.jetty.client.util.StringContentProvider;
-import org.eclipse.jetty.http.HttpHeader;
-import org.eclipse.jetty.http.HttpMethod;
-import org.eclipse.smarthome.core.thing.*;
-import org.eclipse.smarthome.core.thing.binding.BaseThingHandler;
-import org.eclipse.smarthome.core.thing.binding.BaseBridgeHandler;
-import org.eclipse.smarthome.core.thing.binding.ThingHandlerService;
-import org.eclipse.smarthome.core.thing.binding.builder.ChannelBuilder;
-import org.eclipse.smarthome.core.thing.binding.builder.ThingBuilder;
-import org.eclipse.smarthome.core.types.Command;
-import org.eclipse.smarthome.io.net.http.HttpClientFactory;
+import org.openhab.binding.yamahamusiccast.internal.model.UdpMessage;
+import org.openhab.core.common.ThreadPoolManager;
+import org.openhab.core.thing.*;
+import org.openhab.core.thing.binding.BaseBridgeHandler;
+import org.openhab.core.types.Command;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jdk.internal.jshell.tool.resources.version;
-
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonSyntaxException;
-
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledExecutorService;
-import org.eclipse.smarthome.core.common.ThreadPoolManager;
-import org.openhab.binding.yamahamusiccast.internal.UdpListener;
-
 
 /**
  * The {@link YamahaMusiccastBridgeHandler} is responsible for handling commands, which are
@@ -63,7 +40,7 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
     private final Logger logger = LoggerFactory.getLogger(YamahaMusiccastBridgeHandler.class);
 
     private final ScheduledExecutorService UdpScheduler = ThreadPoolManager
-    .getScheduledPool("YamahaMusiccastListener" + "-" + thing.getUID().getId());
+            .getScheduledPool("YamahaMusiccastListener" + "-" + thing.getUID().getId());
     private @Nullable ScheduledFuture<?> listenerJob;
     private final UdpListener udpListener;
 
@@ -82,7 +59,7 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
         startUDPListenerJob();
     }
 
-      @Override
+    @Override
     public void dispose() {
         stopUDPListenerJob();
         super.dispose();
@@ -116,10 +93,9 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
                 udpDeviceId = "";
             }
             if (udpDeviceId.equals(handler.getDeviceId())) {
-                //logger.info("package for {}", thing.getLabel());
+                // logger.info("package for {}", thing.getLabel());
                 handler.processUDPEvent(json);
             }
         }
     }
-
 }

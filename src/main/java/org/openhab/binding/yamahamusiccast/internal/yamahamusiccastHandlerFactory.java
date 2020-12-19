@@ -14,26 +14,20 @@ package org.openhab.binding.yamahamusiccast.internal;
 
 import static org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastBindingConstants.*;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
-import org.eclipse.smarthome.core.thing.Thing;
-import org.eclipse.smarthome.core.thing.Bridge;
-import org.eclipse.smarthome.core.thing.ThingTypeUID;
-import org.eclipse.smarthome.core.thing.binding.BaseThingHandlerFactory;
-import org.eclipse.smarthome.core.thing.binding.ThingHandler;
-import org.eclipse.smarthome.core.thing.binding.ThingHandlerFactory;
+import org.openhab.core.thing.Bridge;
+import org.openhab.core.thing.Thing;
+import org.openhab.core.thing.ThingTypeUID;
+import org.openhab.core.thing.binding.BaseThingHandlerFactory;
+import org.openhab.core.thing.binding.ThingHandler;
+import org.openhab.core.thing.binding.ThingHandlerFactory;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.Activate;
-import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastHandler;
-import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastBridgeHandler;
-import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastStateDescriptionProvider;
-
 
 /**
  * The {@link yamahamusiccastHandlerFactory} is responsible for creating things and thing
@@ -45,7 +39,7 @@ import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastStateDescript
 @Component(configurationPid = "binding.yamahamusiccast", service = ThingHandlerFactory.class)
 public class YamahaMusiccastHandlerFactory extends BaseThingHandlerFactory {
 
-    //private static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Collections.singleton(THING_DEVICE);
+    // private static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Collections.singleton(THING_DEVICE);
 
     private static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = new HashSet<>();
     static {
@@ -53,18 +47,18 @@ public class YamahaMusiccastHandlerFactory extends BaseThingHandlerFactory {
         SUPPORTED_THING_TYPES_UIDS.add(YamahaMusiccastBindingConstants.THING_TYPE_BRIDGE);
     }
 
-
     private final YamahaMusiccastStateDescriptionProvider stateDescriptionProvider;
-    //private final UdpService udpService;
+    // private final UdpService udpService;
 
     @Activate
     public YamahaMusiccastHandlerFactory(@Reference YamahaMusiccastStateDescriptionProvider stateDescriptionProvider) {
         this.stateDescriptionProvider = stateDescriptionProvider;
-        //this.udpService = udpService;
+        // this.udpService = udpService;
     }
+
     @Override
     public boolean supportsThingType(ThingTypeUID thingTypeUID) {
-        //return THING_TYPE_BRIDGE.equals(thingTypeUID) || SUPPORTED_THING_TYPES_UIDS.contains(thingTypeUID);
+        // return THING_TYPE_BRIDGE.equals(thingTypeUID) || SUPPORTED_THING_TYPES_UIDS.contains(thingTypeUID);
         return SUPPORTED_THING_TYPES_UIDS.contains(thingTypeUID);
     }
 
@@ -73,13 +67,12 @@ public class YamahaMusiccastHandlerFactory extends BaseThingHandlerFactory {
         ThingTypeUID thingTypeUID = thing.getThingTypeUID();
 
         if (thingTypeUID.equals(THING_TYPE_BRIDGE)) {
-            //YamahaMusiccastBridgeHandler bridgeHandler = new YamahaMusiccastBridgeHandler(thing);
-            //return bridgeHandler;
+            // YamahaMusiccastBridgeHandler bridgeHandler = new YamahaMusiccastBridgeHandler(thing);
+            // return bridgeHandler;
             return new YamahaMusiccastBridgeHandler((Bridge) thing);
         } else if (THING_DEVICE.equals(thingTypeUID)) {
-            return new YamahaMusiccastHandler(thing,stateDescriptionProvider);
-        } 
+            return new YamahaMusiccastHandler(thing, stateDescriptionProvider);
+        }
         return null;
-        
     }
 }

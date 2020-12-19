@@ -195,7 +195,7 @@
 		<label>Track</label>
 		<description>Track</description>
 	</channel-type>
-		<channel-type id="channelAlbum">
+	<channel-type id="channelAlbum">
 		<item-type>String</item-type>
 		<label>Album</label>
 		<description>Album</description>
