@@ -277,6 +277,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                         httpResponse = setClientInfo(config.configHost,json);
                     } else if (action.equals("link")) { 
                         json = "{\"group_id\":\"" + groupId + "\", \"zone\":\"" + mclinkSetupZone + "\", \"type\":\"add\", \"client_list\":[\"" + config.configHost + "\"]}";
+                        logger.info("setServerInfo json: {}", json);
                         httpResponse = setServerInfo(mclinkSetupServer, json);
                         // All zones of Model are required for MC Link
                         tmpString = "";
