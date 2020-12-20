@@ -369,9 +369,9 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             }
         }
         updatePresets(0);
-        //fetchOtherDevices();
+        fetchOtherDevices();
         updateNetUSBPlayer();
-        fetchOtherDevicesViaBridge();
+        //fetchOtherDevicesViaBridge();
     }
 
     @Override
