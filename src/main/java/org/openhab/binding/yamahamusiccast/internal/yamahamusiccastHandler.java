@@ -200,8 +200,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                                 logger.info("Volume mc_link: {}", tmpString);
                             }
                         } // END configSyncVolume
-                        
-
                     } catch (Exception e) {
                         //Wait for refresh
                     }                    

@@ -18,8 +18,6 @@ UDP events are captured to reflect changes in the binding for
 - Repeat
 - Shuffle
 
-For Music Cast, the different Things are read via the OpenHAB REST API.
-
 ## Supported Things
 
 Each model (AV Receiver, ...) is a Thing. Things are linked to a Bridge for receiving UDP events.
@@ -127,6 +125,7 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306
 - Removed configuration for refreshInterval (v0.74).
 - Added channel for AlbumArt/Shuffle/Repeat (v0.74).
 - Fixed error which occured when updating Thing (v0.74).
+- Other Things detected via Bridge instead of API (v0.74).
 
 ###### v0.60
 

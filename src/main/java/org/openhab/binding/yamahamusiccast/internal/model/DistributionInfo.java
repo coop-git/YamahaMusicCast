@@ -34,8 +34,8 @@ public class DistributionInfo {
     @SerializedName("server_zone")
     private String serverZone;
 
-    @SerializedName("client_list")
-    private ClientList clientList;
+    //@SerializedName("client_list")
+    //private ClientList clientList;
 
     public String getResponseCode() {
         return responseCode;
@@ -53,9 +53,9 @@ public class DistributionInfo {
         return serverZone;
     }
 
-    public ClientList getClientList() {
-        return clientList;
-    }
+    //public ClientList getClientList() {
+    //    return clientList;
+    //}
 
     public class ClientList {
         @SerializedName("ip_address")
