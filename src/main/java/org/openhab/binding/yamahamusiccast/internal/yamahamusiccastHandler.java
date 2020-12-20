@@ -127,6 +127,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     String channelWithoutGroup = "";
     @NonNullByDefault({}) String thingLabel = "";
     @NonNullByDefault({}) String mclinkSetupServer = "";
+    @NonNullByDefault({}) String mclinkSetupZone = "";
     String url = "";
     String json = "";
     String action= "";
@@ -252,8 +253,9 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                         groupId="";
                     } else {
                         action="link";
-                        String[] parts2 = command.toString().split("#");
-                        mclinkSetupServer = parts2[0];
+                        String[] parts = command.toString().split("\\*\\*\\*");
+                        mclinkSetupServer = parts[0];
+                        mclinkSetupZone = parts[1];
                         tmpString = getDistributionInfo(mclinkSetupServer);
                         DistributionInfo targetObject = new DistributionInfo();
                         targetObject = new Gson().fromJson(tmpString, DistributionInfo.class);
@@ -274,7 +276,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                         json = "{\"group_id\":\"\"}";
                         httpResponse = setClientInfo(config.configHost,json);
                     } else if (action.equals("link")) { 
-                        json = "{\"group_id\":\"" + groupId + "\", \"zone\":\"" + zone + "\", \"type\":\"add\", \"client_list\":[\"" + config.configHost + "\"]}";
+                        json = "{\"group_id\":\"" + groupId + "\", \"zone\":\"" + mclinkSetupZone + "\", \"type\":\"add\", \"client_list\":[\"" + config.configHost + "\"]}";
                         httpResponse = setServerInfo(mclinkSetupServer, json);
                         // All zones of Model are required for MC Link
                         tmpString = "";
@@ -369,9 +371,9 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             }
         }
         updatePresets(0);
-        fetchOtherDevices();
+        //fetchOtherDevices();
         updateNetUSBPlayer();
-        //fetchOtherDevicesViaBridge();
+        fetchOtherDevicesViaBridge();
     }
 
     @Override
@@ -850,22 +852,22 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         List<StateOption> options = new ArrayList<>();
         for (Thing thing : bridge.getThings()) {
             label = thing.getLabel();
-            host = getThing().getConfiguration().get("configHost").toString();
+            host = thing.getConfiguration().get("configHost").toString();
             logger.debug("Thing found on Bridge: {} - {}", label, host);
             zonesPerHost = getNumberOfZones(host);
             for (int i = 1; i <= zonesPerHost; i++) {
                 switch (i) {
                     case 1:
-                        options.add(new StateOption(host + "#" + "main", label + "#main"));                    
+                        options.add(new StateOption(host + "***main", label + "***main***" + host));
                         break;
                     case 2:
-                        options.add(new StateOption(host + "#" + "zone2", label + "#zone2"));
+                        options.add(new StateOption(host + "***zone2", label + "***zone2***" + host));
                         break;
                     case 3:
-                        options.add(new StateOption(host + "#" + "zone3", label + "#zone3"));
+                        options.add(new StateOption(host + "***zone3", label + "***zone3***" + host));
                         break;
                     case 4:
-                        options.add(new StateOption(host + "#" + "zone4", label + "#zone4"));
+                        options.add(new StateOption(host + "***zone4", label + "***zone4***" + host));
                         break;
                 }
             }
@@ -919,16 +921,16 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     for (int i = 1; i <= zonesPerHost; i++) {
                         switch (i) {
                             case 1:
-                                options.add(new StateOption(host + "#" + "main", label + "#main"));                    
+                                options.add(new StateOption(host + "***main", label + "***main"));                    
                                 break;
                             case 2:
-                                options.add(new StateOption(host + "#" + "zone2", label + "#zone2"));
+                                options.add(new StateOption(host + "***zone2", label + "***zone2"));
                                 break;
                             case 3:
-                                options.add(new StateOption(host + "#" + "zone3", label + "#zone3"));
+                                options.add(new StateOption(host + "***zone3", label + "***zone3"));
                                 break;
                             case 4:
-                                options.add(new StateOption(host + "#" + "zone4", label + "#zone4"));
+                                options.add(new StateOption(host + "***zone4", label + "***zone4"));
                                 break;
                         }
                     }

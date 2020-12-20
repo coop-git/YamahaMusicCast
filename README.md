@@ -57,8 +57,8 @@ N/A
 | channelTrack          | String | Track                                                              |
 | channelAlbum          | String | Album                                                              |
 | channelAlbumArt       | Image  | Album Art                                                          |
-| channelRepeat         | String | Toggle Repeat. Values: Off, One, All                               |
-| channelShuffle        | String | Toggle Shuffle. Values: Off, On, Songs, Album                      |
+| channelRepeat         | String | Toggle Repeat. Available values: Off, One, All                     |
+| channelShuffle        | String | Toggle Shuffle. Availabel values: Off, On, Songs, Album            |
 
 
 | Zones                | description                                          |
@@ -126,6 +126,7 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306
 - Added channel for AlbumArt/Shuffle/Repeat (v0.74).
 - Fixed error which occured when updating Thing (v0.74).
 - Other Things detected via Bridge instead of API (v0.74).
+- Revert changes for Sync Volume and detect other Things via Bridge (v0.75).
 
 ###### v0.60
 
