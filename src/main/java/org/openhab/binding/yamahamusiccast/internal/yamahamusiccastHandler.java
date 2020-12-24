@@ -104,6 +104,8 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     JsonParser parser = new JsonParser();
     String tmpString = "";
     Integer tmpInteger = 0;
+    Integer volumePercent = 0;
+    Integer volumeAbsValue = 0;
     Integer connectionTimeout = 5000;
     Integer longConnectionTimeout = 60000;
     @Nullable String responseCode = "";
@@ -188,18 +190,24 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     tmpString = command.toString();
                     tmpString = tmpString.replace(".0","");
                     try {
-                        tmpInteger = Integer.parseInt(tmpString);
-                        tmpInteger = (maxVolumeState * tmpInteger)/100;
-                        logger.debug("Pushed Volume:{} - Calculated Volume:{}", tmpString, tmpInteger);
-                        setVolume(tmpInteger, zone);
+                        volumePercent = Integer.parseInt(tmpString);
+                        volumeAbsValue = (maxVolumeState * tmpInteger)/100;
+                        setVolume(volumeAbsValue, zone, config.configHost);
                         if (config.configSyncVolume) {
                             tmpString = getDistributionInfo(config.configHost);
                             DistributionInfo targetObject = new DistributionInfo();
                             targetObject = new Gson().fromJson(tmpString, DistributionInfo.class);
                             role = targetObject.getRole();
                             if (role.equals("server")) {
-                                logger.info("Volume mc_link: {}", tmpString);
+                                for (JsonElement ip : targetObject.getClientList()) {   
+                                    JsonObject clientObject = ip.getAsJsonObject();
+                                    setVolumeLinkedDevice(volumePercent, zone, clientObject.get("ip_address").getAsString());
+                                }    
                             }
+                            //test json
+                            //tmpString = "{\"response_code\":0,\"group_id\":\"a\",\"group_name\":\"a\",\"role\":\"server\",\"status\":\"working\",\"server_zone\":\"main\",\"client_list\":[{\"ip_address\":\"192.168.1.152\",\"data_type\":\"base\"},{\"ip_address\":\"192.168.1.151\",\"data_type\":\"base\"}],\"build_disable\":[],\"audio_dropout\":false,\"mc_surround\":{\"id\":0,\"role\":\"none\",\"status\":\"none\",\"build_disable\":[]}}";
+                            //targetObject = new Gson().fromJson(tmpString, DistributionInfo.class);
+                            //
                         } // END configSyncVolume
                     } catch (Exception e) {
                         //Wait for refresh
@@ -209,8 +217,9 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     tmpString = command.toString();
                     tmpString = tmpString.replace(".0","");
                     try {
-                        tmpInteger = Integer.parseInt(tmpString);
-                        setVolume(tmpInteger, zone);
+                        volumeAbsValue = Integer.parseInt(tmpString);
+                        volumePercent = (volumeAbsValue / maxVolumeState)*100;
+                        setVolume(volumeAbsValue, zone, config.configHost);
                     } catch (Exception e) {
                         //Wait for refresh
                     }                    
@@ -275,6 +284,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     if (action.equals("unlink")) {
                         json = "{\"group_id\":\"\"}";
                         httpResponse = setClientInfo(config.configHost,json);
+                        // setserverinfo with remove possible?
                     } else if (action.equals("link")) { 
                         json = "{\"group_id\":\"" + groupId + "\", \"zone\":\"" + mclinkSetupZone + "\", \"type\":\"add\", \"client_list\":[\"" + config.configHost + "\"]}";
                         logger.info("setServerInfo json: {}", json);
@@ -633,7 +643,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     } 
 
     private void updateStatusZone(String zoneToUpdate) {
-        tmpString = getStatus(zoneToUpdate);
+        tmpString = getStatus(config.configHost, zoneToUpdate);
         try {
             Status targetObject = new Status();
             targetObject = new Gson().fromJson(tmpString, Status.class);
@@ -1002,6 +1012,50 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
 
     }
+
+    private void setVolumeLinkedDevice(Integer value, String zone, String host) {
+        logger.info("setVolumeLinkedDevice: {}", host);
+        Integer zoneNumLinkedDevice = getNumberOfZones(host);
+        Integer maxVolumeLinkedDevice = 0;
+        Status targetObject = new Status();
+        Integer NewVolume = 0;
+        for (int i = 1; i <= zoneNumLinkedDevice; i++) {
+            switch (i) {
+                case 1:
+                    tmpString = getStatus(host, "main");
+                    targetObject = new Gson().fromJson(tmpString, Status.class);
+                    responseCode = targetObject.getResponseCode();
+                    maxVolumeLinkedDevice = targetObject.getMaxVolume();
+                    NewVolume = maxVolumeLinkedDevice * value / 100;
+                    setVolume(NewVolume, "main", host);
+                    break;
+                case 2:
+                    tmpString = getStatus(host, "zone2");
+                    targetObject = new Gson().fromJson(tmpString, Status.class);
+                    responseCode = targetObject.getResponseCode();
+                    maxVolumeLinkedDevice = targetObject.getMaxVolume();
+                    NewVolume = maxVolumeLinkedDevice * value / 100;
+                    setVolume(NewVolume, "zone2", host);
+                    break;
+                case 3:
+                    tmpString = getStatus(host, "zone3");
+                    targetObject = new Gson().fromJson(tmpString, Status.class);
+                    responseCode = targetObject.getResponseCode();
+                    maxVolumeLinkedDevice = targetObject.getMaxVolume();
+                    NewVolume = maxVolumeLinkedDevice * value / 100;
+                    setVolume(NewVolume, "zone3", host);
+                    break;
+                case 4:
+                    tmpString = getStatus(host, "zone4");
+                    targetObject = new Gson().fromJson(tmpString, Status.class);
+                    responseCode = targetObject.getResponseCode();
+                    maxVolumeLinkedDevice = targetObject.getMaxVolume();
+                    NewVolume = maxVolumeLinkedDevice * value / 100;
+                    setVolume(NewVolume, "zone4", host);
+                    break;
+            }
+        }
+    }
     // End Various functions
 
     // API calls to AVR
@@ -1009,10 +1063,10 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     // Start Zone Related
 
 
-    private String getStatus(String zone) {
+    private String getStatus(String host, String zone) {
         topicAVR = "Status";
         try {
-            httpResponse = HttpUtil.executeUrl("GET", "http://" + config.configHost + "/YamahaExtendedControl/v1/" + zone + "/getStatus", connectionTimeout);
+            httpResponse = HttpUtil.executeUrl("GET", "http://" + host + "/YamahaExtendedControl/v1/" + zone + "/getStatus", connectionTimeout);
             logger.debug("{}", httpResponse);
             return httpResponse;
         } catch (IOException e) {
@@ -1045,11 +1099,11 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
     }
 
-    private String setVolume(Integer value, String zone) {
+    private String setVolume(Integer value, String zone, String host) {
         topicAVR = "Volume";
         try {
-            httpResponse = HttpUtil.executeUrl("GET", "http://" + config.configHost + "/YamahaExtendedControl/v1/" + zone + "/setVolume?volume=" + value, connectionTimeout);
-            logger.info("{}", httpResponse);            
+            httpResponse = HttpUtil.executeUrl("GET", "http://" + host + "/YamahaExtendedControl/v1/" + zone + "/setVolume?volume=" + value, connectionTimeout);
+            logger.debug("{}", httpResponse);            
             return httpResponse;
         } catch (IOException e) {
             logger.warn("IO Exception - {} - {}", topicAVR, e.toString());

@@ -12,6 +12,13 @@
  */
 package org.openhab.binding.yamahamusiccast.internal.model;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonArray;
 
 
 /**
@@ -34,8 +41,8 @@ public class DistributionInfo {
     @SerializedName("server_zone")
     private String serverZone;
 
-    //@SerializedName("client_list")
-    //private ClientList clientList;
+    @SerializedName("client_list")
+    private JsonArray clientList;
 
     public String getResponseCode() {
         return responseCode;
@@ -53,9 +60,9 @@ public class DistributionInfo {
         return serverZone;
     }
 
-    //public ClientList getClientList() {
-    //    return clientList;
-    //}
+    public JsonArray getClientList() {
+        return clientList;
+    }
 
     public class ClientList {
         @SerializedName("ip_address")

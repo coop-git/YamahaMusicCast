@@ -25,6 +25,6 @@ public class YamahaMusiccastConfiguration {
      */
     
     public String configHost;
-    public boolean configSyncVolume;
+    public Boolean configSyncVolume;
 
 }
