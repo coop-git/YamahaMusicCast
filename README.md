@@ -35,6 +35,7 @@ N/A
 | Parameter              | type    | description                                             | Advanced | Required      |
 |------------------------|---------|---------------------------------------------------------|----------|---------------|
 | configHost             | String  | IP address of the Yamaha model (AVR, ...)               | false    | true          |
+| configSyncVolume       | Booelan | Sync volume across linked models (default=false)        | true     | false         |
 
 
 ## Channels
@@ -127,6 +128,7 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306
 - Fixed error which occured when updating Thing (v0.74).
 - Other Things detected via Bridge instead of API (v0.74).
 - Revert changes for Sync Volume and detect other Things via Bridge (v0.75).
+- 2nd try for Sync Volume and detect other Things via Bridge (v0.76).
 
 ###### v0.60
 
