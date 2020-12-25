@@ -50,7 +50,7 @@ N/A
 | channelSoundProgram   | String | See below for list                                                 |
 | channelSelectPreset   | String | Select Netradio/USB preset (fetched from Model)                    |
 | channelSleep          | Number | Fixed values for Sleep : 0/30/60/90/120                            |
-| channelMCServer       | String | Select your MusicCast Server (empty to remove client from MC Link) |
+| channelMCServer       | String | Select your MusicCast Server or set to Standalone                  |
 | channelUnlinkMCServer | Switch | Disband MusicCast Link on Master                                   |
 | channelRecallScene    | Number | Select a scene (create your own dropdown list!)                    |
 | channelPlayer         | Player | PLAY/PAUSE/NEXT/PREVIOUS/REWIND/FASTFORWARD                        |
@@ -79,19 +79,38 @@ Thing yamahamusiccast:Device:Living "YXC Living" [configHost="1.2.3.4"]
 ### Basic setup
 
 ```
-To come
+Switch YamahaPower "" {channel="yamahamusiccast:Device:Living:main#channelPower"}
+Switch YamahaMute "" {channel="yamahamusiccast:Device:Living:main#channelMute"}
+Dimmer YamahaVolume "" {channel="yamahamusiccast:Device:Living:main#channelVolume"}
+Number YamahaVolumeAbs "" {channel="yamahamusiccast:Device:Living:main#channelVolumeAbs"}
+String YamahaInput "" {channel="yamahamusiccast:Device:Living:main#channelInput"}
+String YamahaSelectPreset "" {channel="yamahamusiccast:Device:Living:main#channelSelectPreset"}
+String YamahaSoundProgram "" {channel="yamahamusiccast:Device:Living:main#channelSoundProgram"}
 ```
 
 ### Player controls
 
 ```
-To come
+Player YamahaPlayer "" {channel="yamahamusiccast:Device:Living:playerControls#channelPlayer"}
+String YamahaArt "" {channel="yamahamusiccast:Device:Living:playerControls#channelAlbumArt"}
+String YamahaArtist "" {channel="yamahamusiccast:Device:Living:playerControls#channelArtist"}
+String YamahaTrack "" {channel="yamahamusiccast:Device:Living:playerControls#channelTrack"}
+String YamahaAlbum "" {channel="yamahamusiccast:Device:Living:playerControls#channelAlbum"}
 ```
 
 ### MusicCast setup
 
+The idea here is to select what device/model will be the master. This needs to be done per device/model which will then be the slave.
+If you want the *Living* to be the master for the *Kitchen*, select *Living - zone (IP)* from the thing *Kitchen*.
+The binding will check if there is already a group active for which *Living* is the master. If yes, this group will be used and *Kitchen* will be added.
+If no, a new group will be created.
+
+Set **channelMCServer** to *Standalone* to remove the device/model from the current active group. The group wil keep on exist with other devices/models.
+Use **channelUnlinkMCServer** on the Thing which is currently set to master to disband the group.
+
 ```
-To come
+String YamahaMCServer "[%s]" {channel="yamahamusiccast:Device:Living:main#channelMCServer"}
+Switch YamahaUnlinkMC "" {channel="yamahamusiccast:Device:Living:main#channelUnlinkMCServer"}
 ```
 
 ## Input List
