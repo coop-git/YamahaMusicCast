@@ -191,7 +191,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     tmpString = tmpString.replace(".0","");
                     try {
                         volumePercent = Integer.parseInt(tmpString);
-                        volumeAbsValue = (maxVolumeState * tmpInteger)/100;
+                        volumeAbsValue = (maxVolumeState * volumePercent)/100;
                         setVolume(volumeAbsValue, zone, config.configHost);
                         if (config.configSyncVolume) {
                             tmpString = getDistributionInfo(config.configHost);
@@ -204,10 +204,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                                     setVolumeLinkedDevice(volumePercent, zone, clientObject.get("ip_address").getAsString());
                                 }    
                             }
-                            //test json
-                            //tmpString = "{\"response_code\":0,\"group_id\":\"a\",\"group_name\":\"a\",\"role\":\"server\",\"status\":\"working\",\"server_zone\":\"main\",\"client_list\":[{\"ip_address\":\"192.168.1.152\",\"data_type\":\"base\"},{\"ip_address\":\"192.168.1.151\",\"data_type\":\"base\"}],\"build_disable\":[],\"audio_dropout\":false,\"mc_surround\":{\"id\":0,\"role\":\"none\",\"status\":\"none\",\"build_disable\":[]}}";
-                            //targetObject = new Gson().fromJson(tmpString, DistributionInfo.class);
-                            //
                         } // END configSyncVolume
                     } catch (Exception e) {
                         //Wait for refresh
@@ -220,6 +216,18 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                         volumeAbsValue = Integer.parseInt(tmpString);
                         volumePercent = (volumeAbsValue / maxVolumeState)*100;
                         setVolume(volumeAbsValue, zone, config.configHost);
+                        if (config.configSyncVolume) {
+                            tmpString = getDistributionInfo(config.configHost);
+                            DistributionInfo targetObject = new DistributionInfo();
+                            targetObject = new Gson().fromJson(tmpString, DistributionInfo.class);
+                            role = targetObject.getRole();
+                            if (role.equals("server")) {
+                                for (JsonElement ip : targetObject.getClientList()) {   
+                                    JsonObject clientObject = ip.getAsJsonObject();
+                                    setVolumeLinkedDevice(volumePercent, zone, clientObject.get("ip_address").getAsString());
+                                }    
+                            }
+                        }
                     } catch (Exception e) {
                         //Wait for refresh
                     }                    
@@ -382,7 +390,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             }
         }
         updatePresets(0);
-        //fetchOtherDevices();
         updateNetUSBPlayer();
         fetchOtherDevicesViaBridge();
     }
@@ -869,21 +876,21 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             for (int i = 1; i <= zonesPerHost; i++) {
                 switch (i) {
                     case 1:
-                        options.add(new StateOption(host + "***main", label + "***main***" + host));
+                        options.add(new StateOption(host + "***main", label + " - main (" + host + ")"));
                         break;
                     case 2:
-                        options.add(new StateOption(host + "***zone2", label + "***zone2***" + host));
+                        options.add(new StateOption(host + "***zone2", label + " - zone2 (" + host + ")"));
                         break;
                     case 3:
-                        options.add(new StateOption(host + "***zone3", label + "***zone3***" + host));
+                        options.add(new StateOption(host + "***zone3", label + " - zone3 (" + host + ")"));
                         break;
                     case 4:
-                        options.add(new StateOption(host + "***zone4", label + "***zone4***" + host));
+                        options.add(new StateOption(host + "***zone4", label + " - zone4 (" + host + ")"));
                         break;
                 }
             }
         }
-        options.add(new StateOption("", ""));
+        options.add(new StateOption("", "Standalone"));
         //for each zone of the device set all the possible combinations
         for (int i = 1; i <= zoneNum; i++) {
             switch (i) {
@@ -912,75 +919,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     }
                     break;
             }
-        }
-    }
-
-    private void fetchOtherDevices() {
-        Integer zonesPerHost = 1;
-        try {
-            httpResponse = HttpUtil.executeUrl("GET", "http://127.0.0.1:8080/rest/things", longConnectionTimeout);               
-            List<StateOption> options = new ArrayList<>();
-            Gson gson = new Gson(); 
-            ThingsRest[] resultArray = gson.fromJson(httpResponse, ThingsRest[].class);
-            
-            for(ThingsRest result : resultArray) {
-                if (result.getThingTypeUID().equals("yamahamusiccast:Device")) {
-                    String label = result.getLabel();
-                    JsonObject jsonObject = result.getConfiguration();
-                    String host = jsonObject.get("configHost").getAsString();
-                    zonesPerHost = getNumberOfZones(host);
-                    for (int i = 1; i <= zonesPerHost; i++) {
-                        switch (i) {
-                            case 1:
-                                options.add(new StateOption(host + "***main", label + "***main"));                    
-                                break;
-                            case 2:
-                                options.add(new StateOption(host + "***zone2", label + "***zone2"));
-                                break;
-                            case 3:
-                                options.add(new StateOption(host + "***zone3", label + "***zone3"));
-                                break;
-                            case 4:
-                                options.add(new StateOption(host + "***zone4", label + "***zone4"));
-                                break;
-                        }
-                    }
-                }
-            }
-            options.add(new StateOption("", ""));
-
-            //for each zone of the device set all the possible combinations
-            for (int i = 1; i <= zoneNum; i++) {
-                switch (i) {
-                    case 1:
-                        ChannelUID testchannel = new ChannelUID(getThing().getUID(), "main", "channelMCServer");
-                        if (isLinked(testchannel)) {
-                            stateDescriptionProvider.setStateOptions(testchannel, options);
-                        }
-                        break;
-                    case 2:
-                        testchannel = new ChannelUID(getThing().getUID(), "zone2", "channelMCServer");
-                        if (isLinked(testchannel)) {
-                            stateDescriptionProvider.setStateOptions(testchannel, options);
-                        }
-                        break;
-                    case 3:
-                        testchannel = new ChannelUID(getThing().getUID(), "zone3", "channelMCServer");
-                        if (isLinked(testchannel)) {
-                            stateDescriptionProvider.setStateOptions(testchannel, options);
-                        }
-                        break;
-                    case 4:
-                        testchannel = new ChannelUID(getThing().getUID(), "zone4", "channelMCServer");
-                        if (isLinked(testchannel)) {
-                            stateDescriptionProvider.setStateOptions(testchannel, options);
-                        }
-                        break;
-                }
-            }
-
- 
-        } catch (IOException e) {
         }
     }
 
@@ -1018,7 +956,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         Integer zoneNumLinkedDevice = getNumberOfZones(host);
         Integer maxVolumeLinkedDevice = 0;
         Status targetObject = new Status();
-        Integer NewVolume = 0;
+        Integer newVolume = 0;
         for (int i = 1; i <= zoneNumLinkedDevice; i++) {
             switch (i) {
                 case 1:
@@ -1026,32 +964,32 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     targetObject = new Gson().fromJson(tmpString, Status.class);
                     responseCode = targetObject.getResponseCode();
                     maxVolumeLinkedDevice = targetObject.getMaxVolume();
-                    NewVolume = maxVolumeLinkedDevice * value / 100;
-                    setVolume(NewVolume, "main", host);
+                    newVolume = maxVolumeLinkedDevice * value / 100;
+                    setVolume(newVolume, "main", host);
                     break;
                 case 2:
                     tmpString = getStatus(host, "zone2");
                     targetObject = new Gson().fromJson(tmpString, Status.class);
                     responseCode = targetObject.getResponseCode();
                     maxVolumeLinkedDevice = targetObject.getMaxVolume();
-                    NewVolume = maxVolumeLinkedDevice * value / 100;
-                    setVolume(NewVolume, "zone2", host);
+                    newVolume = maxVolumeLinkedDevice * value / 100;
+                    setVolume(newVolume, "zone2", host);
                     break;
                 case 3:
                     tmpString = getStatus(host, "zone3");
                     targetObject = new Gson().fromJson(tmpString, Status.class);
                     responseCode = targetObject.getResponseCode();
                     maxVolumeLinkedDevice = targetObject.getMaxVolume();
-                    NewVolume = maxVolumeLinkedDevice * value / 100;
-                    setVolume(NewVolume, "zone3", host);
+                    newVolume = maxVolumeLinkedDevice * value / 100;
+                    setVolume(newVolume, "zone3", host);
                     break;
                 case 4:
                     tmpString = getStatus(host, "zone4");
                     targetObject = new Gson().fromJson(tmpString, Status.class);
                     responseCode = targetObject.getResponseCode();
                     maxVolumeLinkedDevice = targetObject.getMaxVolume();
-                    NewVolume = maxVolumeLinkedDevice * value / 100;
-                    setVolume(NewVolume, "zone4", host);
+                    newVolume = maxVolumeLinkedDevice * value / 100;
+                    setVolume(newVolume, "zone4", host);
                     break;
             }
         }

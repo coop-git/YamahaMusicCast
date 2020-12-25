@@ -48,7 +48,7 @@ N/A
 | channelVolumeAbs      | Number | Volume as absolute value                                           |
 | channelInput          | String | See below for list                                                 |
 | channelSoundProgram   | String | See below for list                                                 |
-| channelSelectPreset   | String | Select Netradio/USB preset (fetched from model)                    |
+| channelSelectPreset   | String | Select Netradio/USB preset (fetched from Model)                    |
 | channelSleep          | Number | Fixed values for Sleep : 0/30/60/90/120                            |
 | channelMCServer       | String | Select your MusicCast Server (empty to remove client from MC Link) |
 | channelUnlinkMCServer | Switch | Disband MusicCast Link on Master                                   |
@@ -69,9 +69,15 @@ N/A
 
 ## Full Example
 
+### Bridge & Thing(s)
+
+```
 Bridge yamahamusiccast:bridge:bridge "YXC Bridge" {
 Thing yamahamusiccast:Device:Living "YXC Living" [configHost="1.2.3.4"]
 }
+```
+
+
 
 ## Input List
 
@@ -129,6 +135,7 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306
 - Other Things detected via Bridge instead of API (v0.74).
 - Revert changes for Sync Volume and detect other Things via Bridge (v0.75).
 - 2nd try for Sync Volume and detect other Things via Bridge (v0.76).
+- Changed *empty value* to *Standalone* (v0.76).
 
 ###### v0.60
 
