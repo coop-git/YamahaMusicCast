@@ -76,8 +76,23 @@ Bridge yamahamusiccast:bridge:bridge "YXC Bridge" {
 Thing yamahamusiccast:Device:Living "YXC Living" [configHost="1.2.3.4"]
 }
 ```
+### Basic setup
 
+```
+To come
+```
 
+### Player controls
+
+```
+To come
+```
+
+### MusicCast setup
+
+```
+To come
+```
 
 ## Input List
 
