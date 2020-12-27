@@ -171,6 +171,7 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306
 - Revert changes for Sync Volume and detect other Things via Bridge (v0.75).
 - 2nd try for Sync Volume and detect other Things via Bridge (v0.76).
 - Changed *empty value* to *Standalone* (v0.76).
+- Update environment to OH 2.5.12, worked further on coding guidelines (v0.77).
 
 ###### v0.60
 

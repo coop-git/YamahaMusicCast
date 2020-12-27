@@ -113,8 +113,9 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
                     YamahaMusiccastHandler handler = (YamahaMusiccastHandler) thing.getHandler();
                     logger.debug("UDP: {} - {} ({})", json, handler.getDeviceId(), thing.getLabel());
                     try {
-                        UdpMessage targetObject = new UdpMessage();
-                        targetObject = new Gson().fromJson(json, UdpMessage.class);
+                        //UdpMessage targetObject = new UdpMessage();
+                        @Nullable
+                        UdpMessage targetObject = new Gson().fromJson(json, UdpMessage.class);
                         udpDeviceId = targetObject.getDeviceId();
                     } catch (Exception e) {
                         logger.warn("Error fetching Device Id");

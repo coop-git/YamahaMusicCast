@@ -194,9 +194,9 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     try {
                         volumePercent = Integer.parseInt(tmpString);
                         volumeAbsValue = (maxVolumeState * volumePercent)/100;
-                        setVolume(volumeAbsValue, zone, config.configHost);
+                        setVolume(volumeAbsValue, zone, this.host);
                         if (config.configSyncVolume) {
-                            tmpString = getDistributionInfo(config.configHost);
+                            tmpString = getDistributionInfo(this.host);
                             //DistributionInfo targetObject = new DistributionInfo();
                             @Nullable
                             DistributionInfo targetObject = new Gson().fromJson(tmpString, DistributionInfo.class);
@@ -218,11 +218,12 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     try {
                         volumeAbsValue = Integer.parseInt(tmpString);
                         volumePercent = (volumeAbsValue / maxVolumeState)*100;
-                        setVolume(volumeAbsValue, zone, config.configHost);
+                        setVolume(volumeAbsValue, zone, this.host);
                         if (config.configSyncVolume) {
-                            tmpString = getDistributionInfo(config.configHost);
-                            DistributionInfo targetObject = new DistributionInfo();
-                            targetObject = new Gson().fromJson(tmpString, DistributionInfo.class);
+                            tmpString = getDistributionInfo(this.host);
+                            //DistributionInfo targetObject = new DistributionInfo();
+                            @Nullable
+                            DistributionInfo targetObject = new Gson().fromJson(tmpString, DistributionInfo.class);
                             role = targetObject.getRole();
                             if (role.equals("server")) {
                                 for (JsonElement ip : targetObject.getClientList()) {   
@@ -295,10 +296,10 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     
                     if (action.equals("unlink")) {
                         json = "{\"group_id\":\"\"}";
-                        httpResponse = setClientInfo(config.configHost,json);
+                        httpResponse = setClientInfo(this.host,json);
                         // setserverinfo with remove possible?
                     } else if (action.equals("link")) { 
-                        json = "{\"group_id\":\"" + groupId + "\", \"zone\":\"" + mclinkSetupZone + "\", \"type\":\"add\", \"client_list\":[\"" + config.configHost + "\"]}";
+                        json = "{\"group_id\":\"" + groupId + "\", \"zone\":\"" + mclinkSetupZone + "\", \"type\":\"add\", \"client_list\":[\"" + this.host + "\"]}";
                         logger.info("setServerInfo json: {}", json);
                         httpResponse = setServerInfo(mclinkSetupServer, json);
                         // All zones of Model are required for MC Link
@@ -321,14 +322,14 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                         }
                         json = "{\"group_id\":\"" + groupId + "\", \"zone\":[" + tmpString + "]}";
                         logger.info("setClientInfo json: {}", json);
-                        httpResponse = setClientInfo(config.configHost, json);
+                        httpResponse = setClientInfo(this.host, json);
                         httpResponse = startDistribution(mclinkSetupServer);
                     }
                     break;
                 case CHANNEL_UNLINKMCSERVER:
                         if (command.equals(OnOffType.ON)) {
                             json = "{\"group_id\":\"\"}";
-                            httpResponse = setServerInfo(config.configHost, json);
+                            httpResponse = setServerInfo(this.host, json);
                             updateState(channelUID, OnOffType.OFF); 
                         }
                     break;
