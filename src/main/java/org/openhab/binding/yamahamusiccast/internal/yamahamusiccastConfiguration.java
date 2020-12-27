@@ -17,10 +17,10 @@ import org.eclipse.jdt.annotation.*;
  *
  * @author Lennert Coopman - Initial contribution
  */
-
+@NonNullByDefault
 public class YamahaMusiccastConfiguration {
   
-    public String configHost;
-    public Boolean configSyncVolume;
+    public @Nullable String configHost;
+    public @Nullable Boolean configSyncVolume;
 
 }
