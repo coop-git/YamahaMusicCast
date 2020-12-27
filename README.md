@@ -35,7 +35,7 @@ N/A
 | Parameter              | type    | description                                             | Advanced | Required      |
 |------------------------|---------|---------------------------------------------------------|----------|---------------|
 | configHost             | String  | IP address of the Yamaha model (AVR, ...)               | false    | true          |
-| configSyncVolume       | Booelan | Sync volume across linked models (default=false)        | true     | false         |
+| configSyncVolume       | Boolean | Sync volume across linked models (default=false)        | true     | false         |
 
 
 ## Channels
@@ -76,6 +76,7 @@ Bridge yamahamusiccast:bridge:bridge "YXC Bridge" {
 Thing yamahamusiccast:Device:Living "YXC Living" [configHost="1.2.3.4"]
 }
 ```
+
 ### Basic setup
 
 ```
@@ -103,7 +104,7 @@ String YamahaAlbum "" {channel="yamahamusiccast:Device:Living:playerControls#cha
 The idea here is to select what device/model will be the master. This needs to be done per device/model which will then be the slave.
 If you want the *Living* to be the master for the *Kitchen*, select *Living - zone (IP)* from the thing *Kitchen*.
 The binding will check if there is already a group active for which *Living* is the master. If yes, this group will be used and *Kitchen* will be added.
-If no, a new group will be created.
+If not, a new group will be created.
 
 Set **channelMCServer** to *Standalone* to remove the device/model from the current active group. The group wil keep on exist with other devices/models.
 Use **channelUnlinkMCServer** on the Thing which is currently set to master to disband the group.

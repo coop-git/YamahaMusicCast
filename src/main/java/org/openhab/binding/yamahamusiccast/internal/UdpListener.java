@@ -35,12 +35,9 @@ import org.slf4j.LoggerFactory;
  */
 @NonNullByDefault
 public class UdpListener extends Thread {
-    // Doorbird devices report status on a UDP port
+    
     private static final int UDP_PORT = 41100;
-
-    // How long to wait in milliseconds for a UDP packet
     private static final int SOCKET_TIMEOUT_MILLISECONDS = 3000;
-
     private static final int BUFFER_SIZE = 5120;
 
     private final Logger logger = LoggerFactory.getLogger(UdpListener.class);
@@ -49,7 +46,7 @@ public class UdpListener extends Thread {
 
     private final YamahaMusiccastBridgeHandler bridgeHandler;
 
-    // UDP socket used to receive status events from doorbell
+    // UDP socket used to receive status events from Yamaha device
     private @Nullable DatagramSocket socket;
 
     public UdpListener(YamahaMusiccastBridgeHandler bridgeHandler) {

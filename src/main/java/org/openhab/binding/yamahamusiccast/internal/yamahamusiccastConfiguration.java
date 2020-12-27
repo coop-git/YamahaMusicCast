@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.openhab.binding.yamahamusiccast.internal;
-
+import org.eclipse.jdt.annotation.*;
 /**
  * The {@link yamahamusiccastConfiguration} class contains fields mapping thing configuration parameters.
  *
@@ -19,11 +19,7 @@ package org.openhab.binding.yamahamusiccast.internal;
  */
 
 public class YamahaMusiccastConfiguration {
-
-    /**
-     * Sample configuration parameter. Replace with your own.
-     */
-    
+  
     public String configHost;
     public Boolean configSyncVolume;
 
