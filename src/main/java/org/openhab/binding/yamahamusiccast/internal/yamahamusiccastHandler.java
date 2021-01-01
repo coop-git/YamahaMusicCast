@@ -277,7 +277,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                 case CHANNEL_MCSERVER:
                     action = "";
                     json = "";
-                    InputStream is2 = new ByteArrayInputStream(json.getBytes());
+                    //InputStream is2 = new ByteArrayInputStream(json.getBytes());
 
                     if (command.toString().equals("")) {
                         action="unlink";
@@ -412,6 +412,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         updatePresets(0);
         updateNetUSBPlayer();
         fetchOtherDevicesViaBridge();
+        updateMCLinkStatus();
     }
 
     @Override
@@ -962,8 +963,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     public String getDeviceId() {
         try {
             tmpString = getDeviceInfo();
-            //DeviceInfo targetObject = new DeviceInfo();
-            
+            @Nullable         
             DeviceInfo targetObject = new Gson().fromJson(tmpString, DeviceInfo.class);
             deviceId = targetObject.getDeviceId();
             return deviceId;
@@ -1017,6 +1017,45 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     break;
             }
         }
+    }
+
+    private void updateMCLinkStatus () {
+        tmpString = getDistributionInfo(this.host);
+        @Nullable
+        DistributionInfo targetObject = new Gson().fromJson(tmpString, DistributionInfo.class);
+        role = targetObject.getRole();
+        ChannelUID testchannel;
+        if (role.equals("none")) {
+            for (int i = 1; i <= zoneNum; i++) {
+                switch (i) {
+                    case 1:
+                        testchannel = new ChannelUID(getThing().getUID(), "main", "channelMCServer");
+                        if (isLinked(testchannel)){
+                            updateState(testchannel, StringType.valueOf(""));
+                        }
+                        break;
+                    case 2:
+                        testchannel = new ChannelUID(getThing().getUID(), "zone2", "channelMCServer");
+                        if (isLinked(testchannel)){
+                            updateState(testchannel, StringType.valueOf(""));
+                        }
+                        break;
+                    case 3:
+                        testchannel = new ChannelUID(getThing().getUID(), "zone3", "channelMCServer");
+                        if (isLinked(testchannel)){
+                            updateState(testchannel, StringType.valueOf(""));
+                        }
+                        break;
+                    case 4:
+                        testchannel = new ChannelUID(getThing().getUID(), "zone4", "channelMCServer");
+                        if (isLinked(testchannel)){
+                            updateState(testchannel, StringType.valueOf(""));
+                        }
+                        break;
+                }
+            }
+        }
+
     }
     // End Various functions
 
