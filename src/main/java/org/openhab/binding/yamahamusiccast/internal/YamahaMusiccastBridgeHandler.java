@@ -52,8 +52,7 @@ import org.openhab.binding.yamahamusiccast.internal.UdpListener;
 
 
 /**
- * The {@link YamahaMusiccastBridgeHandler} is responsible for handling commands, which are
- * sent to one of the channels.
+ * The {@link YamahaMusiccastBridgeHandler} is responsible for dispatching UDP events to linked Things.
  *
  * @author Lennert Coopman - Initial contribution
  */

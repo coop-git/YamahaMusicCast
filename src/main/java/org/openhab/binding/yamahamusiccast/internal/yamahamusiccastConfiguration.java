@@ -13,7 +13,7 @@
 package org.openhab.binding.yamahamusiccast.internal;
 import org.eclipse.jdt.annotation.*;
 /**
- * The {@link yamahamusiccastConfiguration} class contains fields mapping thing configuration parameters.
+ * The {@link YamahaMusiccastConfiguration} class contains fields mapping thing configuration parameters.
  *
  * @author Lennert Coopman - Initial contribution
  */

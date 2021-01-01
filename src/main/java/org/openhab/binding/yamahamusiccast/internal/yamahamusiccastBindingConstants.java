@@ -16,7 +16,7 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.smarthome.core.thing.ThingTypeUID;
 
 /**
- * The {@link yamahamusiccastBindingConstants} class defines common constants, which are
+ * The {@link YamahaMusiccastBindingConstants} class defines common constants, which are
  * used across the whole binding.
  *
  * @author Lennert Coopman - Initial contribution

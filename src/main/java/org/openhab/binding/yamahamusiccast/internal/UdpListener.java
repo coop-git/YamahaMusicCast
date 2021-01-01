@@ -28,8 +28,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The {@link DoorbirdUdpListener} is responsible for receiving
- * UDP braodcasts from the Doorbird doorbell.
+ * The {@link UdpListener} is responsible for receiving
+ * UDP braodcasts from the Yamaha device/model.
  *
  * @author Lennert Coopman - Initial contribution
  */

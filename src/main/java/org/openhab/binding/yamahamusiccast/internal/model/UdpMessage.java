@@ -16,7 +16,7 @@ import org.eclipse.jdt.annotation.*;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 
 /**
- * This class represents the push request sent to the API.
+ * This class represents the UDP event received from the Yamaha model/device.
  *
  * @author Lennert Coopman - Initial contribution
  */

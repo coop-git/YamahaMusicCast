@@ -86,7 +86,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonArray;
 
 /**
- * The {@link yamahamusiccastHandler} is responsible for handling commands, which are
+ * The {@link YamahaMusiccastHandler} is responsible for handling commands, which are
  * sent to one of the channels.
  *
  * @author Lennert Coopman - Initial contribution

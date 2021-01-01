@@ -20,8 +20,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
- * The {@link yamahamusiccastHandler} is responsible for handling commands, which are
- * sent to one of the channels.
+ * The {@link YamahaMusiccastStateDescriptionProvider} is responsible for handling the state options of a channel.
  *
  * @author Lennert Coopman - Initial contribution
  */

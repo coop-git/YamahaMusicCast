@@ -36,7 +36,7 @@ import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastStateDescript
 
 
 /**
- * The {@link yamahamusiccastHandlerFactory} is responsible for creating things and thing
+ * The {@link YamahamusiccastHandlerFactory} is responsible for creating things and thing
  * handlers.
  *
  * @author Lennert Coopman - Initial contribution

@@ -16,7 +16,7 @@ import org.eclipse.jdt.annotation.*;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 
 /**
- * This class represents the push request sent to the API.
+ * This class represents the Features request requested from the Yamaha model/device via the API.
  *
  * @author Lennert Coopman - Initial contribution
  */
