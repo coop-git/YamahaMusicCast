@@ -12,63 +12,58 @@
  */
 package org.openhab.binding.yamahamusiccast.internal.model;
 import com.google.gson.annotations.SerializedName;
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonArray;
-
+import org.eclipse.jdt.annotation.*;
+import org.eclipse.jdt.annotation.NonNullByDefault;
 
 /**
  * This class represents the push request sent to the API.
  *
  * @author Lennert Coopman - Initial contribution
  */
-
+@NonNullByDefault
 public class DistributionInfo {
 
     @SerializedName("response_code")
-    private String responseCode;
+    private @Nullable String responseCode;
 
     @SerializedName("group_id")
-    private String groupId;
+    private @Nullable String groupId;
 
     @SerializedName("role")
-    private String role;
+    private @Nullable String role;
 
     @SerializedName("server_zone")
-    private String serverZone;
+    private @Nullable String serverZone;
 
     @SerializedName("client_list")
-    private JsonArray clientList;
+    private @Nullable JsonArray clientList;
 
-    public String getResponseCode() {
+    public @Nullable String getResponseCode() {
         return responseCode;
     }
 
-    public String getGroupId() {
+    public @Nullable String getGroupId() {
         return groupId;
     }
 
-    public String getRole() {
+    public @Nullable String getRole() {
         return role;
     }
 
-    public String getServerZone() {
+    public @Nullable String getServerZone() {
         return serverZone;
     }
 
-    public JsonArray getClientList() {
+    public @Nullable JsonArray getClientList() {
         return clientList;
     }
-
+    @NonNullByDefault
     public class ClientList {
         @SerializedName("ip_address")
-        private String ipaddress;
+        private @Nullable String ipaddress;
 
-        public String getIpaddress() {
+        public @Nullable String getIpaddress() {
             if (ipaddress==null) {ipaddress = "";}
             return ipaddress;
         } 

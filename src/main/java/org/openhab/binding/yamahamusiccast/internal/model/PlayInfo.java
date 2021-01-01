@@ -12,70 +12,71 @@
  */
 package org.openhab.binding.yamahamusiccast.internal.model;
 import com.google.gson.annotations.SerializedName;
-
+import org.eclipse.jdt.annotation.*;
+import org.eclipse.jdt.annotation.NonNullByDefault;
 
 /**
  * This class represents the push request sent to the API.
  *
  * @author Lennert Coopman - Initial contribution
  */
-
+@NonNullByDefault
 public class PlayInfo {
 
     @SerializedName("response_code")
-    private String responseCode;
+    private @Nullable String responseCode;
 
     @SerializedName("playback")
-    private String playback;
+    private @Nullable String playback;
 
     @SerializedName("artist")
-    private String artist;
+    private @Nullable String artist;
 
     @SerializedName("track")
-    private String track;
+    private @Nullable String track;
 
     @SerializedName("album")
-    private String album;
+    private @Nullable String album;
 
     @SerializedName("albumart_url")
-    private String albumarturl;
+    private @Nullable String albumarturl;
 
     @SerializedName("repeat")
-    private String repeat;
+    private @Nullable String repeat;
 
     @SerializedName("shuffle")
-    private String shuffle;
+    private @Nullable String shuffle;
 
 
-    public String getResponseCode() {
+    public @Nullable String getResponseCode() {
         return responseCode;
     }
 
-    public String getPlayback() {
+    public @Nullable String getPlayback() {
         return playback;
     }  
 
-    public String getArtist() {
+    public @Nullable String getArtist() {
         return artist;
     }  
 
-    public String getTrack() {
+    public @Nullable String getTrack() {
         return track;
     }  
 
-    public String getAlbum() {
+    public @Nullable String getAlbum() {
         return album;
     }  
    
-    public String getAlbumArtUrl() {
+    public @Nullable String getAlbumArtUrl() {
         return albumarturl;
     }  
 
-    public String getRepeat() {
+    public @Nullable String getRepeat() {
         return repeat;
     }  
 
-    public String getShuffle() {
+    public @Nullable String getShuffle() {
         return shuffle;
     }  
    

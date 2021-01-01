@@ -12,118 +12,119 @@
  */
 package org.openhab.binding.yamahamusiccast.internal.model;
 import com.google.gson.annotations.SerializedName;
-
+import org.eclipse.jdt.annotation.*;
+import org.eclipse.jdt.annotation.NonNullByDefault;
 
 /**
  * This class represents the push request sent to the API.
  *
  * @author Lennert Coopman - Initial contribution
  */
-
+@NonNullByDefault
 public class UdpMessage {
 
     @SerializedName("device_id")
-    private String deviceId;
+    private @Nullable String deviceId;
 
-    public String getDeviceId() {
+    public @Nullable String getDeviceId() {
         return deviceId;
     }
 
     @SerializedName("main")
-    private Zone main;
+    private @Nullable Zone main;
     @SerializedName("zone2")
-    private Zone zone2;
+    private @Nullable Zone zone2;
     @SerializedName("zone3")
-    private Zone zone3;
+    private @Nullable Zone zone3;
     @SerializedName("zone4")
-    private Zone zone4;
+    private @Nullable Zone zone4;
     @SerializedName("netusb")
-    private NetUSB netusb;
+    private @Nullable NetUSB netusb;
 
 
-    public Zone getMain() {
+    public @Nullable Zone getMain() {
         return main;
     }
-    public Zone getZone2() {
+    public @Nullable Zone getZone2() {
         return zone2;
     }
-    public Zone getZone3() {
+    public @Nullable Zone getZone3() {
         return zone3;
     }
-    public Zone getZone4() {
+    public @Nullable Zone getZone4() {
         return zone4;
     }
-    public NetUSB getNetUSB() {
+    public @Nullable NetUSB getNetUSB() {
         return netusb;
     }
 
-
+    @NonNullByDefault
     public class Zone {
         @SerializedName("power")
-        private String power;
+        private @Nullable String power;
         @SerializedName("volume")
-        private Integer volume = Integer.valueOf(0);
+        private int volume = 0;
         @SerializedName("mute")
-        private String mute;
+        private @Nullable String mute;
         @SerializedName("input")
-        private String input;
+        private @Nullable String input;
         @SerializedName("status_updated")
-        private String statusUpdated;
+        private @Nullable String statusUpdated;
 
 
-        public String getPower() {
+        public @Nullable String getPower() {
             if (power==null) {power = "";}
             return power;
         }
-        public String getMute() {
+        public @Nullable String getMute() {
             if (mute==null) {mute = "";}
             return mute;
         }
-        public String getInput() {
+        public @Nullable String getInput() {
             if (input==null) {input = "";}
             return input;
         }
-        public Integer getVolume() {
+        public int getVolume() {
             return volume;
         }
-        public String getstatusUpdated() {
+        public @Nullable String getstatusUpdated() {
             if (statusUpdated==null) {statusUpdated = "";}
             return statusUpdated;
         }
     }
-
+    @NonNullByDefault
     public class NetUSB {
         @SerializedName("preset_control")
-        private PresetControl presetControl;
+        private @Nullable PresetControl presetControl;
         @SerializedName("play_info_updated")
-        private String playInfoUpdated;
+        private @Nullable String playInfoUpdated;
         
-        public PresetControl getPresetControl() {
+        public @Nullable PresetControl getPresetControl() {
             return presetControl;
         }
-        public String getPlayInfoUpdated() {
+        public @Nullable String getPlayInfoUpdated() {
             if (playInfoUpdated==null) {playInfoUpdated = "";}
             return playInfoUpdated;
         }
     }
-
+    @NonNullByDefault
     public class PresetControl {
         @SerializedName("type")
-        private String type;
+        private @Nullable String type;
         @SerializedName("num")
-        private Integer num = Integer.valueOf(1);
+        private int num = 1;
         @SerializedName("result")
-        private String result;  
+        private @Nullable String result;  
 
-        public String getType() {
+        public @Nullable String getType() {
             if (type==null) {type = "";}
             return type;
         }
-        public String getResult() {
+        public @Nullable String getResult() {
             if (result==null) {result = "";}
             return result;
         }
-        public Integer getNum() {
+        public int getNum() {
             return num;
         }
 

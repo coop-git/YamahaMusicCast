@@ -12,34 +12,35 @@
  */
 package org.openhab.binding.yamahamusiccast.internal.model;
 import com.google.gson.annotations.SerializedName;
-
+import org.eclipse.jdt.annotation.*;
+import org.eclipse.jdt.annotation.NonNullByDefault;
 
 /**
  * This class represents the push request sent to the API.
  *
  * @author Lennert Coopman - Initial contribution
  */
-
+@NonNullByDefault
 public class DeviceInfo {
 
     @SerializedName("response_code")
-    private String responseCode;
+    private @Nullable String responseCode;
 
     @SerializedName("model_name")
-    private String modelName;
+    private @Nullable String modelName;
 
     @SerializedName("device_id")
-    private String deviceId;
+    private @Nullable String deviceId;
 
-    public String getResponseCode() {
+    public @Nullable String getResponseCode() {
         return responseCode;
     }
 
-    public String getModelName() {
+    public @Nullable String getModelName() {
         return modelName;
     }
 
-    public String getDeviceId() {
+    public @Nullable String getDeviceId() {
         return deviceId;
     }
 }

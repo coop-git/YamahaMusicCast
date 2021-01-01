@@ -103,27 +103,35 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     
     JsonParser parser = new JsonParser();
     String tmpString = "";
-    Integer tmpInteger = 0;
-    Integer volumePercent = 0;
-    Integer volumeAbsValue = 0;
-    Integer connectionTimeout = 5000;
-    Integer longConnectionTimeout = 60000;
+    int tmpInteger = 0;
+    int volumePercent = 0;
+    int volumeAbsValue = 0;
+    int connectionTimeout = 5000;
+    int longConnectionTimeout = 60000;
     @Nullable String responseCode = "";
     @Nullable String powerState = "";
     @Nullable String muteState = "";
-    @Nullable Integer volumeState = 0;
-    @Nullable Integer maxVolumeState = 0;
+    int volumeState = 0;
+    int maxVolumeState = 0;
     @Nullable String inputState = "";
-    @Nullable Integer presetNumber = 0;
+    int presetNumber = 0;
     @Nullable String soundProgramState = "";
-    @Nullable Integer sleepState = 0;
+    int sleepState = 0;
+    @NonNullByDefault({})
     String playbackState = "";
+    @NonNullByDefault({})
     String artistState = "";
+    @NonNullByDefault({})
     String trackState = "";
+    @NonNullByDefault({})
     String albumState = "";
+    @NonNullByDefault({})
     String albumArtUrlState = "";
+    @NonNullByDefault({})
     String repeatState = "";
+    @NonNullByDefault({})
     String shuffleState = "";
+    @NonNullByDefault({})
     String topicAVR = "";
     @NonNullByDefault({}) String zone = "main";
     String channelWithoutGroup = "";
@@ -133,12 +141,15 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     String url = "";
     String json = "";
     String action= "";
-    Integer zoneNum = 0;
+    
+    int zoneNum = 0;
+    @NonNullByDefault({})
     String groupId = "";
+    @NonNullByDefault({})
     String role = "";
     @NonNullByDefault({})
     String host;
-
+    @NonNullByDefault({})
     public String deviceId = "";
     
 
@@ -477,8 +488,8 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         String powerState = "";
         String muteState="";
         String inputState = "";
-        Integer volumeState = 0;
-        Integer presetNumber = 0;
+        int volumeState = 0;
+        int presetNumber = 0;
         logger.debug("YXC - Handling UDP for {}", zoneToUpdate);       
         switch (zoneToUpdate) {
             case "main":
@@ -633,7 +644,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             }
         }
 
-        if (!volumeState.equals(0)) {
+        if (volumeState != 0) {
             channel = new ChannelUID(getThing().getUID(), zoneToUpdate, "channelVolume");
             if (isLinked(channel)) {
                 updateState(channel, new PercentType((volumeState * 100) / maxVolumeState));
@@ -644,7 +655,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             }
         }
 
-        if (!presetNumber.equals(0)) {
+        if (presetNumber != 0) {
             logger.debug("Preset detected: {}", presetNumber);
             updatePresets(presetNumber);
         }
@@ -739,11 +750,11 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
     }
 
-    private void updatePresets(Integer value) {
+    private void updatePresets(int value) {
         String inputText = "";
         tmpString = getPresetInfo(); // Without zone
-        Integer presetCounter = 0;
-        Integer currentPreset = 0;
+        int presetCounter = 0;
+        int currentPreset = 0;
         try {
             JsonElement jsonTree = parser.parse(tmpString);
             JsonObject jsonObject = jsonTree.getAsJsonObject();
@@ -755,13 +766,13 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                 JsonObject presetObject = pr.getAsJsonObject();
                 String text = presetObject.get("text").getAsString();
                 if (!text.equals("")) {
-                    optionsPresets.add(new StateOption(presetCounter.toString(), "#" + presetCounter.toString() + " " + text));                
+                    optionsPresets.add(new StateOption(String.valueOf(presetCounter), "#" + String.valueOf(presetCounter) + " " + text));                
                     if (inputText.equals(text)) {
                         currentPreset = presetCounter;
                     }
                 }
             }
-            if (!value.equals(0)) {currentPreset = value;}
+            if (value != 0) {currentPreset = value;}
             for (Channel channel : getThing().getChannels()) {
                 ChannelUID channelUID = channel.getUID();
                 channelWithoutGroup = channelUID.getIdWithoutGroup();
@@ -769,7 +780,8 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     switch (channelWithoutGroup) {
                         case CHANNEL_SELECTPRESET:
                             stateDescriptionProvider.setStateOptions(channelUID, optionsPresets);
-                            updateState(channelUID,StringType.valueOf(currentPreset.toString()));
+                            //updateState(channelUID,StringType.valueOf(currentPreset.toString()));
+                            updateState(channelUID,StringType.valueOf(String.valueOf(currentPreset)));
                             break;
                     }
                 }
@@ -874,7 +886,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         Bridge bridge = getBridge();
         String host = "";
         String label = "";
-        Integer zonesPerHost = 1;
+        int zonesPerHost = 1;
         List<StateOption> options = new ArrayList<>();
         for (Thing thing : bridge.getThings()) {
             label = thing.getLabel();
@@ -934,7 +946,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         return UUID.randomUUID().toString().replace("-","").substring(0,32);
     }
 
-    private Integer getNumberOfZones(String host) {
+    private int getNumberOfZones(String host) {
         try {
             tmpString = getFeatures(host);
             //Features targetObject = new Features();
@@ -951,9 +963,10 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         try {
             tmpString = getDeviceInfo();
             //DeviceInfo targetObject = new DeviceInfo();
-            @Nullable
+            
             DeviceInfo targetObject = new Gson().fromJson(tmpString, DeviceInfo.class);
-            return targetObject.getDeviceId();
+            deviceId = targetObject.getDeviceId();
+            return deviceId;
         } catch (Exception e) {
             logger.warn("Error fetching Device Id");
             return "";
@@ -961,13 +974,13 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
 
     }
 
-    private void setVolumeLinkedDevice(Integer value, String zone, String host) {
+    private void setVolumeLinkedDevice(int value, String zone, String host) {
         logger.info("setVolumeLinkedDevice: {}", host);
-        Integer zoneNumLinkedDevice = getNumberOfZones(host);
-        Integer maxVolumeLinkedDevice = 0;
+        int zoneNumLinkedDevice = getNumberOfZones(host);
+        int maxVolumeLinkedDevice = 0;
         @Nullable
         Status targetObject = new Status();
-        Integer newVolume = 0;
+        int newVolume = 0;
         for (int i = 1; i <= zoneNumLinkedDevice; i++) {
             switch (i) {
                 case 1:
@@ -1048,7 +1061,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
     }
 
-    private String setVolume(Integer value, String zone, String host) {
+    private String setVolume(int value, String zone, String host) {
         topicAVR = "Volume";
         try {
             httpResponse = HttpUtil.executeUrl("GET", "http://" + host + "/YamahaExtendedControl/v1/" + zone + "/setVolume?volume=" + value, connectionTimeout);

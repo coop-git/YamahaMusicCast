@@ -13,6 +13,7 @@
 package org.openhab.binding.yamahamusiccast.internal.model;
 import com.google.gson.annotations.SerializedName;
 import org.eclipse.jdt.annotation.*;
+import org.eclipse.jdt.annotation.NonNullByDefault;
 
 /**
  * This class represents the push request sent to the API.
@@ -32,10 +33,10 @@ public class Status {
     private @Nullable String mute;
 
     @SerializedName("volume")
-    private @Nullable Integer volume;
+    private int volume;
 
     @SerializedName("max_volume")
-    private @Nullable Integer maxVolume;
+    private int maxVolume;
 
     @SerializedName("input")
     private @Nullable String input;
@@ -44,7 +45,7 @@ public class Status {
     private @Nullable String soundProgram;
 
     @SerializedName("sleep")
-    private @Nullable Integer sleep = Integer.valueOf(0);
+    private int sleep = 0;
 
 
     public @Nullable String getResponseCode() {
@@ -59,11 +60,11 @@ public class Status {
         return mute;
     }
 
-    public @Nullable Integer getVolume() {
+    public int getVolume() {
         return volume;
     }
 
-    public @Nullable Integer getMaxVolume() {
+    public int getMaxVolume() {
         return maxVolume;
     }
 
@@ -75,7 +76,7 @@ public class Status {
         return soundProgram;
     }
 
-    public @Nullable Integer getSleep() {
+    public int getSleep() {
         return sleep;
     }
 
