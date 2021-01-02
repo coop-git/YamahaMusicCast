@@ -56,7 +56,7 @@ public class UdpListener extends Thread {
     public void shutdown() {
         if (socket != null) {
             socket.close();
-            logger.debug("Listener closing listener socket");
+            logger.debug("YXC - UDP Listener socket closed");
             socket = null;
         }
     }
@@ -69,9 +69,9 @@ public class UdpListener extends Thread {
             InetSocketAddress address = new InetSocketAddress(UDP_PORT);
             s.bind(address);
             socket = s;
-            logger.debug("Listener got UDP socket on port {} with timeout {}", UDP_PORT, SOCKET_TIMEOUT_MILLISECONDS);
+            logger.debug("YXC - UDP Listener got socket on port {} with timeout {}", UDP_PORT, SOCKET_TIMEOUT_MILLISECONDS);
         } catch (SocketException e) {
-            logger.debug("Listener got SocketException: {}", e.getMessage(), e);
+            logger.debug("YXC - UDP Listener got SocketException: {}", e.getMessage(), e);
             socket = null;
             return;
         }
@@ -86,11 +86,10 @@ public class UdpListener extends Thread {
             } catch (SocketTimeoutException e) {
                 // Nothing to do on socket timeout
             } catch (IOException e) {
-                logger.debug("Listener got IOException waiting for datagram: {}", e.getMessage());
+                logger.debug("YXC - UDP Listener got IOException waiting for datagram: {}", e.getMessage());
                 socket = null;
             }
         }
-        logger.debug("Listener exiting");
+        logger.debug("YXC - UDP Listener exiting");
     }
-
 }
