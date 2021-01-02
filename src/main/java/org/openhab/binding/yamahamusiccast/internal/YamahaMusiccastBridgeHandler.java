@@ -112,7 +112,6 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
                     YamahaMusiccastHandler handler = (YamahaMusiccastHandler) thing.getHandler();
                     logger.debug("UDP: {} - {} ({})", json, handler.getDeviceId(), thing.getLabel());
                     try {
-                        //UdpMessage targetObject = new UdpMessage();
                         @Nullable
                         UdpMessage targetObject = new Gson().fromJson(json, UdpMessage.class);
                         udpDeviceId = targetObject.getDeviceId();
@@ -121,7 +120,6 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
                         udpDeviceId = "";
                     }
                     if (udpDeviceId.equals(handler.getDeviceId())) {
-                        //logger.info("package for {}", thing.getLabel());
                         handler.processUDPEvent(json);
                     }
 
@@ -130,21 +128,6 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
                     logger.debug("Thing Status: NOT ONLINE - {}",thing.getLabel());
                     break;
             }
-
-            // YamahaMusiccastHandler handler = (YamahaMusiccastHandler) thing.getHandler();
-            // logger.debug("UDP: {} - {} ({})", json, handler.getDeviceId(), thing.getLabel());
-            // try {
-            //     UdpMessage targetObject = new UdpMessage();
-            //     targetObject = new Gson().fromJson(json, UdpMessage.class);
-            //     udpDeviceId = targetObject.getDeviceId();
-            // } catch (Exception e) {
-            //     logger.warn("Error fetching Device Id");
-            //     udpDeviceId = "";
-            // }
-            // if (udpDeviceId.equals(handler.getDeviceId())) {
-            //     //logger.info("package for {}", thing.getLabel());
-            //     handler.processUDPEvent(json);
-            // }
         }
     }
 

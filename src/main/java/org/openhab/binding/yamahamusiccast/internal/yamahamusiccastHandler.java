@@ -95,7 +95,6 @@ import com.google.gson.JsonArray;
 public class YamahaMusiccastHandler extends BaseThingHandler {
 
     private Logger logger = LoggerFactory.getLogger(YamahaMusiccastHandler.class);
-    //private @Nullable ScheduledFuture<?> refreshTask;
     private @Nullable ScheduledFuture<?> keepUdpEventsAliveTask;
     
     private @NonNullByDefault({}) YamahaMusiccastConfiguration config;
@@ -163,9 +162,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     @Override
     public void handleCommand(ChannelUID channelUID, Command command) { 
         if (!command.equals(RefreshType.REFRESH)) {
-            //nothing here
-        //} else  {
-            logger.info("Handling command {} for channel {}", command, channelUID);
+            logger.debug("Handling command {} for channel {}", command, channelUID);
             channelWithoutGroup = channelUID.getIdWithoutGroup();
             zone = channelUID.getGroupId();
             switch (channelWithoutGroup) {
@@ -208,7 +205,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                         setVolume(volumeAbsValue, zone, this.host);
                         if (config.configSyncVolume) {
                             tmpString = getDistributionInfo(this.host);
-                            //DistributionInfo targetObject = new DistributionInfo();
                             @Nullable
                             DistributionInfo targetObject = new Gson().fromJson(tmpString, DistributionInfo.class);
                             role = targetObject.getRole();
@@ -232,7 +228,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                         setVolume(volumeAbsValue, zone, this.host);
                         if (config.configSyncVolume) {
                             tmpString = getDistributionInfo(this.host);
-                            //DistributionInfo targetObject = new DistributionInfo();
                             @Nullable
                             DistributionInfo targetObject = new Gson().fromJson(tmpString, DistributionInfo.class);
                             role = targetObject.getRole();
@@ -277,8 +272,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                 case CHANNEL_MCSERVER:
                     action = "";
                     json = "";
-                    //InputStream is2 = new ByteArrayInputStream(json.getBytes());
-
                     if (command.toString().equals("")) {
                         action="unlink";
                         role="";
@@ -289,7 +282,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                         mclinkSetupServer = parts[0];
                         mclinkSetupZone = parts[1];
                         tmpString = getDistributionInfo(mclinkSetupServer);
-                        //DistributionInfo targetObject = new DistributionInfo();
                         @Nullable
                         DistributionInfo targetObject = new Gson().fromJson(tmpString, DistributionInfo.class);
                         responseCode = targetObject.getResponseCode();
@@ -298,7 +290,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                         if (role.equals("server")) {
                             groupId = targetObject.getGroupId();
                         } else if (role.equals("client")) {
-                            // error geven
                             groupId = "";
                         } else if (role.equals("none")) {
                             groupId = generateGroupId();
@@ -308,7 +299,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     if (action.equals("unlink")) {
                         json = "{\"group_id\":\"\"}";
                         httpResponse = setClientInfo(this.host,json);
-                        // setserverinfo with remove possible?
                     } else if (action.equals("link")) { 
                         json = "{\"group_id\":\"" + groupId + "\", \"zone\":\"" + mclinkSetupZone + "\", \"type\":\"add\", \"client_list\":[\"" + this.host + "\"]}";
                         logger.info("setServerInfo json: {}", json);
@@ -359,11 +349,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
 
     @Override
     public void initialize() {
-        //Needed as extra parameters
-        // * Max Volume
-        // * Number of Zones
-        // * Presets
-
         thingLabel = thing.getLabel();
         logger.info("YXC - Start initializing! - {}", thingLabel);
         this.config = getConfigAs(YamahaMusiccastConfiguration.class);
@@ -419,17 +404,13 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     public void dispose() { 
         if (keepUdpEventsAliveTask != null) {
             keepUdpEventsAliveTask.cancel(true);
-        }
-        
+        }        
     }
     // Various functions 
     public void processUDPEvent (String json) {
         logger.debug("UDP package: {}", json);
-        //UdpMessage targetObject = new UdpMessage();
         @Nullable
         UdpMessage targetObject = new Gson().fromJson(json, UdpMessage.class);
-        //ChannelUID channel;
-        //String zoneToUpdate;
         String jsonMain;
         String jsonZone2;
         String jsonZone3;
@@ -441,7 +422,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                 updateStateFromUDPEvent("main", targetObject);
             }
         } catch (Exception e) {
-            //logger.warn("Could not update state via UDP event");
         }
 
         try {
@@ -449,8 +429,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             if (!jsonZone2.equals("")) {
                 updateStateFromUDPEvent("zone2", targetObject);
             }
-        } catch (Exception e) {
-            //logger.warn("Could not update state via UDP event");
+        } catch (Exception e) {    
         }
 
         try {
@@ -459,7 +438,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                 updateStateFromUDPEvent("zone3", targetObject);
             }
         } catch (Exception e) {
-            //logger.warn("Could not update state via UDP event");
         }
 
         try {
@@ -467,8 +445,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             if (!jsonZone4.equals("")) {
                 updateStateFromUDPEvent("zone4", targetObject);
             }
-        } catch (Exception e) {
-            //logger.warn("Could not update state via UDP event");
+        } catch (Exception e) {   
         }
 
         try {
@@ -476,8 +453,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             if (!netUsb.equals("")) {
                 updateStateFromUDPEvent("netusb", targetObject);
             }
-        } catch (Exception e) {
-            //logger.warn("Could not update state via UDP event");
+        } catch (Exception e) {  
         }
 
     }
@@ -609,7 +585,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                 }
                 try {
                     playInfoUpdated = targetObject.getNetUSB().getPlayInfoUpdated();
-                    //logger.info("netusb case: {}", playInfoUpdated);
                 } catch (Exception e) {
                     playInfoUpdated = "";
                 }
@@ -672,19 +647,16 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
 
     private void updateStatusZone(String zoneToUpdate) {
         tmpString = getStatus(this.host, zoneToUpdate);
-        
-            //Status targetObject = new Status();
-            @Nullable
-            Status targetObject = new Gson().fromJson(tmpString, Status.class);
-            responseCode = targetObject.getResponseCode();
-            powerState = targetObject.getPower();
-            muteState = targetObject.getMute();
-            volumeState = targetObject.getVolume();
-            maxVolumeState = targetObject.getMaxVolume();
-            inputState = targetObject.getInput();
-            soundProgramState = targetObject.getSoundProgram();
-            sleepState = targetObject.getSleep();
- 
+        @Nullable
+        Status targetObject = new Gson().fromJson(tmpString, Status.class);
+        responseCode = targetObject.getResponseCode();
+        powerState = targetObject.getPower();
+        muteState = targetObject.getMute();
+        volumeState = targetObject.getVolume();
+        maxVolumeState = targetObject.getMaxVolume();
+        inputState = targetObject.getInput();
+        soundProgramState = targetObject.getSoundProgram();
+        sleepState = targetObject.getSleep();
         
         switch (responseCode) {
             case "0":
@@ -693,7 +665,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     channelWithoutGroup = channelUID.getIdWithoutGroup();
                     zone = channelUID.getGroupId();
                     if (isLinked(channelUID)) {
-                        switch (channelWithoutGroup) { //channelUID.getId()
+                        switch (channelWithoutGroup) {
                             case CHANNEL_POWER:
                                 if (powerState.equals("on")) {
                                     if (zone.equals(zoneToUpdate)) {
@@ -781,7 +753,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     switch (channelWithoutGroup) {
                         case CHANNEL_SELECTPRESET:
                             stateDescriptionProvider.setStateOptions(channelUID, optionsPresets);
-                            //updateState(channelUID,StringType.valueOf(currentPreset.toString()));
                             updateState(channelUID,StringType.valueOf(String.valueOf(currentPreset)));
                             break;
                     }
@@ -795,7 +766,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     private void updateNetUSBPlayer() {
         tmpString = getPlayInfo();
         try {
-            //PlayInfo targetObject = new PlayInfo();
             @Nullable
             PlayInfo targetObject = new Gson().fromJson(tmpString, PlayInfo.class);
             responseCode = targetObject.getResponseCode();
@@ -912,7 +882,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             }
         }
         options.add(new StateOption("", "Standalone"));
-        //for each zone of the device set all the possible combinations
+        //for each zone of the device, set all the possible combinations
         for (int i = 1; i <= zoneNum; i++) {
             switch (i) {
                 case 1:
@@ -950,7 +920,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     private int getNumberOfZones(String host) {
         try {
             tmpString = getFeatures(host);
-            //Features targetObject = new Features();
             @Nullable
             Features targetObject = new Gson().fromJson(tmpString, Features.class);
             return Integer.valueOf(targetObject.getSystem().getZoneNum());

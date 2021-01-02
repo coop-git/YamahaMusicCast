@@ -41,12 +41,7 @@ public class UdpListener extends Thread {
     private static final int BUFFER_SIZE = 5120;
 
     private final Logger logger = LoggerFactory.getLogger(UdpListener.class);
-
-    
-
     private final YamahaMusiccastBridgeHandler bridgeHandler;
-
-    // UDP socket used to receive status events from Yamaha device
     private @Nullable DatagramSocket socket;
 
     public UdpListener(YamahaMusiccastBridgeHandler bridgeHandler) {

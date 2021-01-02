@@ -116,6 +116,7 @@ Use **channelUnlinkMCServer** on the Thing which is currently set to master to d
 String YamahaMCServer "[%s]" {channel="yamahamusiccast:Device:Living:main#channelMCServer"}
 Switch YamahaUnlinkMC "" {channel="yamahamusiccast:Device:Living:main#channelUnlinkMCServer"}
 ```
+
 #### How to use this in a rule?
 
 The label uses the format _Thinglabel - zone (IP)_.
