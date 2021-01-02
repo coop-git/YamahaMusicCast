@@ -39,9 +39,9 @@ public class Features {
     @NonNullByDefault
     public class System {
         @SerializedName("zone_num")
-        private @Nullable String zoneNum;
+        private int zoneNum;
 
-        public @Nullable String getZoneNum() {
+        public int getZoneNum() {
             return zoneNum;
         }
 

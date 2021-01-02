@@ -918,14 +918,16 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     }
 
     private int getNumberOfZones(String host) {
+        int numberOfZones = 0;
         try {
             tmpString = getFeatures(host);
             @Nullable
             Features targetObject = new Gson().fromJson(tmpString, Features.class);
-            return Integer.valueOf(targetObject.getSystem().getZoneNum());
+            numberOfZones = targetObject.getSystem().getZoneNum();
+            return numberOfZones;
         } catch (Exception e) {
             logger.warn("Error fetching zones");
-            return 0;
+            return numberOfZones;
         }
     }
 
