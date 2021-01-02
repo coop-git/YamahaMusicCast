@@ -385,10 +385,10 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                 logger.info("YXC - Finished initializing! - {}", thingLabel);
             } else {
                 updateStatus(ThingStatus.OFFLINE);
-                logger.info("YXC - Not initialized! - {}", thingLabel);
+                logger.info("YXC - No host found");
             }
         } else {
-            logger.info("YXC - No host found");
+            logger.info("YXC - Not initialized! - {}", thingLabel);
         }
     }
 

@@ -106,12 +106,23 @@ If you want the *Living* to be the master for the *Kitchen*, select *Living - zo
 The binding will check if there is already a group active for which *Living* is the master. If yes, this group will be used and *Kitchen* will be added.
 If not, a new group will be created.
 
+*Device A*: Living with IP 192.168.1.1
+*Device B*: Kitchen with IP 192.168.1.2
+
 Set **channelMCServer** to *Standalone* to remove the device/model from the current active group. The group wil keep on exist with other devices/models.
 Use **channelUnlinkMCServer** on the Thing which is currently set to master to disband the group.
 
 ```
 String YamahaMCServer "[%s]" {channel="yamahamusiccast:Device:Living:main#channelMCServer"}
 Switch YamahaUnlinkMC "" {channel="yamahamusiccast:Device:Living:main#channelUnlinkMCServer"}
+```
+#### How to use this in a rule?
+
+The label uses the format _Thinglabel - zone (IP)_.
+The value which is sent to OH uses the format _IP***zone_.
+
+```
+sendCommand(Kitchen_YamahaMCServer, "192.168.1.1***main")
 ```
 
 ## Input List
@@ -153,7 +164,6 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306
 
 ###### To Do / Wishlist
 
-- [ ] Add common Volume/Mute for linked models when Music Cast is active
 - [ ] Create a pull request for OH3
 - [ ] Autodiscovery (no plans yet)
 
