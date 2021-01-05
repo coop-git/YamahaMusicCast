@@ -159,7 +159,7 @@ mono_movie / movie / enhanced / 2ch_stereo / 5ch_stereo / 7ch_stereo / 9ch_stere
 ## Tested Models
 
 RX-D485 / WX-010 / WX-030 / ISX-80 / YSP-1600 / RX-A860 / R-N303D / EX-A1080 / WXA-050 / HTR-4068 (RX-V479)
-MusicCast 20 / WCX-50 / RX-V6A / YAS-306
+MusicCast 20 / WCX-50 / RX-V6A / YAS-306 / ISX-18D
 
 ## Changelog
 

@@ -1039,7 +1039,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         topicAVR = "Status";
         try {
             httpResponse = HttpUtil.executeUrl("GET", "http://" + host + "/YamahaExtendedControl/v1/" + zone + "/getStatus", connectionTimeout);
-            logger.debug("{}", httpResponse);
+            logger.info("{}", httpResponse);
             return httpResponse;
         } catch (IOException e) {
             logger.warn("IO Exception - {} - {}", topicAVR, e.toString());

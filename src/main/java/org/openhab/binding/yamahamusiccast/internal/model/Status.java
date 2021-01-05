@@ -53,10 +53,12 @@ public class Status {
     }
 
     public @Nullable String getPower() {
+        if (power==null) {power = "";}
         return power;
     }
 
     public @Nullable String getMute() {
+        if (mute==null) {mute = "";}
         return mute;
     }
 
@@ -69,10 +71,12 @@ public class Status {
     }
 
     public @Nullable String getInput() {
+        if (input==null) {input = "";}
         return input;
     }
 
     public @Nullable String getSoundProgram() {
+        if (soundProgram==null) {input = "";}
         return soundProgram;
     }
 
