@@ -37,10 +37,12 @@ public class DeviceInfo {
     }
 
     public @Nullable String getModelName() {
+        if (modelName==null) {modelName = "";}
         return modelName;
     }
 
     public @Nullable String getDeviceId() {
+        if (deviceId==null) {deviceId = "";}
         return deviceId;
     }
 }

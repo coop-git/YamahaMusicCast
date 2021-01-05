@@ -76,7 +76,7 @@ public class Status {
     }
 
     public @Nullable String getSoundProgram() {
-        if (soundProgram==null) {input = "";}
+        if (soundProgram==null) {soundProgram = "";}
         return soundProgram;
     }
 

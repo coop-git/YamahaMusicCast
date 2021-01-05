@@ -53,30 +53,37 @@ public class PlayInfo {
     }
 
     public @Nullable String getPlayback() {
+        if (playback==null) {playback = "";}
         return playback;
     }  
 
     public @Nullable String getArtist() {
+        if (artist==null) {artist = "";}
         return artist;
     }  
 
     public @Nullable String getTrack() {
+        if (track==null) {track = "";}
         return track;
     }  
 
     public @Nullable String getAlbum() {
+        if (album==null) {album = "";}
         return album;
     }  
    
     public @Nullable String getAlbumArtUrl() {
+        if (albumarturl==null) {albumarturl = "";}
         return albumarturl;
     }  
 
     public @Nullable String getRepeat() {
+        if (repeat==null) {repeat = "";}
         return repeat;
     }  
 
     public @Nullable String getShuffle() {
+        if (shuffle==null) {shuffle = "";}
         return shuffle;
     }  
    

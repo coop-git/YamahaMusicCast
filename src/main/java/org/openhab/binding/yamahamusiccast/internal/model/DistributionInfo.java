@@ -44,14 +44,17 @@ public class DistributionInfo {
     }
 
     public @Nullable String getGroupId() {
+        if (groupId==null) {groupId = "";}
         return groupId;
     }
 
     public @Nullable String getRole() {
+        if (role==null) {role = "";}
         return role;
     }
 
     public @Nullable String getServerZone() {
+        if (serverZone==null) {serverZone = "";}
         return serverZone;
     }
 
