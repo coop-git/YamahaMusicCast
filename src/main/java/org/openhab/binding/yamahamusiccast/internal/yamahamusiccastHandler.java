@@ -1042,7 +1042,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             logger.info("{}", httpResponse);
             return httpResponse;
         } catch (IOException e) {
-            logger.warn("IO Exception - {} - {}", topicAVR, e.toString());
+            logger.info("IO Exception - {} - {}", topicAVR, e.toString());
             return "{\"response_code\":\"999\"}";
         }
     }
