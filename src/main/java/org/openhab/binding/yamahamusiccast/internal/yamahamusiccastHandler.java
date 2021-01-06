@@ -658,6 +658,15 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         soundProgramState = targetObject.getSoundProgram();
         sleepState = targetObject.getSleep();
         
+        logger.debug("{} - Response: {}", zoneToUpdate, responseCode);
+        logger.debug("{} - Power: {}", zoneToUpdate, powerState);
+        logger.debug("{} - Mute: {}", zoneToUpdate, muteState);
+        logger.debug("{} - Volume: {}", zoneToUpdate, volumeState);
+        logger.debug("{} - Max Volume: {}", zoneToUpdate, maxVolumeState);
+        logger.debug("{} - Input: {}", zoneToUpdate, inputState);
+        logger.debug("{} - Soundprogram: {}", zoneToUpdate, soundProgramState);
+        logger.debug("{} - Sleep: {}", zoneToUpdate, sleepState);
+
         switch (responseCode) {
             case "0":
                 for (Channel channel : getThing().getChannels()) {
@@ -1039,10 +1048,10 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         topicAVR = "Status";
         try {
             httpResponse = HttpUtil.executeUrl("GET", "http://" + host + "/YamahaExtendedControl/v1/" + zone + "/getStatus", connectionTimeout);
-            logger.info("{}", httpResponse);
+            logger.debug("{}", httpResponse);
             return httpResponse;
         } catch (IOException e) {
-            logger.info("IO Exception - {} - {}", topicAVR, e.toString());
+            logger.warn("IO Exception - {} - {}", topicAVR, e.toString());
             return "{\"response_code\":\"999\"}";
         }
     }

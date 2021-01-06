@@ -67,6 +67,8 @@ public class Status {
     }
 
     public int getMaxVolume() {
+        //if no value is returned, set to 1 to avoid division by zero
+        if (maxVolume==0) {maxVolume = 1;}
         return maxVolume;
     }
 

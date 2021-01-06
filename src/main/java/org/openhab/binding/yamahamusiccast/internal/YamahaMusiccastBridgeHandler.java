@@ -96,7 +96,7 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
         if (listenerJob != null) {
             listenerJob.cancel(true);
             udpListener.shutdown();
-            logger.debug("Canceling listener job");
+            logger.debug("YXC - Canceling listener job");
         }
     }
 
@@ -125,7 +125,7 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
 
                     break;
                 default:
-                    logger.debug("Thing Status: NOT ONLINE - {}",thing.getLabel());
+                    logger.debug("YXC - Thing Status: NOT ONLINE - {}",thing.getLabel());
                     break;
             }
         }
