@@ -163,11 +163,12 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306 / ISX-18D
 
 ## Changelog
 
-###### To Do / Wishlist
+###### To Do / Wishlist (last updated 7 Jan 2021)
 
 - [ ] Create a pull request for OH3 (in progress)
 - [ ] One central power switch
 - [ ] MusicCast Server: Add a channel to show the number of connected clients/nodes
+- [ ] MusicCast: changes made with app are not reflected in OH
 - [ ] Research if it is possible to only change volume of Master without changing config.
 - [ ] Autodiscovery (no plans yet)
 
