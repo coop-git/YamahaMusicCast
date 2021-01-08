@@ -170,6 +170,7 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306 / ISX-18D
 - [ ] MusicCast Server: Add a channel to show the number of connected clients/nodes
 - [ ] MusicCast: changes made with app are not reflected in OH
 - [ ] Research if it is possible to only change volume of Master without changing config.
+- [ ] Zone _main_ will always be present. Based on the value of zone_num, create the other zones dynamically.
 - [ ] Autodiscovery (no plans yet)
 
 ###### v0.7x - In development
