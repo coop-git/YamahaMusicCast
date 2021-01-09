@@ -301,7 +301,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                         httpResponse = setClientInfo(this.host,json);
                     } else if (action.equals("link")) { 
                         json = "{\"group_id\":\"" + groupId + "\", \"zone\":\"" + mclinkSetupZone + "\", \"type\":\"add\", \"client_list\":[\"" + this.host + "\"]}";
-                        logger.info("setServerInfo json: {}", json);
+                        logger.debug("setServerInfo json: {}", json);
                         httpResponse = setServerInfo(mclinkSetupServer, json);
                         // All zones of Model are required for MC Link
                         tmpString = "";
@@ -322,7 +322,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                             }
                         }
                         json = "{\"group_id\":\"" + groupId + "\", \"zone\":[" + tmpString + "]}";
-                        logger.info("setClientInfo json: {}", json);
+                        logger.debug("setClientInfo json: {}", json);
                         httpResponse = setClientInfo(this.host, json);
                         httpResponse = startDistribution(mclinkSetupServer);
                     }
@@ -407,8 +407,8 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }        
     }
     // Various functions 
-    public void processUDPEvent (String json) {
-        logger.debug("UDP package: {}", json);
+    public void processUDPEvent (String json, String trackingID) {
+        logger.debug("UDP package: {} (Tracking: {})", json, trackingID);
         @Nullable
         UdpMessage targetObject = new Gson().fromJson(json, UdpMessage.class);
         String jsonMain;
@@ -768,7 +768,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                 }
             }
         } catch (Exception e) {
-            logger.info("Something went wrong with fetching Presets");
+            logger.info("YXC - Something went wrong with fetching Presets");
         } 
     }
 
@@ -862,7 +862,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         return text;
     }
 
-    private void fetchOtherDevicesViaBridge () {      
+    private void fetchOtherDevicesViaBridge() {      
         Bridge bridge = getBridge();
         String host = "";
         String label = "";
@@ -871,7 +871,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         for (Thing thing : bridge.getThings()) {
             label = thing.getLabel();
             host = thing.getConfiguration().get("configHost").toString();
-            logger.debug("Thing found on Bridge: {} - {}", label, host);
+            logger.debug("YXC - Thing found on Bridge: {} - {}", label, host);
             zonesPerHost = getNumberOfZones(host);
             for (int i = 1; i <= zonesPerHost; i++) {
                 switch (i) {

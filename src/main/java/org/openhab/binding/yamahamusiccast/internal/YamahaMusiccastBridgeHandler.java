@@ -100,7 +100,7 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
         }
     }
 
-    public void handleUDPEvent(String json) {
+    public void handleUDPEvent(String json, String trackingID) {
         String udpDeviceId = "";
         Bridge bridge = (Bridge) thing;
         for (Thing thing : bridge.getThings()) {
@@ -110,22 +110,22 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
                     logger.debug("Thing Status: ONLINE - {}",thing.getLabel());
 
                     YamahaMusiccastHandler handler = (YamahaMusiccastHandler) thing.getHandler();
-                    logger.debug("UDP: {} - {} ({})", json, handler.getDeviceId(), thing.getLabel());
+                    logger.debug("UDP: {} - {} ({} - Tracking: {})", json, handler.getDeviceId(), thing.getLabel(), trackingID);
                     try {
                         @Nullable
                         UdpMessage targetObject = new Gson().fromJson(json, UdpMessage.class);
                         udpDeviceId = targetObject.getDeviceId();
                     } catch (Exception e) {
-                        logger.warn("Error fetching Device Id");
+                        logger.warn("Error fetching Device Id (Tracking: {})", trackingID);
                         udpDeviceId = "";
                     }
                     if (udpDeviceId.equals(handler.getDeviceId())) {
-                        handler.processUDPEvent(json);
+                        handler.processUDPEvent(json, trackingID);
                     }
 
                     break;
                 default:
-                    logger.debug("YXC - Thing Status: NOT ONLINE - {}",thing.getLabel());
+                    logger.debug("YXC - Thing Status: NOT ONLINE - {} (Tracking: {})",thing.getLabel(), trackingID);
                     break;
             }
         }

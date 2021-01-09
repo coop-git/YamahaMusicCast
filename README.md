@@ -109,7 +109,7 @@ If not, a new group will be created.
 *Device A*: Living with IP 192.168.1.1
 *Device B*: Kitchen with IP 192.168.1.2
 
-Set **channelMCServer** to *Standalone* to remove the device/model from the current active group. The group wil keep on exist with other devices/models.
+Set **channelMCServer** to *Standalone* to remove the device/model from the current active group. The group will keep on exist with other devices/models.
 Use **channelUnlinkMCServer** on the Thing which is currently set to master to disband the group.
 
 ```
@@ -171,6 +171,7 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306 / ISX-18D
 - [ ] MusicCast: changes made with app are not reflected in OH
 - [ ] Research if it is possible to only change volume of Master without changing config.
 - [ ] Zone _main_ will always be present. Based on the value of zone_num, create the other zones dynamically.
+- [ ] Expose TotTime and PlayTime with UDP.
 - [ ] Autodiscovery (no plans yet)
 
 ###### v0.7x - In development
@@ -188,7 +189,7 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306 / ISX-18D
 - 2nd try for Sync Volume and detect other Things via Bridge (v0.76).
 - Changed *empty value* to *Standalone* (v0.76).
 - Update environment to OH 2.5.12, worked further on coding guidelines (v0.77).
-- Changes to avoid null values and be compliant with coding guidelines for Pul Request OH3 (v0.78).
+- Changes to avoid null values and be compliant with coding guidelines for Pull Request OH3 (v0.78).
 
 ###### v0.60
 

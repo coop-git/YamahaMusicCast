@@ -28,7 +28,7 @@
 			<parameter name="configSyncVolume" type="boolean">
 				<label>Sync Volume for Music Cast</label>
 				<description>Sync Volume across linked Music Cast models</description>
-				<default>false</default>
+				<default>true</default>
 			</parameter>
 		</config-description>
 	</thing-type>
