@@ -67,6 +67,36 @@ N/A
 | Zone1-4              | Zone 1 to 4 to control Power, Volume, ...            |
 | playerControls       | Separate zone for Play, Pause, ...                   |
 
+## Input List
+
+Firmware v1
+
+cd / tuner / multi_ch / phono / hdmi1 / hdmi2 / hdmi3 / hdmi4 / hdmi5 / hdmi6 / hdmi7 /
+hdmi8 / hdmi / av1 / av2 / av3 / av4 / av5 / av6 / av7 / v_aux / aux1 / aux2 / aux / audio1 /
+audio2 / audio3 / audio4 / audio_cd / audio / optical1 / optical2 / optical / coaxial1 / coaxial2 /
+coaxial / digital1 / digital2 / digital / line1 / line2 / line3 / line_cd / analog / tv / bd_dvd /
+usb_dac / usb / bluetooth / server / net_radio / rhapsody / napster / pandora / siriusxm /
+spotify / juke / airplay / radiko / qobuz / mc_link / main_sync / none
+
+Firmware v2
+
+cd / tuner / multi_ch / phono / hdmi1 / hdmi2 / hdmi3 / hdmi4 / hdmi5 / hdmi6 / hdmi7 / 
+hdmi8 / hdmi / av1 / av2 / av3 / av4 / av5 / av6 / av7 / v_aux / aux1 / aux2 / aux / audio1 / 
+audio2 / audio3 / audio4 / **audio5** / audio_cd / audio / optical1 / optical2 / optical / coaxial1 / coaxial2 / 
+coaxial / digital1 / digital2 / digital / line1 / line2 / line3 / line_cd / analog / tv / bd_dvd / 
+usb_dac / usb / bluetooth / server / net_radio / ~~rhapsody~~ /napster / pandora / siriusxm / 
+spotify / juke / airplay / radiko / qobuz / **tidal** / **deezer** / mc_link / main_sync / none
+
+## Sound Program
+
+munich_a / munich_b / munich / frankfurt / stuttgart / vienna / amsterdam / usa_a / usa_b /
+tokyo / freiburg / royaumont / chamber / concert / village_gate / village_vanguard /
+warehouse_loft / cellar_club / jazz_club / roxy_theatre / bottom_line / arena / sports /
+action_game / roleplaying_game / game / music_video / music / recital_opera / pavilion /
+disco / standard / spectacle / sci-fi / adventure / drama / talk_show / tv_program /
+mono_movie / movie / enhanced / 2ch_stereo / 5ch_stereo / 7ch_stereo / 9ch_stereo /
+11ch_stereo / stereo / surr_decoder / my_surround / target / straight / off
+
 ## Full Example
 
 ### Bridge & Thing(s)
@@ -126,36 +156,6 @@ The value which is sent to OH uses the format _IP***zone_.
 sendCommand(Kitchen_YamahaMCServer, "192.168.1.1***main")
 ```
 
-## Input List
-
-Firmware v1
-
-cd / tuner / multi_ch / phono / hdmi1 / hdmi2 / hdmi3 / hdmi4 / hdmi5 / hdmi6 / hdmi7 /
-hdmi8 / hdmi / av1 / av2 / av3 / av4 / av5 / av6 / av7 / v_aux / aux1 / aux2 / aux / audio1 /
-audio2 / audio3 / audio4 / audio_cd / audio / optical1 / optical2 / optical / coaxial1 / coaxial2 /
-coaxial / digital1 / digital2 / digital / line1 / line2 / line3 / line_cd / analog / tv / bd_dvd /
-usb_dac / usb / bluetooth / server / net_radio / rhapsody / napster / pandora / siriusxm /
-spotify / juke / airplay / radiko / qobuz / mc_link / main_sync / none
-
-Firmware v2
-
-cd / tuner / multi_ch / phono / hdmi1 / hdmi2 / hdmi3 / hdmi4 / hdmi5 / hdmi6 / hdmi7 / 
-hdmi8 / hdmi / av1 / av2 / av3 / av4 / av5 / av6 / av7 / v_aux / aux1 / aux2 / aux / audio1 / 
-audio2 / audio3 / audio4 / **audio5** / audio_cd / audio / optical1 / optical2 / optical / coaxial1 / coaxial2 / 
-coaxial / digital1 / digital2 / digital / line1 / line2 / line3 / line_cd / analog / tv / bd_dvd / 
-usb_dac / usb / bluetooth / server / net_radio / ~~rhapsody~~ /napster / pandora / siriusxm / 
-spotify / juke / airplay / radiko / qobuz / **tidal** / **deezer** / mc_link / main_sync / none
-
-## Sound Program
-
-munich_a / munich_b / munich / frankfurt / stuttgart / vienna / amsterdam / usa_a / usa_b /
-tokyo / freiburg / royaumont / chamber / concert / village_gate / village_vanguard /
-warehouse_loft / cellar_club / jazz_club / roxy_theatre / bottom_line / arena / sports /
-action_game / roleplaying_game / game / music_video / music / recital_opera / pavilion /
-disco / standard / spectacle / sci-fi / adventure / drama / talk_show / tv_program /
-mono_movie / movie / enhanced / 2ch_stereo / 5ch_stereo / 7ch_stereo / 9ch_stereo /
-11ch_stereo / stereo / surr_decoder / my_surround / target / straight / off
-
 ## Tested Models
 
 RX-D485 / WX-010 / WX-030 / ISX-80 / YSP-1600 / RX-A860 / R-N303D / EX-A1080 / WXA-050 / HTR-4068 (RX-V479)
@@ -172,6 +172,7 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306 / ISX-18D
 - [ ] Research if it is possible to only change volume of Master without changing config.
 - [ ] Zone _main_ will always be present. Based on the value of zone_num, create the other zones dynamically.
 - [ ] Expose TotTime and PlayTime with UDP.
+- [ ] Set client to _Standalone_ when input is changed.
 - [ ] Autodiscovery (no plans yet)
 
 ###### v0.7x - In development
@@ -190,6 +191,7 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306 / ISX-18D
 - Changed *empty value* to *Standalone* (v0.76).
 - Update environment to OH 2.5.12, worked further on coding guidelines (v0.77).
 - Changes to avoid null values and be compliant with coding guidelines for Pull Request OH3 (v0.78).
+- **BREAKING CHANGE**: Thing type renamed from _Device_ to _device_ (v0.78).
 
 ###### v0.60
 

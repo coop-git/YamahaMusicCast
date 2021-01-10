@@ -13,7 +13,7 @@
 package org.openhab.binding.yamahamusiccast.internal;
 
 import static org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastBindingConstants.*;
-import org.openhab.binding.yamahamusiccast.internal.model.Status;
+import org.openhab.binding.yamahamusiccast.internal.model.StatusDTO;
 import org.openhab.binding.yamahamusiccast.internal.model.ThingsRest;
 import org.openhab.binding.yamahamusiccast.internal.model.DeviceInfo;
 import org.openhab.binding.yamahamusiccast.internal.model.DistributionInfo;
@@ -67,6 +67,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.Objects;
 import java.util.UUID;
 import java.math.BigDecimal;
@@ -96,7 +97,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
 
     private Logger logger = LoggerFactory.getLogger(YamahaMusiccastHandler.class);
     private @Nullable ScheduledFuture<?> keepUdpEventsAliveTask;
-    
+    private @Nullable ScheduledFuture<?> generalHousekeepingTask;
     private @NonNullByDefault({}) YamahaMusiccastConfiguration config;
     private @NonNullByDefault({}) String httpResponse;
     
@@ -362,8 +363,9 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
 
             if (zoneNum > 0) {
                 refreshOnStartup();
-                keepUdpEventsAliveTask = scheduler.scheduleWithFixedDelay(this::keepUdpEventsAlive, 5, 300,
-                        TimeUnit.SECONDS);
+                //keepUdpEventsAliveTask = scheduler.scheduleWithFixedDelay(this::keepUdpEventsAlive, 5, 300,
+                //        TimeUnit.SECONDS);
+                generalHousekeepingTask = scheduler.scheduleWithFixedDelay(this::generalHousekeeping, 5, 300, Time.SECONDS);
                 logger.info("YXC - Start Keep Alive UDP events (5 minutes - {}) ", thingLabel);
 
                 updateStatus(ThingStatus.ONLINE);
@@ -375,6 +377,11 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         } else {
             logger.info("YXC - Not initialized! - {}", thingLabel);
         }
+    }
+
+    private void generalHousekeeping() {
+        keepUdpEventsAlive();
+        fetchOtherDevicesViaBridge();
     }
 
     private void refreshOnStartup() {
@@ -648,7 +655,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     private void updateStatusZone(String zoneToUpdate) {
         tmpString = getStatus(this.host, zoneToUpdate);
         @Nullable
-        Status targetObject = new Gson().fromJson(tmpString, Status.class);
+        StatusDTO targetObject = new Gson().fromJson(tmpString, StatusDTO.class);
         responseCode = targetObject.getResponseCode();
         powerState = targetObject.getPower();
         muteState = targetObject.getMute();
@@ -868,6 +875,16 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         String label = "";
         int zonesPerHost = 1;
         List<StateOption> options = new ArrayList<>();
+
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        tmpString = sdf.format(date);
+
+        options.add(new StateOption("", "Standalone"));
+        options.add(new StateOption("server", "Server"));
+        options.add(new StateOption("client", "Client"));
+
+
         for (Thing thing : bridge.getThings()) {
             label = thing.getLabel();
             host = thing.getConfiguration().get("configHost").toString();
@@ -890,7 +907,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                 }
             }
         }
-        options.add(new StateOption("", "Standalone"));
+        
         //for each zone of the device, set all the possible combinations
         for (int i = 1; i <= zoneNum; i++) {
             switch (i) {
@@ -959,13 +976,13 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         int zoneNumLinkedDevice = getNumberOfZones(host);
         int maxVolumeLinkedDevice = 0;
         @Nullable
-        Status targetObject = new Status();
+        StatusDTO targetObject = new StatusDTO();
         int newVolume = 0;
         for (int i = 1; i <= zoneNumLinkedDevice; i++) {
             switch (i) {
                 case 1:
                     tmpString = getStatus(host, "main");
-                    targetObject = new Gson().fromJson(tmpString, Status.class);
+                    targetObject = new Gson().fromJson(tmpString, StatusDTO.class);
                     responseCode = targetObject.getResponseCode();
                     maxVolumeLinkedDevice = targetObject.getMaxVolume();
                     newVolume = maxVolumeLinkedDevice * value / 100;
@@ -973,7 +990,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     break;
                 case 2:
                     tmpString = getStatus(host, "zone2");
-                    targetObject = new Gson().fromJson(tmpString, Status.class);
+                    targetObject = new Gson().fromJson(tmpString, StatusDTO.class);
                     responseCode = targetObject.getResponseCode();
                     maxVolumeLinkedDevice = targetObject.getMaxVolume();
                     newVolume = maxVolumeLinkedDevice * value / 100;
@@ -981,7 +998,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     break;
                 case 3:
                     tmpString = getStatus(host, "zone3");
-                    targetObject = new Gson().fromJson(tmpString, Status.class);
+                    targetObject = new Gson().fromJson(tmpString, StatusDTO.class);
                     responseCode = targetObject.getResponseCode();
                     maxVolumeLinkedDevice = targetObject.getMaxVolume();
                     newVolume = maxVolumeLinkedDevice * value / 100;
@@ -989,7 +1006,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     break;
                 case 4:
                     tmpString = getStatus(host, "zone4");
-                    targetObject = new Gson().fromJson(tmpString, Status.class);
+                    targetObject = new Gson().fromJson(tmpString, StatusDTO.class);
                     responseCode = targetObject.getResponseCode();
                     maxVolumeLinkedDevice = targetObject.getMaxVolume();
                     newVolume = maxVolumeLinkedDevice * value / 100;

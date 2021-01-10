@@ -20,8 +20,8 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
  *
  * @author Lennert Coopman - Initial contribution
  */
-@NonNullByDefault
-public class Status {
+
+public class StatusDTO {
 
     @SerializedName("response_code")
     private @Nullable String responseCode;

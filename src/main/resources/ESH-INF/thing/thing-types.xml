@@ -5,7 +5,7 @@
 	xsi:schemaLocation="https://openhab.org/schemas/thing-description/v1.0.0 https://openhab.org/schemas/thing-description-1.0.0.xsd">
 
 
-	<thing-type id="Device">
+	<thing-type id="device">
 		<supported-bridge-type-refs>
 			<bridge-type-ref id="bridge"/>
 		</supported-bridge-type-refs>
@@ -23,6 +23,7 @@
 		<config-description>
 			<parameter name="configHost" type="text" required="true">
 				<label>Address</label>
+				<context>network-address</context>
 				<description>The IP address of the AVR to control.</description>
 			</parameter>
 			<parameter name="configSyncVolume" type="boolean">
@@ -36,8 +37,8 @@
 	<channel-group-type id="mainControls">
 		<label>Main Zone (default)</label>
 		<channels>
-			<channel id="channelPower" typeId="channelPower"/>
-			<channel id="channelMute" typeId="channelMute"/>
+			<channel id="channelPower" typeId="system.power"/>
+			<channel id="channelMute" typeId="system.mute"/>
 			<channel id="channelVolume" typeId="channelVolume"/>
 			<channel id="channelInput" typeId="channelInput"/>
 			<channel id="channelSoundProgram" typeId="channelSoundProgram"/>
@@ -53,8 +54,8 @@
 	<channel-group-type id="zone2Controls">
 		<label>Zone 2</label>
 		<channels>
-			<channel id="channelPower" typeId="channelPower"/>
-			<channel id="channelMute" typeId="channelMute"/>
+			<channel id="channelPower" typeId="system.power"/>
+			<channel id="channelMute" typeId="system.mute"/>
 			<channel id="channelVolume" typeId="channelVolume"/>
 			<channel id="channelInput" typeId="channelInput"/>
 			<channel id="channelSoundProgram" typeId="channelSoundProgram"/>
@@ -70,8 +71,8 @@
 	<channel-group-type id="zone3Controls">
 		<label>Zone 3</label>
 		<channels>
-			<channel id="channelPower" typeId="channelPower"/>
-			<channel id="channelMute" typeId="channelMute"/>
+			<channel id="channelPower" typeId="system.power"/>
+			<channel id="channelMute" typeId="system.mute"/>
 			<channel id="channelVolume" typeId="channelVolume"/>
 			<channel id="channelInput" typeId="channelInput"/>
 			<channel id="channelSoundProgram" typeId="channelSoundProgram"/>
@@ -87,8 +88,8 @@
 	<channel-group-type id="zone4Controls">
 		<label>Zone 4</label>
 		<channels>
-			<channel id="channelPower" typeId="channelPower"/>
-			<channel id="channelMute" typeId="channelMute"/>
+			<channel id="channelPower" typeId="system.power"/>
+			<channel id="channelMute" typeId="system.mute"/>
 			<channel id="channelVolume" typeId="channelVolume"/>
 			<channel id="channelInput" typeId="channelInput"/>
 			<channel id="channelSoundProgram" typeId="channelSoundProgram"/>
@@ -113,9 +114,6 @@
 			<channel id="channelShuffle" typeId="channelShuffle"/>
 		</channels>
 	</channel-group-type>
-
-
-
 
 	<channel-type id="channelPower">
 		<item-type>Switch</item-type>
@@ -182,7 +180,6 @@
 		<label>Deactivate MusicCast Link on Server</label>
 		<description>Deactivate MusicCast Link on Server</description>
 	</channel-type>
-
 	<channel-type id="channelRecallScene">
 		<item-type>Number</item-type>
 		<label>Scene selection</label>
