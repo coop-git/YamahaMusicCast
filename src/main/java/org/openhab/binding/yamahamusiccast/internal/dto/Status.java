@@ -10,7 +10,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.openhab.binding.yamahamusiccast.internal.model;
+package org.openhab.binding.yamahamusiccast.internal.dto;
 import com.google.gson.annotations.SerializedName;
 import org.eclipse.jdt.annotation.*;
 import org.eclipse.jdt.annotation.NonNullByDefault;
@@ -21,16 +21,16 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
  * @author Lennert Coopman - Initial contribution
  */
 
-public class StatusDTO {
+public class Status {
 
     @SerializedName("response_code")
-    private @Nullable String responseCode;
+    private String responseCode;
 
     @SerializedName("power")
-    private @Nullable String power;
+    private String power;
 
     @SerializedName("mute")
-    private @Nullable String mute;
+    private String mute;
 
     @SerializedName("volume")
     private int volume;
@@ -39,25 +39,25 @@ public class StatusDTO {
     private int maxVolume;
 
     @SerializedName("input")
-    private @Nullable String input;
+    private String input;
 
     @SerializedName("sound_program")
-    private @Nullable String soundProgram;
+    private String soundProgram;
 
     @SerializedName("sleep")
     private int sleep = 0;
 
 
-    public @Nullable String getResponseCode() {
+    public String getResponseCode() {
         return responseCode;
     }
 
-    public @Nullable String getPower() {
+    public String getPower() {
         if (power==null) {power = "";}
         return power;
     }
 
-    public @Nullable String getMute() {
+    public String getMute() {
         if (mute==null) {mute = "";}
         return mute;
     }
@@ -72,12 +72,12 @@ public class StatusDTO {
         return maxVolume;
     }
 
-    public @Nullable String getInput() {
+    public String getInput() {
         if (input==null) {input = "";}
         return input;
     }
 
-    public @Nullable String getSoundProgram() {
+    public String getSoundProgram() {
         if (soundProgram==null) {soundProgram = "";}
         return soundProgram;
     }

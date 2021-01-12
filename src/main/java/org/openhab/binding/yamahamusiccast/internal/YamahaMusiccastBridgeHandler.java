@@ -12,7 +12,7 @@
  */
 package org.openhab.binding.yamahamusiccast.internal;
 
-import org.openhab.binding.yamahamusiccast.internal.model.UdpMessage;
+import org.openhab.binding.yamahamusiccast.internal.dto.UdpMessage;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

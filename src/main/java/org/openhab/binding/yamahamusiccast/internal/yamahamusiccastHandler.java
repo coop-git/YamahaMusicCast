@@ -13,13 +13,13 @@
 package org.openhab.binding.yamahamusiccast.internal;
 
 import static org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastBindingConstants.*;
-import org.openhab.binding.yamahamusiccast.internal.model.StatusDTO;
-import org.openhab.binding.yamahamusiccast.internal.model.ThingsRest;
-import org.openhab.binding.yamahamusiccast.internal.model.DeviceInfo;
-import org.openhab.binding.yamahamusiccast.internal.model.DistributionInfo;
-import org.openhab.binding.yamahamusiccast.internal.model.Features;
-import org.openhab.binding.yamahamusiccast.internal.model.PlayInfo;
-import org.openhab.binding.yamahamusiccast.internal.model.UdpMessage;
+import org.openhab.binding.yamahamusiccast.internal.dto.Status;
+import org.openhab.binding.yamahamusiccast.internal.dto.ThingsRest;
+import org.openhab.binding.yamahamusiccast.internal.dto.DeviceInfo;
+import org.openhab.binding.yamahamusiccast.internal.dto.DistributionInfo;
+import org.openhab.binding.yamahamusiccast.internal.dto.Features;
+import org.openhab.binding.yamahamusiccast.internal.dto.PlayInfo;
+import org.openhab.binding.yamahamusiccast.internal.dto.UdpMessage;
 import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastStateDescriptionProvider;
 import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastConfiguration;
 import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastBridgeHandler;
@@ -166,6 +166,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             logger.debug("Handling command {} for channel {}", command, channelUID);
             channelWithoutGroup = channelUID.getIdWithoutGroup();
             zone = channelUID.getGroupId();
+            DistributionInfo distributioninfo = new DistributionInfo();
             switch (channelWithoutGroup) {
                 case CHANNEL_POWER:
                     if (command.equals(OnOffType.ON)) {
@@ -206,11 +207,10 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                         setVolume(volumeAbsValue, zone, this.host);
                         if (config.configSyncVolume) {
                             tmpString = getDistributionInfo(this.host);
-                            @Nullable
-                            DistributionInfo targetObject = new Gson().fromJson(tmpString, DistributionInfo.class);
-                            role = targetObject.getRole();
+                            distributioninfo = new Gson().fromJson(tmpString, DistributionInfo.class);
+                            role = distributioninfo.getRole();
                             if (role.equals("server")) {
-                                for (JsonElement ip : targetObject.getClientList()) {   
+                                for (JsonElement ip : distributioninfo.getClientList()) {   
                                     JsonObject clientObject = ip.getAsJsonObject();
                                     setVolumeLinkedDevice(volumePercent, zone, clientObject.get("ip_address").getAsString());
                                 }    
@@ -229,11 +229,10 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                         setVolume(volumeAbsValue, zone, this.host);
                         if (config.configSyncVolume) {
                             tmpString = getDistributionInfo(this.host);
-                            @Nullable
-                            DistributionInfo targetObject = new Gson().fromJson(tmpString, DistributionInfo.class);
-                            role = targetObject.getRole();
+                            distributioninfo = new Gson().fromJson(tmpString, DistributionInfo.class);
+                            role = distributioninfo.getRole();
                             if (role.equals("server")) {
-                                for (JsonElement ip : targetObject.getClientList()) {   
+                                for (JsonElement ip : distributioninfo.getClientList()) {   
                                     JsonObject clientObject = ip.getAsJsonObject();
                                     setVolumeLinkedDevice(volumePercent, zone, clientObject.get("ip_address").getAsString());
                                 }    
@@ -244,6 +243,14 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     }                    
                     break;
                 case CHANNEL_INPUT:
+                    //if it is a client, disconnect it first.
+                    tmpString = getDistributionInfo(this.host);
+                    distributioninfo = new Gson().fromJson(tmpString, DistributionInfo.class);
+                    role = distributioninfo.getRole();
+                    if (role.equals("client")) {
+                        json = "{\"group_id\":\"\"}";
+                        httpResponse = setClientInfo(this.host,json);
+                    }
                     setInput(command.toString(), zone);
                     break;
                 case CHANNEL_SOUNDPROGRAM:
@@ -283,13 +290,12 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                         mclinkSetupServer = parts[0];
                         mclinkSetupZone = parts[1];
                         tmpString = getDistributionInfo(mclinkSetupServer);
-                        @Nullable
-                        DistributionInfo targetObject = new Gson().fromJson(tmpString, DistributionInfo.class);
-                        responseCode = targetObject.getResponseCode();
+                        distributioninfo = new Gson().fromJson(tmpString, DistributionInfo.class);
+                        responseCode = distributioninfo.getResponseCode();
                         
-                        role = targetObject.getRole();
+                        role = distributioninfo.getRole();
                         if (role.equals("server")) {
-                            groupId = targetObject.getGroupId();
+                            groupId = distributioninfo.getGroupId();
                         } else if (role.equals("client")) {
                             groupId = "";
                         } else if (role.equals("none")) {
@@ -363,9 +369,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
 
             if (zoneNum > 0) {
                 refreshOnStartup();
-                //keepUdpEventsAliveTask = scheduler.scheduleWithFixedDelay(this::keepUdpEventsAlive, 5, 300,
-                //        TimeUnit.SECONDS);
-                generalHousekeepingTask = scheduler.scheduleWithFixedDelay(this::generalHousekeeping, 5, 300, Time.SECONDS);
+                generalHousekeepingTask = scheduler.scheduleWithFixedDelay(this::generalHousekeeping, 5, 300, TimeUnit.SECONDS);
                 logger.info("YXC - Start Keep Alive UDP events (5 minutes - {}) ", thingLabel);
 
                 updateStatus(ThingStatus.ONLINE);
@@ -382,6 +386,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     private void generalHousekeeping() {
         keepUdpEventsAlive();
         fetchOtherDevicesViaBridge();
+        updateMCLinkStatus();
     }
 
     private void refreshOnStartup() {
@@ -655,7 +660,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     private void updateStatusZone(String zoneToUpdate) {
         tmpString = getStatus(this.host, zoneToUpdate);
         @Nullable
-        StatusDTO targetObject = new Gson().fromJson(tmpString, StatusDTO.class);
+        Status targetObject = new Gson().fromJson(tmpString, Status.class);
         responseCode = targetObject.getResponseCode();
         powerState = targetObject.getPower();
         muteState = targetObject.getMute();
@@ -976,13 +981,13 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         int zoneNumLinkedDevice = getNumberOfZones(host);
         int maxVolumeLinkedDevice = 0;
         @Nullable
-        StatusDTO targetObject = new StatusDTO();
+        Status targetObject = new Status();
         int newVolume = 0;
         for (int i = 1; i <= zoneNumLinkedDevice; i++) {
             switch (i) {
                 case 1:
                     tmpString = getStatus(host, "main");
-                    targetObject = new Gson().fromJson(tmpString, StatusDTO.class);
+                    targetObject = new Gson().fromJson(tmpString, Status.class);
                     responseCode = targetObject.getResponseCode();
                     maxVolumeLinkedDevice = targetObject.getMaxVolume();
                     newVolume = maxVolumeLinkedDevice * value / 100;
@@ -990,7 +995,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     break;
                 case 2:
                     tmpString = getStatus(host, "zone2");
-                    targetObject = new Gson().fromJson(tmpString, StatusDTO.class);
+                    targetObject = new Gson().fromJson(tmpString, Status.class);
                     responseCode = targetObject.getResponseCode();
                     maxVolumeLinkedDevice = targetObject.getMaxVolume();
                     newVolume = maxVolumeLinkedDevice * value / 100;
@@ -998,7 +1003,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     break;
                 case 3:
                     tmpString = getStatus(host, "zone3");
-                    targetObject = new Gson().fromJson(tmpString, StatusDTO.class);
+                    targetObject = new Gson().fromJson(tmpString, Status.class);
                     responseCode = targetObject.getResponseCode();
                     maxVolumeLinkedDevice = targetObject.getMaxVolume();
                     newVolume = maxVolumeLinkedDevice * value / 100;
@@ -1006,7 +1011,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     break;
                 case 4:
                     tmpString = getStatus(host, "zone4");
-                    targetObject = new Gson().fromJson(tmpString, StatusDTO.class);
+                    targetObject = new Gson().fromJson(tmpString, Status.class);
                     responseCode = targetObject.getResponseCode();
                     maxVolumeLinkedDevice = targetObject.getMaxVolume();
                     newVolume = maxVolumeLinkedDevice * value / 100;

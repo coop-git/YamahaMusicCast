@@ -166,14 +166,14 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306 / ISX-18D
 ###### To Do / Wishlist (last updated 7 Jan 2021)
 
 - [ ] Create a pull request for OH3 (in progress)
-- [ ] One central power switch
 - [ ] MusicCast Server: Add a channel to show the number of connected clients/nodes
 - [ ] MusicCast: changes made with app are not reflected in OH
 - [ ] Research if it is possible to only change volume of Master without changing config.
 - [ ] Zone _main_ will always be present. Based on the value of zone_num, create the other zones dynamically.
-- [ ] Expose TotTime and PlayTime with UDP.
+- [ ] Expose TotalTime and PlayTime with UDP events.
 - [ ] Set client to _Standalone_ when input is changed.
 - [ ] Autodiscovery (no plans yet)
+- [ ] One central power switch (no plans as not available in API)
 
 ###### v0.7x - In development
 

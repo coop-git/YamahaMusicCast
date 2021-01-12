@@ -10,7 +10,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.openhab.binding.yamahamusiccast.internal.model;
+package org.openhab.binding.yamahamusiccast.internal.dto;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.JsonArray;
 import org.eclipse.jdt.annotation.*;
@@ -21,52 +21,51 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
  *
  * @author Lennert Coopman - Initial contribution
  */
-@NonNullByDefault
 public class DistributionInfo {
 
     @SerializedName("response_code")
-    private @Nullable String responseCode;
+    private String responseCode;
 
     @SerializedName("group_id")
-    private @Nullable String groupId;
+    private String groupId;
 
     @SerializedName("role")
-    private @Nullable String role;
+    private String role;
 
     @SerializedName("server_zone")
-    private @Nullable String serverZone;
+    private String serverZone;
 
     @SerializedName("client_list")
-    private @Nullable JsonArray clientList;
+    private JsonArray clientList;
 
-    public @Nullable String getResponseCode() {
+    public String getResponseCode() {
         return responseCode;
     }
 
-    public @Nullable String getGroupId() {
+    public String getGroupId() {
         if (groupId==null) {groupId = "";}
         return groupId;
     }
 
-    public @Nullable String getRole() {
+    public String getRole() {
         if (role==null) {role = "";}
         return role;
     }
 
-    public @Nullable String getServerZone() {
+    public String getServerZone() {
         if (serverZone==null) {serverZone = "";}
         return serverZone;
     }
 
-    public @Nullable JsonArray getClientList() {
+    public JsonArray getClientList() {
         return clientList;
     }
-    @NonNullByDefault
+    
     public class ClientList {
         @SerializedName("ip_address")
-        private @Nullable String ipaddress;
+        private String ipaddress;
 
-        public @Nullable String getIpaddress() {
+        public String getIpaddress() {
             if (ipaddress==null) {ipaddress = "";}
             return ipaddress;
         } 
