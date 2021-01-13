@@ -165,14 +165,14 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306 / ISX-18D
 
 ###### To Do / Wishlist (last updated 7 Jan 2021)
 
-- [ ] Create a pull request for OH3 (in progress)
+- [ ] Create a pull request for OH3 (in progress, working on requested changes)
 - [ ] MusicCast Server: Add a channel to show the number of connected clients/nodes
 - [ ] MusicCast: changes made with app are not reflected in OH
-- [ ] Research if it is possible to only change volume of Master without changing config.
 - [ ] Zone _main_ will always be present. Based on the value of zone_num, create the other zones dynamically.
 - [ ] Expose TotalTime and PlayTime with UDP events.
 - [ ] Set client to _Standalone_ when input is changed.
-- [ ] Autodiscovery (no plans yet)
+- [ ] Research if it is possible to only change volume of Master without changing config.
+- [ ] Autodiscovery (no plans)
 - [ ] One central power switch (no plans as not available in API)
 
 ###### v0.7x - In development
@@ -191,7 +191,10 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306 / ISX-18D
 - Changed *empty value* to *Standalone* (v0.76).
 - Update environment to OH 2.5.12, worked further on coding guidelines (v0.77).
 - Changes to avoid null values and be compliant with coding guidelines for Pull Request OH3 (v0.78).
-- **BREAKING CHANGE**: Thing type renamed from _Device_ to _device_ (v0.78).
+- **BREAKING CHANGE**: Thing type renamed from _Device_ to _device_ (v0.79).
+- **BREAKING CHANGE**: Configuration parameter renamed from _configHost_ to _host_ (v0.79).
+- **BREAKING CHANGE**: Configuration parameter renamed from _configSyncVolume_ to _syncVolume_ (v0.79).
+- **BREAKING CHANGE**: Removed the word _channel_ in Channel names.(v0.79).
 
 ###### v0.60
 

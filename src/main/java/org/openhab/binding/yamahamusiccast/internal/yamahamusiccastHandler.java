@@ -205,7 +205,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                         volumePercent = Integer.parseInt(tmpString);
                         volumeAbsValue = (maxVolumeState * volumePercent)/100;
                         setVolume(volumeAbsValue, zone, this.host);
-                        if (config.configSyncVolume) {
+                        if (config.syncVolume) {
                             tmpString = getDistributionInfo(this.host);
                             distributioninfo = new Gson().fromJson(tmpString, DistributionInfo.class);
                             role = distributioninfo.getRole();
@@ -215,7 +215,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                                     setVolumeLinkedDevice(volumePercent, zone, clientObject.get("ip_address").getAsString());
                                 }    
                             }
-                        } // END configSyncVolume
+                        } // END config.syncVolume
                     } catch (Exception e) {
                         //Wait for refresh
                     }                    
@@ -227,7 +227,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                         volumeAbsValue = Integer.parseInt(tmpString);
                         volumePercent = (volumeAbsValue / maxVolumeState)*100;
                         setVolume(volumeAbsValue, zone, this.host);
-                        if (config.configSyncVolume) {
+                        if (config.syncVolume) {
                             tmpString = getDistributionInfo(this.host);
                             distributioninfo = new Gson().fromJson(tmpString, DistributionInfo.class);
                             role = distributioninfo.getRole();
@@ -360,8 +360,8 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         logger.info("YXC - Start initializing! - {}", thingLabel);
         this.config = getConfigAs(YamahaMusiccastConfiguration.class);
         updateStatus(ThingStatus.UNKNOWN);
-        if (config.configHost != null) {
-            this.host = config.configHost;
+        if (config.host != null) {
+            this.host = config.host;
         }
         if (!this.host.equals("")) {
             zoneNum = getNumberOfZones(this.host);
@@ -604,7 +604,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
 
         if (!powerState.equals("")) {
-            channel = new ChannelUID(getThing().getUID(), zoneToUpdate, "channelPower");
+            channel = new ChannelUID(getThing().getUID(), zoneToUpdate, CHANNEL_POWER);
             if (isLinked(channel)) {
                 if (powerState.equals("on")) {                  
                     updateState(channel, OnOffType.ON); 
@@ -615,7 +615,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
 
         if (!muteState.equals("")) {
-            channel = new ChannelUID(getThing().getUID(), zoneToUpdate, "channelMute");
+            channel = new ChannelUID(getThing().getUID(), zoneToUpdate, CHANNEL_MUTE);
             if (isLinked(channel)) {
                 if (muteState.equals("true")) {                  
                     updateState(channel, OnOffType.ON); 
@@ -626,18 +626,18 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
 
         if (!inputState.equals("")) {
-            channel = new ChannelUID(getThing().getUID(), zoneToUpdate, "channelInput");
+            channel = new ChannelUID(getThing().getUID(), zoneToUpdate, CHANNEL_INPUT);
             if (isLinked(channel)) {
                 updateState(channel, StringType.valueOf(inputState)); 
             }
         }
 
         if (volumeState != 0) {
-            channel = new ChannelUID(getThing().getUID(), zoneToUpdate, "channelVolume");
+            channel = new ChannelUID(getThing().getUID(), zoneToUpdate, CHANNEL_VOLUME);
             if (isLinked(channel)) {
                 updateState(channel, new PercentType((volumeState * 100) / maxVolumeState));
             }
-            channel = new ChannelUID(getThing().getUID(), zoneToUpdate, "channelVolumeAbs");
+            channel = new ChannelUID(getThing().getUID(), zoneToUpdate, CHANNEL_VOLUMEABS);
             if (isLinked(channel)) {
                 updateState(channel, new DecimalType(volumeState));
             }
@@ -802,7 +802,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }        
 
         if (responseCode.equals("0")) {
-            ChannelUID testchannel = new ChannelUID(getThing().getUID(), "playerControls", "channelPlayer");
+            ChannelUID testchannel = new ChannelUID(getThing().getUID(), "playerControls", CHANNEL_PLAYER);
             switch (playbackState) {
                 case "play":
                     updateState(testchannel,PlayPauseType.PLAY);
@@ -820,30 +820,30 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     updateState(testchannel,RewindFastforwardType.FASTFORWARD);
                     break;
             }
-            testchannel = new ChannelUID(getThing().getUID(), "playerControls", "channelArtist");
+            testchannel = new ChannelUID(getThing().getUID(), "playerControls", CHANNEL_ARTIST);
             if (isLinked(testchannel)){
                 updateState(testchannel, StringType.valueOf(artistState));
             }
-            testchannel = new ChannelUID(getThing().getUID(), "playerControls", "channelTrack");
+            testchannel = new ChannelUID(getThing().getUID(), "playerControls", CHANNEL_TRACK);
             if (isLinked(testchannel)){
                 updateState(testchannel, StringType.valueOf(trackState));
             }
-            testchannel = new ChannelUID(getThing().getUID(), "playerControls", "channelAlbum");
+            testchannel = new ChannelUID(getThing().getUID(), "playerControls", CHANNEL_ALBUM);
             if (isLinked(testchannel)){
                 updateState(testchannel, StringType.valueOf(albumState));
             }
-            testchannel = new ChannelUID(getThing().getUID(), "playerControls", "channelAlbumArt");
+            testchannel = new ChannelUID(getThing().getUID(), "playerControls", CHANNEL_ALBUMART);
             if (isLinked(testchannel)){
                 if (!albumArtUrlState.equals("")) {
                     albumArtUrlState = "http://" + this.host + albumArtUrlState;    
                 }
                 updateState(testchannel, StringType.valueOf(albumArtUrlState));
             }
-            testchannel = new ChannelUID(getThing().getUID(), "playerControls", "channelRepeat");
+            testchannel = new ChannelUID(getThing().getUID(), "playerControls", CHANNEL_REPEAT);
             if (isLinked(testchannel)){
                 updateState(testchannel, StringType.valueOf(repeatState));
             }
-            testchannel = new ChannelUID(getThing().getUID(), "playerControls", "channelShuffle");
+            testchannel = new ChannelUID(getThing().getUID(), "playerControls", CHANNEL_SHUFFLE);
             if (isLinked(testchannel)){
                 updateState(testchannel, StringType.valueOf(shuffleState));
             }
@@ -881,10 +881,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         int zonesPerHost = 1;
         List<StateOption> options = new ArrayList<>();
 
-        Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-        tmpString = sdf.format(date);
-
         options.add(new StateOption("", "Standalone"));
         options.add(new StateOption("server", "Server"));
         options.add(new StateOption("client", "Client"));
@@ -892,7 +888,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
 
         for (Thing thing : bridge.getThings()) {
             label = thing.getLabel();
-            host = thing.getConfiguration().get("configHost").toString();
+            host = thing.getConfiguration().get("host").toString();
             logger.debug("YXC - Thing found on Bridge: {} - {}", label, host);
             zonesPerHost = getNumberOfZones(host);
             for (int i = 1; i <= zonesPerHost; i++) {
@@ -917,25 +913,25 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         for (int i = 1; i <= zoneNum; i++) {
             switch (i) {
                 case 1:
-                    ChannelUID testchannel = new ChannelUID(getThing().getUID(), "main", "channelMCServer");
+                    ChannelUID testchannel = new ChannelUID(getThing().getUID(), "main", CHANNEL_MCSERVER);
                     if (isLinked(testchannel)) {
                         stateDescriptionProvider.setStateOptions(testchannel, options);
                     }
                     break;
                 case 2:
-                    testchannel = new ChannelUID(getThing().getUID(), "zone2", "channelMCServer");
+                    testchannel = new ChannelUID(getThing().getUID(), "zone2", CHANNEL_MCSERVER);
                     if (isLinked(testchannel)) {
                         stateDescriptionProvider.setStateOptions(testchannel, options);
                     }
                     break;
                 case 3:
-                    testchannel = new ChannelUID(getThing().getUID(), "zone3", "channelMCServer");
+                    testchannel = new ChannelUID(getThing().getUID(), "zone3", CHANNEL_MCSERVER);
                     if (isLinked(testchannel)) {
                         stateDescriptionProvider.setStateOptions(testchannel, options);
                     }
                     break;
                 case 4:
-                    testchannel = new ChannelUID(getThing().getUID(), "zone4", "channelMCServer");
+                    testchannel = new ChannelUID(getThing().getUID(), "zone4", CHANNEL_MCSERVER);
                     if (isLinked(testchannel)) {
                         stateDescriptionProvider.setStateOptions(testchannel, options);
                     }
@@ -1026,38 +1022,48 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         @Nullable
         DistributionInfo targetObject = new Gson().fromJson(tmpString, DistributionInfo.class);
         role = targetObject.getRole();
+        
+        switch (role) {
+            case "none":
+                setMCLinkToStandalone();
+                break;
+            case "server":
+                break;
+            case "client":
+                break;
+        }
+    }
+
+    private void setMCLinkToStandalone() {
         ChannelUID testchannel;
-        if (role.equals("none")) {
-            for (int i = 1; i <= zoneNum; i++) {
-                switch (i) {
-                    case 1:
-                        testchannel = new ChannelUID(getThing().getUID(), "main", "channelMCServer");
-                        if (isLinked(testchannel)){
-                            updateState(testchannel, StringType.valueOf(""));
-                        }
-                        break;
-                    case 2:
-                        testchannel = new ChannelUID(getThing().getUID(), "zone2", "channelMCServer");
-                        if (isLinked(testchannel)){
-                            updateState(testchannel, StringType.valueOf(""));
-                        }
-                        break;
-                    case 3:
-                        testchannel = new ChannelUID(getThing().getUID(), "zone3", "channelMCServer");
-                        if (isLinked(testchannel)){
-                            updateState(testchannel, StringType.valueOf(""));
-                        }
-                        break;
-                    case 4:
-                        testchannel = new ChannelUID(getThing().getUID(), "zone4", "channelMCServer");
-                        if (isLinked(testchannel)){
-                            updateState(testchannel, StringType.valueOf(""));
-                        }
-                        break;
-                }
+        for (int i = 1; i <= zoneNum; i++) {
+            switch (i) {
+                case 1:
+                    testchannel = new ChannelUID(getThing().getUID(), "main", CHANNEL_MCSERVER);
+                    if (isLinked(testchannel)){
+                        updateState(testchannel, StringType.valueOf(""));
+                    }
+                    break;
+                case 2:
+                    testchannel = new ChannelUID(getThing().getUID(), "zone2", CHANNEL_MCSERVER);
+                    if (isLinked(testchannel)){
+                        updateState(testchannel, StringType.valueOf(""));
+                    }
+                    break;
+                case 3:
+                    testchannel = new ChannelUID(getThing().getUID(), "zone3", CHANNEL_MCSERVER);
+                    if (isLinked(testchannel)){
+                        updateState(testchannel, StringType.valueOf(""));
+                    }
+                    break;
+                case 4:
+                    testchannel = new ChannelUID(getThing().getUID(), "zone4", CHANNEL_MCSERVER);
+                    if (isLinked(testchannel)){
+                        updateState(testchannel, StringType.valueOf(""));
+                    }
+                    break;
             }
         }
-
     }
     // End Various functions
 
