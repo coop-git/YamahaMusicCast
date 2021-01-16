@@ -193,7 +193,7 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306 / ISX-18D
 - **BREAKING CHANGE**: Thing type renamed from _Device_ to _device_ (v0.79).
 - **BREAKING CHANGE**: Configuration parameter renamed from _configHost_ to _host_ (v0.79).
 - **BREAKING CHANGE**: Configuration parameter renamed from _configSyncVolume_ to _syncVolume_ (v0.79).
-- **BREAKING CHANGE**: Removed the word _channel_ in Channel names.(v0.79).
+- **BREAKING CHANGE**: Removed the word _channel_ in Channel names and Channel names are changed from upper to lower case.(v0.79).
 - Set client to _Standalone_ when input is changed (v0.79)
 
 ###### v0.60
