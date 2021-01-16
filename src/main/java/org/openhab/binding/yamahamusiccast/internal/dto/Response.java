@@ -13,35 +13,22 @@
 package org.openhab.binding.yamahamusiccast.internal.dto;
 import com.google.gson.annotations.SerializedName;
 
+
 /**
- * This class represents the DeviceInfo request requested from the Yamaha model/device via the API.
+ * This class represents the response received from the Yamaha model/device via the API.
  *
  * @author Lennert Coopman - Initial contribution
  */
-public class DeviceInfo {
+
+public class Response {
 
     @SerializedName("response_code")
     private String responseCode;
-
-    @SerializedName("model_name")
-    private String modelName;
-
-    @SerializedName("device_id")
-    private String deviceId;
 
     public String getResponseCode() {
         return responseCode;
     }
 
-    public String getModelName() {
-        if (modelName==null) {modelName = "";}
-        return modelName;
-    }
-
-    public String getDeviceId() {
-        if (deviceId==null) {deviceId = "";}
-        return deviceId;
-    }
 }
 
 

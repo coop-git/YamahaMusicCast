@@ -12,8 +12,7 @@
  */
 package org.openhab.binding.yamahamusiccast.internal.dto;
 import com.google.gson.annotations.SerializedName;
-import org.eclipse.jdt.annotation.*;
-import org.eclipse.jdt.annotation.NonNullByDefault;
+
 
 /**
  * This class represents the Features request requested from the Yamaha model/device via the API.
@@ -36,7 +35,7 @@ public class Features {
     public System getSystem() {
         return system;
     }
-    @NonNullByDefault
+    
     public class System {
         @SerializedName("zone_num")
         private int zoneNum;

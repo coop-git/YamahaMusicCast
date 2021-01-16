@@ -12,8 +12,7 @@
  */
 package org.openhab.binding.yamahamusiccast.internal.dto;
 import com.google.gson.annotations.SerializedName;
-import org.eclipse.jdt.annotation.*;
-import org.eclipse.jdt.annotation.NonNullByDefault;
+
 
 /**
  * This class represents the UDP event received from the Yamaha model/device.
