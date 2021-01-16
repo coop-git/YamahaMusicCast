@@ -32,39 +32,39 @@ N/A
 
 ## Thing Configuration
 
-| Parameter              | type    | description                                             | Advanced | Required      |
-|------------------------|---------|---------------------------------------------------------|----------|---------------|
-| configHost             | String  | IP address of the Yamaha model (AVR, ...)               | false    | true          |
-| configSyncVolume       | Boolean | Sync volume across linked models (default=false)        | true     | false         |
+| Parameter        | type    | description                                             | Advanced | Required      |
+|------------------|---------|---------------------------------------------------------|----------|---------------|
+| host             | String  | IP address of the Yamaha model (AVR, ...)               | false    | true          |
+| syncVolume       | Boolean | Sync volume across linked models (default=false)        | true     | false         |
 
 
 ## Channels
 
-| channel               | type   | description                                                        |
-|-----------------------|--------|--------------------------------------------------------------------|
-| channelPower          | Switch | Power ON/OFF                                                       |
-| channelMute           | Switch | Mute ON/OFF                                                        |
-| channelVolume         | Dimmer | Volume as % (recalculated based on Max Volume Model)               |
-| channelVolumeAbs      | Number | Volume as absolute value                                           |
-| channelInput          | String | See below for list                                                 |
-| channelSoundProgram   | String | See below for list                                                 |
-| channelSelectPreset   | String | Select Netradio/USB preset (fetched from Model)                    |
-| channelSleep          | Number | Fixed values for Sleep : 0/30/60/90/120                            |
-| channelMCServer       | String | Select your MusicCast Server or set to Standalone                  |
-| channelUnlinkMCServer | Switch | Disband MusicCast Link on Master                                   |
-| channelRecallScene    | Number | Select a scene (create your own dropdown list!)                    |
-| channelPlayer         | Player | PLAY/PAUSE/NEXT/PREVIOUS/REWIND/FASTFORWARD                        |
-| channelArtist         | String | Artist                                                             |
-| channelTrack          | String | Track                                                              |
-| channelAlbum          | String | Album                                                              |
-| channelAlbumArt       | Image  | Album Art                                                          |
-| channelRepeat         | String | Toggle Repeat. Available values: Off, One, All                     |
-| channelShuffle        | String | Toggle Shuffle. Availabel values: Off, On, Songs, Album            |
+| channel        | type   | description                                                        |
+|----------------|--------|--------------------------------------------------------------------|
+| power          | Switch | Power ON/OFF                                                       |
+| mute           | Switch | Mute ON/OFF                                                        |
+| volume         | Dimmer | Volume as % (recalculated based on Max Volume Model)               |
+| volumeAbs      | Number | Volume as absolute value                                           |
+| input          | String | See below for list                                                 |
+| soundProgram   | String | See below for list                                                 |
+| selectPreset   | String | Select Netradio/USB preset (fetched from Model)                    |
+| sleep          | Number | Fixed values for Sleep : 0/30/60/90/120                            |
+| mcServer       | String | Select your MusicCast Server or set to Standalone                  |
+| unlinkMCServer | Switch | Disband MusicCast Link on Master                                   |
+| recallScene    | Number | Select a scene (create your own dropdown list!)                    |
+| player         | Player | PLAY/PAUSE/NEXT/PREVIOUS/REWIND/FASTFORWARD                        |
+| artist         | String | Artist                                                             |
+| track          | String | Track                                                              |
+| album          | String | Album                                                              |
+| albumArt       | Image  | Album Art                                                          |
+| repeat         | String | Toggle Repeat. Available values: Off, One, All                     |
+| shuffle        | String | Toggle Shuffle. Availabel values: Off, On, Songs, Album            |
 
 
 | Zones                | description                                          |
 |----------------------|------------------------------------------------------|
-| Zone1-4              | Zone 1 to 4 to control Power, Volume, ...            |
+| zone1-4              | Zone 1 to 4 to control Power, Volume, ...            |
 | playerControls       | Separate zone for Play, Pause, ...                   |
 
 ## Input List
@@ -103,30 +103,30 @@ mono_movie / movie / enhanced / 2ch_stereo / 5ch_stereo / 7ch_stereo / 9ch_stere
 
 ```
 Bridge yamahamusiccast:bridge:bridge "YXC Bridge" {
-Thing yamahamusiccast:Device:Living "YXC Living" [configHost="1.2.3.4"]
+Thing yamahamusiccast:device:Living "YXC Living" [configHost="1.2.3.4"]
 }
 ```
 
 ### Basic setup
 
 ```
-Switch YamahaPower "" {channel="yamahamusiccast:Device:Living:main#channelPower"}
-Switch YamahaMute "" {channel="yamahamusiccast:Device:Living:main#channelMute"}
-Dimmer YamahaVolume "" {channel="yamahamusiccast:Device:Living:main#channelVolume"}
-Number YamahaVolumeAbs "" {channel="yamahamusiccast:Device:Living:main#channelVolumeAbs"}
-String YamahaInput "" {channel="yamahamusiccast:Device:Living:main#channelInput"}
-String YamahaSelectPreset "" {channel="yamahamusiccast:Device:Living:main#channelSelectPreset"}
-String YamahaSoundProgram "" {channel="yamahamusiccast:Device:Living:main#channelSoundProgram"}
+Switch YamahaPower "" {channel="yamahamusiccast:Device:Living:main#power"}
+Switch YamahaMute "" {channel="yamahamusiccast:Device:Living:main#mute"}
+Dimmer YamahaVolume "" {channel="yamahamusiccast:Device:Living:main#volume"}
+Number YamahaVolumeAbs "" {channel="yamahamusiccast:Device:Living:main#volumeAbs"}
+String YamahaInput "" {channel="yamahamusiccast:Device:Living:main#input"}
+String YamahaSelectPreset "" {channel="yamahamusiccast:Device:Living:main#selectPreset"}
+String YamahaSoundProgram "" {channel="yamahamusiccast:Device:Living:main#soundProgram"}
 ```
 
 ### Player controls
 
 ```
-Player YamahaPlayer "" {channel="yamahamusiccast:Device:Living:playerControls#channelPlayer"}
-String YamahaArt "" {channel="yamahamusiccast:Device:Living:playerControls#channelAlbumArt"}
-String YamahaArtist "" {channel="yamahamusiccast:Device:Living:playerControls#channelArtist"}
-String YamahaTrack "" {channel="yamahamusiccast:Device:Living:playerControls#channelTrack"}
-String YamahaAlbum "" {channel="yamahamusiccast:Device:Living:playerControls#channelAlbum"}
+Player YamahaPlayer "" {channel="yamahamusiccast:Device:Living:playerControls#player"}
+String YamahaArt "" {channel="yamahamusiccast:Device:Living:playerControls#albumArt"}
+String YamahaArtist "" {channel="yamahamusiccast:Device:Living:playerControls#artist"}
+String YamahaTrack "" {channel="yamahamusiccast:Device:Living:playerControls#track"}
+String YamahaAlbum "" {channel="yamahamusiccast:Device:Living:playerControls#album"}
 ```
 
 ### MusicCast setup
@@ -139,12 +139,12 @@ If not, a new group will be created.
 *Device A*: Living with IP 192.168.1.1
 *Device B*: Kitchen with IP 192.168.1.2
 
-Set **channelMCServer** to *Standalone* to remove the device/model from the current active group. The group will keep on exist with other devices/models.
-Use **channelUnlinkMCServer** on the Thing which is currently set to master to disband the group.
+Set **mcServer** to *Standalone* to remove the device/model from the current active group. The group will keep on exist with other devices/models.
+Use **unlinkMCServer** on the Thing which is currently set to master to disband the group.
 
 ```
-String YamahaMCServer "[%s]" {channel="yamahamusiccast:Device:Living:main#channelMCServer"}
-Switch YamahaUnlinkMC "" {channel="yamahamusiccast:Device:Living:main#channelUnlinkMCServer"}
+String YamahaMCServer "[%s]" {channel="yamahamusiccast:device:Living:main#mcServer"}
+Switch YamahaUnlinkMC "" {channel="yamahamusiccast:device:Living:main#unlinkMCServer"}
 ```
 
 #### How to use this in a rule?
@@ -170,7 +170,6 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306 / ISX-18D
 - [ ] MusicCast: changes made with app are not reflected in OH
 - [ ] Zone _main_ will always be present. Based on the value of zone_num, create the other zones dynamically.
 - [ ] Expose TotalTime and PlayTime with UDP events.
-- [ ] Set client to _Standalone_ when input is changed.
 - [ ] Research if it is possible to only change volume of Master without changing config.
 - [ ] Autodiscovery (no plans)
 - [ ] One central power switch (no plans as not available in API)
@@ -195,6 +194,7 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306 / ISX-18D
 - **BREAKING CHANGE**: Configuration parameter renamed from _configHost_ to _host_ (v0.79).
 - **BREAKING CHANGE**: Configuration parameter renamed from _configSyncVolume_ to _syncVolume_ (v0.79).
 - **BREAKING CHANGE**: Removed the word _channel_ in Channel names.(v0.79).
+- Set client to _Standalone_ when input is changed (v0.79)
 
 ###### v0.60
 

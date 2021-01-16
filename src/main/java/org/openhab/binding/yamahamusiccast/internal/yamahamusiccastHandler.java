@@ -414,8 +414,8 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
 
     @Override
     public void dispose() { 
-        if (keepUdpEventsAliveTask != null) {
-            keepUdpEventsAliveTask.cancel(true);
+        if (generalHousekeepingTask != null) {
+            generalHousekeepingTask.cancel(true);
         }        
     }
     // Various functions 
