@@ -48,6 +48,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledExecutorService;
 import org.eclipse.smarthome.core.common.ThreadPoolManager;
+import org.eclipse.smarthome.core.common.NamedThreadFactory;
 import org.openhab.binding.yamahamusiccast.internal.UdpListener;
 
 

@@ -97,6 +97,8 @@ public class UdpMessage {
         private PresetControl presetControl;
         @SerializedName("play_info_updated")
         private String playInfoUpdated;
+        @SerializedName("play_time")
+        private int playTime;
         
         public PresetControl getPresetControl() {
             return presetControl;
@@ -104,6 +106,9 @@ public class UdpMessage {
         public String getPlayInfoUpdated() {
             if (playInfoUpdated==null) {playInfoUpdated = "";}
             return playInfoUpdated;
+        }
+        public int getPlayTime() {
+            return playTime;
         }
     }
 
