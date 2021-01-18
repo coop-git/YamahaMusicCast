@@ -209,48 +209,36 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     }
                     break;                  
                 case CHANNEL_VOLUME:
-                    tmpString = command.toString();
-                    tmpString = tmpString.replace(".0","");
-                    try {
-                        volumePercent = Integer.parseInt(tmpString);
-                        volumeAbsValue = (maxVolumeState * volumePercent)/100;
-                        setVolume(volumeAbsValue, zone, this.host);
-                        if (config.syncVolume) {
-                            tmpString = getDistributionInfo(this.host);
-                            distributioninfo = new Gson().fromJson(tmpString, DistributionInfo.class);
-                            role = distributioninfo.getRole();
-                            if (role.equals("server")) {
-                                for (JsonElement ip : distributioninfo.getClientList()) {   
-                                    JsonObject clientObject = ip.getAsJsonObject();
-                                    setVolumeLinkedDevice(volumePercent, zone, clientObject.get("ip_address").getAsString());
-                                }    
-                            }
-                        } // END config.syncVolume
-                    } catch (Exception e) {
-                        //Wait for refresh
-                    }                    
+                    volumePercent = Integer.parseInt(command.toString().replace(".0", ""));
+                    volumeAbsValue = (maxVolumeState * volumePercent)/100;
+                    setVolume(volumeAbsValue, zone, this.host);
+                    if (config.syncVolume) {
+                        tmpString = getDistributionInfo(this.host);
+                        distributioninfo = new Gson().fromJson(tmpString, DistributionInfo.class);
+                        role = distributioninfo.getRole();
+                        if (role.equals("server")) {
+                            for (JsonElement ip : distributioninfo.getClientList()) {   
+                                JsonObject clientObject = ip.getAsJsonObject();
+                                setVolumeLinkedDevice(volumePercent, zone, clientObject.get("ip_address").getAsString());
+                            }    
+                        }
+                    } // END config.syncVolume
                     break;
                 case CHANNEL_VOLUMEABS:
-                    tmpString = command.toString();
-                    tmpString = tmpString.replace(".0","");
-                    try {
-                        volumeAbsValue = Integer.parseInt(tmpString);
-                        volumePercent = (volumeAbsValue / maxVolumeState)*100;
-                        setVolume(volumeAbsValue, zone, this.host);
-                        if (config.syncVolume) {
-                            tmpString = getDistributionInfo(this.host);
-                            distributioninfo = new Gson().fromJson(tmpString, DistributionInfo.class);
-                            role = distributioninfo.getRole();
-                            if (role.equals("server")) {
-                                for (JsonElement ip : distributioninfo.getClientList()) {   
-                                    JsonObject clientObject = ip.getAsJsonObject();
-                                    setVolumeLinkedDevice(volumePercent, zone, clientObject.get("ip_address").getAsString());
-                                }    
-                            }
+                    volumeAbsValue = Integer.parseInt(command.toString().replace(".0", ""));
+                    volumePercent = (volumeAbsValue / maxVolumeState)*100;
+                    setVolume(volumeAbsValue, zone, this.host);
+                    if (config.syncVolume) {
+                        tmpString = getDistributionInfo(this.host);
+                        distributioninfo = new Gson().fromJson(tmpString, DistributionInfo.class);
+                        role = distributioninfo.getRole();
+                        if (role.equals("server")) {
+                            for (JsonElement ip : distributioninfo.getClientList()) {   
+                                JsonObject clientObject = ip.getAsJsonObject();
+                                setVolumeLinkedDevice(volumePercent, zone, clientObject.get("ip_address").getAsString());
+                            }    
                         }
-                    } catch (Exception e) {
-                        //Wait for refresh
-                    }                    
+                    }
                     break;
                 case CHANNEL_INPUT:
                     //if it is a client, disconnect it first.
