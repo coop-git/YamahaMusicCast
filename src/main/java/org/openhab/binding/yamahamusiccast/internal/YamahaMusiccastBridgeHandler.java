@@ -50,6 +50,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import org.eclipse.smarthome.core.common.ThreadPoolManager;
 import org.eclipse.smarthome.core.common.NamedThreadFactory;
 import org.openhab.binding.yamahamusiccast.internal.UdpListener;
+import java.io.IOException;
 
 
 /**
@@ -112,14 +113,10 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
 
                     YamahaMusiccastHandler handler = (YamahaMusiccastHandler) thing.getHandler();
                     logger.debug("UDP: {} - {} ({} - Tracking: {})", json, handler.getDeviceId(), thing.getLabel(), trackingID);
-                    try {
-                        @Nullable
-                        UdpMessage targetObject = new Gson().fromJson(json, UdpMessage.class);
-                        udpDeviceId = targetObject.getDeviceId();
-                    } catch (Exception e) {
-                        logger.warn("Error fetching Device Id (Tracking: {})", trackingID);
-                        udpDeviceId = "";
-                    }
+
+                    @Nullable
+                    UdpMessage targetObject = new Gson().fromJson(json, UdpMessage.class);
+                    udpDeviceId = targetObject.getDeviceId();
                     if (udpDeviceId.equals(handler.getDeviceId())) {
                         handler.processUDPEvent(json, trackingID);
                     }
