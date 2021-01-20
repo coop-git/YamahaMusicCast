@@ -60,7 +60,7 @@ import java.io.IOException;
  */
 @NonNullByDefault
 public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
-
+    private Gson gson = new Gson();
     private final Logger logger = LoggerFactory.getLogger(YamahaMusiccastBridgeHandler.class);
 
     private final ScheduledExecutorService udpScheduler = ThreadPoolManager
@@ -115,7 +115,7 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
                     logger.debug("UDP: {} - {} ({} - Tracking: {})", json, handler.getDeviceId(), thing.getLabel(), trackingID);
 
                     @Nullable
-                    UdpMessage targetObject = new Gson().fromJson(json, UdpMessage.class);
+                    UdpMessage targetObject = gson.fromJson(json, UdpMessage.class);
                     udpDeviceId = targetObject.getDeviceId();
                     if (udpDeviceId.equals(handler.getDeviceId())) {
                         handler.processUDPEvent(json, trackingID);
