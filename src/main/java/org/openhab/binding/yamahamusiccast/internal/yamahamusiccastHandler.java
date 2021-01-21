@@ -132,6 +132,8 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     String repeatState = "";
     @Nullable
     String shuffleState = "";
+    int playTimeState = 0;
+    int totalTimeState = 0;
     @Nullable
     String topicAVR = "";
     @Nullable
@@ -476,6 +478,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         String inputState = "";
         int volumeState = 0;
         int presetNumber = 0;
+        int playTime = 0;
         logger.debug("YXC - Handling UDP for {}", zoneToUpdate);       
         switch (zoneToUpdate) {
             case "main":
@@ -597,6 +600,8 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                 } catch (Exception e) {
                     playInfoUpdated = "";
                 }
+                playTime = targetObject.getNetUSB().getPlayTime();
+                //totalTime is not in UDP event
                 break;
         }
 
@@ -651,6 +656,12 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
 
         if (!statusUpdated.isEmpty()) {
             updateStatusZone(zoneToUpdate);
+        }
+        if (playTime != 0) {
+            channel = new ChannelUID(getThing().getUID(), zoneToUpdate, CHANNEL_PLAYTIME);
+            if (isLinked(channel)) {
+                updateState(channel, StringType.valueOf(String.valueOf(playTime)));
+            }
         }
     } 
 
@@ -794,6 +805,8 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             albumArtUrlState = targetObject.getAlbumArtUrl();
             repeatState = targetObject.getRepeat();
             shuffleState = targetObject.getShuffle();
+            playTimeState = targetObject.getPlayTime();
+            totalTimeState = targetObject.getTotalTime();
         } catch (Exception e) {
             responseCode = "999";
         }        
@@ -844,15 +857,17 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             if (isLinked(testchannel)){
                 updateState(testchannel, StringType.valueOf(shuffleState));
             }
+            testchannel = new ChannelUID(getThing().getUID(), "playerControls", CHANNEL_PLAYTIME);
+            if (isLinked(testchannel)){
+                updateState(testchannel, StringType.valueOf(String.valueOf(playTimeState))); 
+            }
+            testchannel = new ChannelUID(getThing().getUID(), "playerControls", CHANNEL_TOTALTIME);
+            if (isLinked(testchannel)){
+                updateState(testchannel, StringType.valueOf(String.valueOf(totalTimeState)));
+            }
         }
 
     }
-
-//    private @Nullable String getResponseCode(String json) {
-//        JsonElement jsonTree = parser.parse(json);
-//        JsonObject jsonObject = jsonTree.getAsJsonObject();
-//        return jsonObject.get("response_code").getAsString();
-//    }
 
     private @Nullable String getLastInput() {
         String text = "";
@@ -1067,11 +1082,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             }
         }
     }
-    // End Various functions
 
-    // API calls to AVR
-
-    // Start Zone Related
     private String makeRequest(@Nullable String topicAVR, String url) {
         String response = "";
         try {
@@ -1083,6 +1094,11 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             return "{\"response_code\":\"999\"}";
         }
     }
+    // End Various functions
+
+    // API calls to AVR
+
+    // Start Zone Related
 
     private @Nullable String getStatus(@Nullable String host, String zone) {
         topicAVR = "Status";

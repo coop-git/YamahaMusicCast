@@ -17,6 +17,8 @@ UDP events are captured to reflect changes in the binding for
 - Album Art
 - Repeat
 - Shuffle
+- Play Time
+- Total Time
 
 ## Supported Things
 
@@ -60,6 +62,8 @@ N/A
 | albumArt       | Image  | Album Art                                                          |
 | repeat         | String | Toggle Repeat. Available values: Off, One, All                     |
 | shuffle        | String | Toggle Shuffle. Availabel values: Off, On, Songs, Album            |
+| playTime       | String | Play time of current selection: radio, song, track, ...            |
+| totalTime      | String | Total time of current selection: radio, song, track, ...           |
 
 
 | Zones                | description                                          |

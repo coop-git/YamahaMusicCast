@@ -46,6 +46,11 @@ public class PlayInfo {
     @SerializedName("shuffle")
     private String shuffle;
 
+    @SerializedName("play_time")
+    private int playTime;
+
+    @SerializedName("total_time")
+    private int totalTime;
 
     public String getResponseCode() {
         return responseCode;
@@ -84,10 +89,15 @@ public class PlayInfo {
     public String getShuffle() {
         if (shuffle==null) {shuffle = "";}
         return shuffle;
-    }  
-   
+    }
 
+    public int getPlayTime() {
+        return playTime;
+    }
 
+    public int getTotalTime() {
+        return totalTime;
+    }
 }
 
 
