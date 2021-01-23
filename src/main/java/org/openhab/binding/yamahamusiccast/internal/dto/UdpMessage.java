@@ -39,7 +39,8 @@ public class UdpMessage {
     private Zone zone4;
     @SerializedName("netusb")
     private NetUSB netusb;
-
+    @SerializedName("dist")
+    private Dist dist;
 
     public Zone getMain() {
         return main;
@@ -56,7 +57,9 @@ public class UdpMessage {
     public NetUSB getNetUSB() {
         return netusb;
     }
-
+    public Dist getDist() {
+        return dist;
+    }
     
     public class Zone {
         @SerializedName("power")
@@ -132,6 +135,16 @@ public class UdpMessage {
             return num;
         }
 
+    }
+
+    public class Dist {
+        @SerializedName("dist_info_updated")
+        private String distInfoUpdated;
+
+        public String getDistInfoUpdated() {
+            if (distInfoUpdated==null) {distInfoUpdated = "";}
+            return distInfoUpdated;
+        }        
     }
 
 }
