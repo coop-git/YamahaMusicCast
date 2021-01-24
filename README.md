@@ -114,23 +114,23 @@ Thing yamahamusiccast:device:Living "YXC Living" [configHost="1.2.3.4"]
 ### Basic setup
 
 ```
-Switch YamahaPower "" {channel="yamahamusiccast:Device:Living:main#power"}
-Switch YamahaMute "" {channel="yamahamusiccast:Device:Living:main#mute"}
-Dimmer YamahaVolume "" {channel="yamahamusiccast:Device:Living:main#volume"}
-Number YamahaVolumeAbs "" {channel="yamahamusiccast:Device:Living:main#volumeAbs"}
-String YamahaInput "" {channel="yamahamusiccast:Device:Living:main#input"}
-String YamahaSelectPreset "" {channel="yamahamusiccast:Device:Living:main#selectPreset"}
-String YamahaSoundProgram "" {channel="yamahamusiccast:Device:Living:main#soundProgram"}
+Switch YamahaPower "" {channel="yamahamusiccast:device:Living:main#power"}
+Switch YamahaMute "" {channel="yamahamusiccast:device:Living:main#mute"}
+Dimmer YamahaVolume "" {channel="yamahamusiccast:device:Living:main#volume"}
+Number YamahaVolumeAbs "" {channel="yamahamusiccast:device:Living:main#volumeAbs"}
+String YamahaInput "" {channel="yamahamusiccast:device:Living:main#input"}
+String YamahaSelectPreset "" {channel="yamahamusiccast:device:Living:main#selectPreset"}
+String YamahaSoundProgram "" {channel="yamahamusiccast:device:Living:main#soundProgram"}
 ```
 
 ### Player controls
 
 ```
-Player YamahaPlayer "" {channel="yamahamusiccast:Device:Living:playerControls#player"}
-String YamahaArt "" {channel="yamahamusiccast:Device:Living:playerControls#albumArt"}
-String YamahaArtist "" {channel="yamahamusiccast:Device:Living:playerControls#artist"}
-String YamahaTrack "" {channel="yamahamusiccast:Device:Living:playerControls#track"}
-String YamahaAlbum "" {channel="yamahamusiccast:Device:Living:playerControls#album"}
+Player YamahaPlayer "" {channel="yamahamusiccast:device:Living:playerControls#player"}
+String YamahaArt "" {channel="yamahamusiccast:device:Living:playerControls#albumArt"}
+String YamahaArtist "" {channel="yamahamusiccast:device:Living:playerControls#artist"}
+String YamahaTrack "" {channel="yamahamusiccast:device:Living:playerControls#track"}
+String YamahaAlbum "" {channel="yamahamusiccast:device:Living:playerControls#album"}
 ```
 
 ### MusicCast setup
@@ -173,6 +173,7 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306 / ISX-18D
 - [ ] MusicCast Server: Add a channel to show the number of connected clients/nodes
 - [ ] MusicCast: changes made with app are not reflected in OH
 - [ ] Zone _main_ will always be present. Based on the value of zone_num, create the other zones dynamically.
+- [ ] Create new DTO classes for _getLastInput_, _getPresetInfo_
 - [ ] Research if it is possible to only change volume of Master without changing config.
 - [ ] Autodiscovery (no plans)
 - [ ] One central power switch (no plans as not available in API)

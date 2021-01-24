@@ -65,19 +65,18 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledExecutorService;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.text.SimpleDateFormat;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
-import java.text.SimpleDateFormat;
 import java.util.Objects;
 import java.util.UUID;
-import java.math.BigDecimal;
-import java.io.IOException;
-import java.io.InputStream;
-
-import java.io.ByteArrayInputStream;
 import java.util.Optional;
 import java.util.Properties;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ByteArrayInputStream;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -384,7 +383,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
 
     private void generalHousekeeping() {
         keepUdpEventsAlive();
-        fillOptionsForMCLink(false);
+        fillOptionsForMCLink();
         updateMCLinkStatus();
     }
 
@@ -407,7 +406,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
         updatePresets(0);
         updateNetUSBPlayer();
-        fillOptionsForMCLink(true);
+        fillOptionsForMCLink();
         updateMCLinkStatus();
     }
 
@@ -435,6 +434,13 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             }
         } catch (Exception e) {
         }
+        // werkt dit?
+        if (Objects.nonNull(targetObject.getMain())) {
+            updateStateFromUDPEvent("main", targetObject);
+        }
+
+
+
 
         try {
             jsonZone2 = targetObject.getZone2().toString();
@@ -600,9 +606,27 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                 }                         
                 break;
             case "netusb":
-                presetNumber = targetObject.getNetUSB().getPresetControl().getNum();
-                playInfoUpdated = targetObject.getNetUSB().getPlayInfoUpdated();
-                playTime = targetObject.getNetUSB().getPlayTime();
+                //get rid of try/catch blocks
+                // try {
+                //     presetNumber = targetObject.getNetUSB().getPresetControl().getNum();
+                // } catch (Exception e) {
+                //     presetNumber = 0;
+                // }
+                if (Objects.isNull(targetObject.getNetUSB().getPresetControl())) {
+                    presetNumber = 0;
+                } else {
+                    presetNumber = targetObject.getNetUSB().getPresetControl().getNum();
+                }
+                try {
+                    playInfoUpdated = targetObject.getNetUSB().getPlayInfoUpdated();
+                } catch (Exception e) {
+                    playInfoUpdated = "";
+                }
+                try {
+                    playTime = targetObject.getNetUSB().getPlayTime();
+                } catch (Exception e) {
+                    playTime = 0;
+                }
                 //totalTime is not in UDP event
                 break;
             case "dist":
@@ -663,7 +687,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             updateStatusZone(zoneToUpdate);
         }
         if (playTime != 0) {
-            channel = new ChannelUID(getThing().getUID(), zoneToUpdate, CHANNEL_PLAYTIME);
+            channel = new ChannelUID(getThing().getUID(), "playerControls", CHANNEL_PLAYTIME);
             if (isLinked(channel)) {
                 updateState(channel, StringType.valueOf(String.valueOf(playTime)));
             }
@@ -895,18 +919,17 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         return text;
     }
 
-    private void fillOptionsForMCLink(boolean onInitialize) {      
+    private void fillOptionsForMCLink() {      
         Bridge bridge = getBridge();
         String host = "";
         String label = "";
         int zonesPerHost = 1;
         List<StateOption> options = new ArrayList<>();
-        // add 3 options for Mc Link on Initialize()
-        if (onInitialize) {
-            options.add(new StateOption("", "Standalone"));
-            options.add(new StateOption("server", "Server"));
-            options.add(new StateOption("client", "Client"));
-        }
+        // first add 3 options for Mc Link
+        options.add(new StateOption("", "Standalone"));
+        options.add(new StateOption("server", "Server"));
+        options.add(new StateOption("client", "Client"));
+
 
         for (Thing thing : bridge.getThings()) {
             label = thing.getLabel();

@@ -65,6 +65,7 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
 
     private final ScheduledExecutorService udpScheduler = ThreadPoolManager
     .getScheduledPool("YamahaMusiccastListener" + "-" + thing.getUID().getId());
+    
     private @Nullable ScheduledFuture<?> listenerJob;
     private final UdpListener udpListener;
 
