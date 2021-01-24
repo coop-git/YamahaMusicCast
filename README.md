@@ -199,7 +199,9 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306 / ISX-18D
 - **BREAKING CHANGE**: Configuration parameter renamed from _configSyncVolume_ to _syncVolume_ (v0.79).
 - **BREAKING CHANGE**: Removed the word _channel_ in Channel names and Channel names are changed from upper to lower case.(v0.79).
 - Set client to _Standalone_ when input is changed (v0.79).
-- Added channels for TotalTime and PlayTime updated with UDP events (v0.79).
+- Added channels for TotalTime and PlayTime updated with UDP events (v0.80).
+- UDP event for mc_link are caught. Server/Client/Standalone are filled (v0.80).
+- Another set of changes to avoid null values and be compliant with coding guidelines for Pull Request OH3 (v0.80).
 
 ###### v0.60
 
