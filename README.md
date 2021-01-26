@@ -173,12 +173,11 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306 / ISX-18D
 - [ ] MusicCast Server: Add a channel to show the number of connected clients/nodes
 - [ ] MusicCast: changes made with app are not reflected in OH
 - [ ] Zone _main_ will always be present. Based on the value of zone_num, create the other zones dynamically.
-- [ ] Create new DTO classes for _getLastInput_, _getPresetInfo_
 - [ ] Research if it is possible to only change volume of Master without changing config.
 - [ ] Autodiscovery (no plans)
 - [ ] One central power switch (no plans as not available in API)
 
-###### v0.7x - In development
+###### v0.7x / v0.8x - In development
 
 - **BREAKING CHANGE**: Added a bridge to receive UDP events (Power, Mute, Volume, Input) by your OpenHAB instance from various devices. Each Thing will keep the connection alive. UDP events will be dispatched to the corresponding Thing (v0.70).
 - channelVolumeAbs has been added to allow to set Volume in absolute value (v0.71).

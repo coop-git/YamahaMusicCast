@@ -21,6 +21,8 @@ import org.openhab.binding.yamahamusiccast.internal.dto.Features;
 import org.openhab.binding.yamahamusiccast.internal.dto.PlayInfo;
 import org.openhab.binding.yamahamusiccast.internal.dto.Response;
 import org.openhab.binding.yamahamusiccast.internal.dto.UdpMessage;
+import org.openhab.binding.yamahamusiccast.internal.dto.RecentInfo;
+import org.openhab.binding.yamahamusiccast.internal.dto.PresetInfo;
 import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastStateDescriptionProvider;
 import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastConfiguration;
 import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastBridgeHandler;
@@ -818,16 +820,23 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
 
     private void updatePresets(int value) {
         String inputText = "";
-        tmpString = getPresetInfo(); // Without zone
         int presetCounter = 0;
         int currentPreset = 0;
-        try {
-            JsonElement jsonTree = parser.parse(tmpString);
-            JsonObject jsonObject = jsonTree.getAsJsonObject();
-            JsonArray presetsArray = jsonObject.getAsJsonArray("preset_info");
+        tmpString = getPresetInfo(); // Without zone
+
+
+        PresetInfo presetinfo = gson.fromJson(tmpString, PresetInfo.class);
+        responseCode = presetinfo.getResponseCode();
+        if (responseCode.equals("0")) {
+
+        //try {
+            //JsonElement jsonTree = parser.parse(tmpString);
+            //JsonObject jsonObject = jsonTree.getAsJsonObject();
+            //JsonArray presetsArray = jsonObject.getAsJsonArray("preset_info");
+
             List<StateOption> optionsPresets = new ArrayList<>();
             inputText = getLastInput(); // Without zone
-            for (JsonElement pr : presetsArray) {
+            for (JsonElement pr : presetinfo.getPresetInfo()) {
                 presetCounter = presetCounter + 1;
                 JsonObject presetObject = pr.getAsJsonObject();
                 String text = presetObject.get("text").getAsString();
@@ -851,9 +860,10 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     }
                 }
             }
-        } catch (Exception e) {
-            logger.info("YXC - Something went wrong with fetching Presets");
-        } 
+        }
+        // } catch (Exception e) {
+        //     logger.info("YXC - Something went wrong with fetching Presets");
+        // } 
     }
 
     private void updateNetUSBPlayer() {
@@ -936,14 +946,19 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     private @Nullable String getLastInput() {
         String text = "";
         tmpString = getRecentInfo();
-        Response targetObject = gson.fromJson(tmpString, Response.class);
-        responseCode = targetObject.getResponseCode();
+        RecentInfo recentinfo = gson.fromJson(tmpString, RecentInfo.class);
+        responseCode = recentinfo.getResponseCode();
         if (responseCode.equals("0")) {
-            JsonElement jsonTree = parser.parse(tmpString);
-            JsonObject jsonObject = jsonTree.getAsJsonObject();
-            JsonArray recentsArray = jsonObject.getAsJsonArray("recent_info");
-            for (JsonElement re : recentsArray) {
-                JsonObject recentObject = re.getAsJsonObject();                
+            // JsonElement jsonTree = parser.parse(tmpString);
+            // JsonObject jsonObject = jsonTree.getAsJsonObject();
+            // JsonArray recentsArray = jsonObject.getAsJsonArray("recent_info");
+            // for (JsonElement re : recentsArray) {
+            //     JsonObject recentObject = re.getAsJsonObject();                
+            //     text = recentObject.get("text").getAsString();
+            //     break;
+            // }
+            for (JsonElement ri : recentinfo.getRecentInfo()) {  
+                JsonObject recentObject = ri.getAsJsonObject();
                 text = recentObject.get("text").getAsString();
                 break;
             }
