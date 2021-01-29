@@ -542,99 +542,99 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                 statusUpdated = targetObject.getMain().getstatusUpdated();
                 break;
             case "zone2":
-                try {
-                    powerState = targetObject.getZone2().getPower();
-                } catch (Exception e) {
-                    powerState = "";
-                }
+                // try {
+                //     powerState = targetObject.getZone2().getPower();
+                // } catch (Exception e) {
+                //     powerState = "";
+                // }
                 powerState = targetObject.getZone2().getPower();
-                try {
-                    muteState = targetObject.getZone2().getMute();
-                } catch (Exception e) {
-                    muteState = "";
-                }
+                // try {
+                //     muteState = targetObject.getZone2().getMute();
+                // } catch (Exception e) {
+                //     muteState = "";
+                // }
                 muteState = targetObject.getZone2().getMute();
-                try {
-                    inputState = targetObject.getZone2().getInput();
-                } catch (Exception e) {
-                    inputState = "";
-                }
+                // try {
+                //     inputState = targetObject.getZone2().getInput();
+                // } catch (Exception e) {
+                //     inputState = "";
+                // }
                 inputState = targetObject.getZone2().getInput();
-                try {
-                    volumeState = targetObject.getZone2().getVolume();
-                } catch (Exception e) {
-                    volumeState = 0;
-                }
+                // try {
+                //     volumeState = targetObject.getZone2().getVolume();
+                // } catch (Exception e) {
+                //     volumeState = 0;
+                // }
                 volumeState = targetObject.getZone2().getVolume();
-                try {
-                    statusUpdated = targetObject.getZone2().getstatusUpdated();
-                } catch (Exception e) {
-                    statusUpdated = "";
-                }
+                // try {
+                //     statusUpdated = targetObject.getZone2().getstatusUpdated();
+                // } catch (Exception e) {
+                //     statusUpdated = "";
+                // }
                 statusUpdated = targetObject.getZone2().getstatusUpdated();
                 break;
             case "zone3":
-                try {
-                    powerState = targetObject.getZone3().getPower();
-                } catch (Exception e) {
-                    powerState = "";
-                }
+                // try {
+                //     powerState = targetObject.getZone3().getPower();
+                // } catch (Exception e) {
+                //     powerState = "";
+                // }
                 powerState = targetObject.getZone3().getPower();
-                try {
-                    muteState = targetObject.getZone3().getMute();
-                } catch (Exception e) {
-                    muteState = "";
-                }
+                // try {
+                //     muteState = targetObject.getZone3().getMute();
+                // } catch (Exception e) {
+                //     muteState = "";
+                // }
                 muteState = targetObject.getZone3().getMute();
-                try {
-                    inputState = targetObject.getZone3().getInput();
-                } catch (Exception e) {
-                    inputState = "";
-                }
+                // try {
+                //     inputState = targetObject.getZone3().getInput();
+                // } catch (Exception e) {
+                //     inputState = "";
+                // }
                 inputState = targetObject.getZone3().getInput();
-                try {
-                    volumeState = targetObject.getZone3().getVolume();
-                } catch (Exception e) {
-                    volumeState = 0;
-                }
+                // try {
+                //     volumeState = targetObject.getZone3().getVolume();
+                // } catch (Exception e) {
+                //     volumeState = 0;
+                // }
                 volumeState = targetObject.getZone3().getVolume();
-                try {
-                    statusUpdated = targetObject.getZone3().getstatusUpdated();
-                } catch (Exception e) {
-                    statusUpdated = "";
-                }
+                // try {
+                //     statusUpdated = targetObject.getZone3().getstatusUpdated();
+                // } catch (Exception e) {
+                //     statusUpdated = "";
+                // }
                 statusUpdated = targetObject.getZone3().getstatusUpdated();
                 break;
             case "zone4":
-                try {
-                    powerState = targetObject.getZone4().getPower();
-                } catch (Exception e) {
-                    powerState = "";
-                }
+                // try {
+                //     powerState = targetObject.getZone4().getPower();
+                // } catch (Exception e) {
+                //     powerState = "";
+                // }
                 powerState = targetObject.getZone4().getPower();
-                try {
-                    muteState = targetObject.getZone4().getMute();
-                } catch (Exception e) {
-                    muteState = "";
-                }
+                // try {
+                //     muteState = targetObject.getZone4().getMute();
+                // } catch (Exception e) {
+                //     muteState = "";
+                // }
                 muteState = targetObject.getZone4().getMute();
-                try {
-                    inputState = targetObject.getZone4().getInput();
-                } catch (Exception e) {
-                    inputState = "";
-                }
+                // try {
+                //     inputState = targetObject.getZone4().getInput();
+                // } catch (Exception e) {
+                //     inputState = "";
+                // }
                 inputState = targetObject.getZone4().getInput();
-                try {
-                    volumeState = targetObject.getZone4().getVolume();
-                } catch (Exception e) {
-                    volumeState = 0;
-                }
+                // try {
+                //     volumeState = targetObject.getZone4().getVolume();
+                // } catch (Exception e) {
+                //     volumeState = 0;
+                // }
                 volumeState = targetObject.getZone4().getVolume();
-                try {
-                    statusUpdated = targetObject.getZone4().getstatusUpdated();
-                } catch (Exception e) {
-                    statusUpdated = "";
-                }
+                // try {
+                //     statusUpdated = targetObject.getZone4().getstatusUpdated();
+                // } catch (Exception e) {
+                //     statusUpdated = "";
+                // }
                 statusUpdated = targetObject.getZone4().getstatusUpdated();
                 break;
             case "netusb":
