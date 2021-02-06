@@ -47,10 +47,23 @@ import com.google.gson.JsonSyntaxException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import org.eclipse.smarthome.core.common.ThreadPoolManager;
 import org.eclipse.smarthome.core.common.NamedThreadFactory;
 import org.openhab.binding.yamahamusiccast.internal.UdpListener;
 import java.io.IOException;
+
+
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetSocketAddress;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.util.Arrays;
+import java.util.UUID;
 
 
 /**
@@ -61,17 +74,49 @@ import java.io.IOException;
 @NonNullByDefault
 public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
     private Gson gson = new Gson();
-    private final Logger logger = LoggerFactory.getLogger(YamahaMusiccastBridgeHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(YamahaMusiccastBridgeHandler.class);    
+    private @Nullable ExecutorService executor;
+    private @Nullable Future<?> eventListenerJob;
+    private static final int UDP_PORT = 41100;
+    private static final int SOCKET_TIMEOUT_MILLISECONDS = 3000;
+    private static final int BUFFER_SIZE = 5120;
+    private @Nullable DatagramSocket socket;
 
-    private final ScheduledExecutorService udpScheduler = ThreadPoolManager
-    .getScheduledPool("YamahaMusiccastListener" + "-" + thing.getUID().getId());
-    
-    private @Nullable ScheduledFuture<?> listenerJob;
-    private final UdpListener udpListener;
+    private void receivePackets() {
+        try {
+            DatagramSocket s = new DatagramSocket(null);
+            s.setSoTimeout(SOCKET_TIMEOUT_MILLISECONDS);
+            s.setReuseAddress(true);
+            InetSocketAddress address = new InetSocketAddress(UDP_PORT);
+            s.bind(address);
+            socket = s;
+            logger.debug("UDP Listener got socket on port {} with timeout {}", UDP_PORT, SOCKET_TIMEOUT_MILLISECONDS);
+        } catch (SocketException e) {
+            logger.debug("UDP Listener got SocketException: {}", e.getMessage(), e);
+            socket = null;
+            return;
+        }
+
+        DatagramPacket packet = new DatagramPacket(new byte[BUFFER_SIZE], BUFFER_SIZE);
+        while (socket != null) {
+            try {
+                socket.receive(packet);
+                String received = new String(packet.getData(), 0, packet.getLength());
+                String trackingID = UUID.randomUUID().toString().replace("-","").substring(0,32);
+                logger.debug("Received packet: {} (Tracking: {})", received, trackingID);
+                handleUDPEvent(received,trackingID);
+            } catch (SocketTimeoutException e) {
+                // Nothing to do on socket timeout
+            } catch (IOException e) {
+                logger.debug("UDP Listener got IOException waiting for datagram: {}", e.getMessage());
+                socket = null;
+            }
+        }
+        logger.debug("UDP Listener exiting");
+    }
 
     public YamahaMusiccastBridgeHandler(Bridge bridge) {
         super(bridge);
-        udpListener = new UdpListener(this);
     }
 
     @Override
@@ -81,25 +126,23 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
     @Override
     public void initialize() {
         updateStatus(ThingStatus.ONLINE);
-        startUDPListenerJob();
+        if (eventListenerJob == null || eventListenerJob.isCancelled()) {
+            executor = Executors.newSingleThreadExecutor(new NamedThreadFactory("binding-yamahamusiccast"));
+            eventListenerJob = executor.submit(this::receivePackets);
+
+        }
     }
 
-      @Override
+    @Override
     public void dispose() {
-        stopUDPListenerJob();
         super.dispose();
-    }
-
-    private void startUDPListenerJob() {
-        logger.debug("YXC - Bridge Listener to start in 5 seconds");
-        listenerJob = udpScheduler.schedule(udpListener, 5, TimeUnit.SECONDS);
-    }
-
-    private void stopUDPListenerJob() {
-        if (listenerJob != null) {
-            listenerJob.cancel(true);
-            udpListener.shutdown();
-            logger.debug("YXC - Canceling listener job");
+        if (eventListenerJob != null) {
+            eventListenerJob.cancel(true);
+            eventListenerJob = null;
+        }
+        if (executor != null) {
+            executor.shutdownNow();
+            executor = null;
         }
     }
 
@@ -111,7 +154,6 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
             switch (statusInfo.getStatus()) {
                 case ONLINE:
                     logger.debug("Thing Status: ONLINE - {}",thing.getLabel());
-
                     YamahaMusiccastHandler handler = (YamahaMusiccastHandler) thing.getHandler();
                     logger.debug("UDP: {} - {} ({} - Tracking: {})", json, handler.getDeviceId(), thing.getLabel(), trackingID);
 
@@ -121,10 +163,9 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
                     if (udpDeviceId.equals(handler.getDeviceId())) {
                         handler.processUDPEvent(json, trackingID);
                     }
-
                     break;
                 default:
-                    logger.debug("YXC - Thing Status: NOT ONLINE - {} (Tracking: {})",thing.getLabel(), trackingID);
+                    logger.debug("Thing Status: NOT ONLINE - {} (Tracking: {})",thing.getLabel(), trackingID);
                     break;
             }
         }
