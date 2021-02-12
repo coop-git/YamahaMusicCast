@@ -163,7 +163,7 @@ sendCommand(Kitchen_YamahaMCServer, "192.168.1.1***main")
 ## Tested Models
 
 RX-D485 / WX-010 / WX-030 / ISX-80 / YSP-1600 / RX-A860 / R-N303D / EX-A1080 / WXA-050 / HTR-4068 (RX-V479)
-MusicCast 20 / WCX-50 / RX-V6A / YAS-306 / ISX-18D
+MusicCast 20 / WCX-50 / RX-V6A / YAS-306 / ISX-18D / WX-021
 
 ## Changelog
 
