@@ -39,6 +39,8 @@ import org.eclipse.smarthome.core.thing.binding.BridgeHandler;
 import org.eclipse.smarthome.core.thing.binding.ThingHandler;
 import org.eclipse.smarthome.core.thing.binding.BaseThingHandler;
 import org.eclipse.smarthome.core.thing.binding.BaseBridgeHandler;
+import org.eclipse.smarthome.core.thing.binding.builder.ChannelBuilder;
+import org.eclipse.smarthome.core.thing.binding.builder.ThingBuilder;
 import org.eclipse.smarthome.core.thing.Channel;
 import org.eclipse.smarthome.core.thing.type.ChannelTypeUID;
 import org.eclipse.smarthome.core.types.Command;
@@ -188,6 +190,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     } else if (command == OnOffType.OFF) {
                         httpResponse = setPower("standby", zone);
                         response = gson.fromJson(httpResponse, Response.class);
+                        PowerOffCleanup();
                         tmpString = response.getResponseCode();
                         if (!tmpString.equals("0")) {
                             updateState(channelUID, OnOffType.ON); 
@@ -279,6 +282,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     setSleep(command.toString(), zone);
                     break;
                 case CHANNEL_MCSERVER:
+                case CHANNEL_MCLINKSTATUS:
                     action = "";
                     json = "";
                     if (command.toString().equals("")) {
@@ -308,7 +312,11 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     
                     if (action.equals("unlink")) {
                         json = "{\"group_id\":\"\"}";
-                        httpResponse = setClientInfo(this.host,json);
+                        if (role.equals("server")) {
+                            httpResponse = setServerInfo(this.host, json);
+                        } else if (role.equals("client"))  {
+                            httpResponse = setClientInfo(this.host,json);    
+                        }
                     } else if (action.equals("link")) { 
                         json = "{\"group_id\":\"" + groupId + "\", \"zone\":\"" + mclinkSetupZone + "\", \"type\":\"add\", \"client_list\":[\"" + this.host + "\"]}";
                         logger.debug("setServerInfo json: {}", json);
@@ -381,6 +389,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                 logger.debug("No host found");
             }
         }
+        //thingStructureChanged();
     }
 
     private void generalHousekeeping() {
@@ -418,7 +427,37 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             generalHousekeepingTask.cancel(true);
         }        
     }
-    // Various functions 
+    //First preparation to add channels based on number of zones
+    protected void thingStructureChanged() {
+        ThingBuilder thingBuilder = editThing();
+        Channel channel = ChannelBuilder.create(new ChannelUID(getThing().getUID(), "playerControls", CHANNEL_POWER), "String")
+        .withDescription("testing")
+        .withLabel("label")
+        .build();
+        //channel = new ChannelUID(getThing().getUID(), zoneToUpdate, CHANNEL_POWER);
+        thingBuilder.withChannel(channel);
+        updateThing(thingBuilder.build());
+    }
+    
+
+    // Various functions
+
+    private void PowerOffCleanup() {
+        ChannelUID channel;
+        channel = new ChannelUID(getThing().getUID(), "playerControls", CHANNEL_ARTIST);
+        if (isLinked(channel)) {
+            updateState(channel, StringType.valueOf("-")); 
+        }
+        channel = new ChannelUID(getThing().getUID(), "playerControls", CHANNEL_TRACK);
+        if (isLinked(channel)) {
+            updateState(channel, StringType.valueOf("-")); 
+        }
+        channel = new ChannelUID(getThing().getUID(), "playerControls", CHANNEL_ALBUM);
+        if (isLinked(channel)) {
+            updateState(channel, StringType.valueOf("-")); 
+        }
+    }
+
     public void processUDPEvent (String json, String trackingID) {
         logger.debug("UDP package: {} (Tracking: {})", json, trackingID);
         @Nullable
@@ -513,6 +552,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     updateState(channel, OnOffType.ON); 
                 } else if (powerState.equals("standby")) {
                     updateState(channel, OnOffType.OFF);
+                    PowerOffCleanup();
                 }
             }
         }
@@ -829,10 +869,15 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
         
         //for each zone of the device, set all the possible combinations
+        ChannelUID testchannel;
         for (int i = 1; i <= zoneNum; i++) {
             switch (i) {
                 case 1:
-                    ChannelUID testchannel = new ChannelUID(getThing().getUID(), "main", CHANNEL_MCSERVER);
+                    testchannel = new ChannelUID(getThing().getUID(), "main", CHANNEL_MCSERVER);
+                    if (isLinked(testchannel)) {
+                        stateDescriptionProvider.setStateOptions(testchannel, options);
+                    }
+                    testchannel = new ChannelUID(getThing().getUID(), "main", CHANNEL_MCLINKSTATUS);
                     if (isLinked(testchannel)) {
                         stateDescriptionProvider.setStateOptions(testchannel, options);
                     }
@@ -842,18 +887,32 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     if (isLinked(testchannel)) {
                         stateDescriptionProvider.setStateOptions(testchannel, options);
                     }
+                    testchannel = new ChannelUID(getThing().getUID(), "zone2", CHANNEL_MCLINKSTATUS);
+                    if (isLinked(testchannel)) {
+                        stateDescriptionProvider.setStateOptions(testchannel, options);
+                    }
                     break;
                 case 3:
                     testchannel = new ChannelUID(getThing().getUID(), "zone3", CHANNEL_MCSERVER);
                     if (isLinked(testchannel)) {
                         stateDescriptionProvider.setStateOptions(testchannel, options);
                     }
+                    testchannel = new ChannelUID(getThing().getUID(), "zone3", CHANNEL_MCLINKSTATUS);
+                    if (isLinked(testchannel)) {
+                        stateDescriptionProvider.setStateOptions(testchannel, options);
+                    }
+
                     break;
                 case 4:
                     testchannel = new ChannelUID(getThing().getUID(), "zone4", CHANNEL_MCSERVER);
                     if (isLinked(testchannel)) {
                         stateDescriptionProvider.setStateOptions(testchannel, options);
                     }
+                    testchannel = new ChannelUID(getThing().getUID(), "zone4", CHANNEL_MCLINKSTATUS);
+                    if (isLinked(testchannel)) {
+                        stateDescriptionProvider.setStateOptions(testchannel, options);
+                    }
+
                     break;
             }
         }
@@ -963,9 +1022,17 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     if (isLinked(testchannel)){
                         updateState(testchannel, StringType.valueOf(""));
                     }
+                    testchannel = new ChannelUID(getThing().getUID(), "main", CHANNEL_MCLINKSTATUS);
+                    if (isLinked(testchannel)){
+                        updateState(testchannel, StringType.valueOf(""));
+                    }
                     break;
                 case 2:
                     testchannel = new ChannelUID(getThing().getUID(), "zone2", CHANNEL_MCSERVER);
+                    if (isLinked(testchannel)){
+                        updateState(testchannel, StringType.valueOf(""));
+                    }
+                    testchannel = new ChannelUID(getThing().getUID(), "zone2", CHANNEL_MCLINKSTATUS);
                     if (isLinked(testchannel)){
                         updateState(testchannel, StringType.valueOf(""));
                     }
@@ -975,9 +1042,17 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     if (isLinked(testchannel)){
                         updateState(testchannel, StringType.valueOf(""));
                     }
+                    testchannel = new ChannelUID(getThing().getUID(), "zone3", CHANNEL_MCLINKSTATUS);
+                    if (isLinked(testchannel)){
+                        updateState(testchannel, StringType.valueOf(""));
+                    }
                     break;
                 case 4:
                     testchannel = new ChannelUID(getThing().getUID(), "zone4", CHANNEL_MCSERVER);
+                    if (isLinked(testchannel)){
+                        updateState(testchannel, StringType.valueOf(""));
+                    }
+                    testchannel = new ChannelUID(getThing().getUID(), "zone4", CHANNEL_MCLINKSTATUS);
                     if (isLinked(testchannel)){
                         updateState(testchannel, StringType.valueOf(""));
                     }
@@ -995,9 +1070,17 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     if (isLinked(testchannel)){
                         updateState(testchannel, StringType.valueOf("client"));
                     }
+                    testchannel = new ChannelUID(getThing().getUID(), "main", CHANNEL_MCLINKSTATUS);
+                    if (isLinked(testchannel)){
+                        updateState(testchannel, StringType.valueOf("client"));
+                    }
                     break;
                 case 2:
                     testchannel = new ChannelUID(getThing().getUID(), "zone2", CHANNEL_MCSERVER);
+                    if (isLinked(testchannel)){
+                        updateState(testchannel, StringType.valueOf("client"));
+                    }
+                    testchannel = new ChannelUID(getThing().getUID(), "zone2", CHANNEL_MCLINKSTATUS);
                     if (isLinked(testchannel)){
                         updateState(testchannel, StringType.valueOf("client"));
                     }
@@ -1007,9 +1090,17 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     if (isLinked(testchannel)){
                         updateState(testchannel, StringType.valueOf("client"));
                     }
+                    testchannel = new ChannelUID(getThing().getUID(), "zone3", CHANNEL_MCLINKSTATUS);
+                    if (isLinked(testchannel)){
+                        updateState(testchannel, StringType.valueOf("client"));
+                    }
                     break;
                 case 4:
                     testchannel = new ChannelUID(getThing().getUID(), "zone4", CHANNEL_MCSERVER);
+                    if (isLinked(testchannel)){
+                        updateState(testchannel, StringType.valueOf("client"));
+                    }
+                    testchannel = new ChannelUID(getThing().getUID(), "zone4", CHANNEL_MCLINKSTATUS);
                     if (isLinked(testchannel)){
                         updateState(testchannel, StringType.valueOf("client"));
                     }
@@ -1027,9 +1118,17 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     if (isLinked(testchannel)){
                         updateState(testchannel, StringType.valueOf("server"));
                     }
+                    testchannel = new ChannelUID(getThing().getUID(), "main", CHANNEL_MCLINKSTATUS);
+                    if (isLinked(testchannel)){
+                        updateState(testchannel, StringType.valueOf("server"));
+                    }
                     break;
                 case 2:
                     testchannel = new ChannelUID(getThing().getUID(), "zone2", CHANNEL_MCSERVER);
+                    if (isLinked(testchannel)){
+                        updateState(testchannel, StringType.valueOf("server"));
+                    }
+                    testchannel = new ChannelUID(getThing().getUID(), "zone2", CHANNEL_MCLINKSTATUS);
                     if (isLinked(testchannel)){
                         updateState(testchannel, StringType.valueOf("server"));
                     }
@@ -1039,9 +1138,17 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     if (isLinked(testchannel)){
                         updateState(testchannel, StringType.valueOf("server"));
                     }
+                    testchannel = new ChannelUID(getThing().getUID(), "zone3", CHANNEL_MCLINKSTATUS);
+                    if (isLinked(testchannel)){
+                        updateState(testchannel, StringType.valueOf("server"));
+                    }
                     break;
                 case 4:
                     testchannel = new ChannelUID(getThing().getUID(), "zone4", CHANNEL_MCSERVER);
+                    if (isLinked(testchannel)){
+                        updateState(testchannel, StringType.valueOf("server"));
+                    }
+                    testchannel = new ChannelUID(getThing().getUID(), "zone4", CHANNEL_MCLINKSTATUS);
                     if (isLinked(testchannel)){
                         updateState(testchannel, StringType.valueOf("server"));
                     }

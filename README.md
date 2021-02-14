@@ -64,6 +64,7 @@ N/A
 | shuffle        | String | Toggle Shuffle. Availabel values: Off, On, Songs, Album            |
 | playTime       | String | Play time of current selection: radio, song, track, ...            |
 | totalTime      | String | Total time of current selection: radio, song, track, ...           |
+| mclinkStatus   | String | TESTING: 1 channel for all mc link statuses and actions            |
 
 
 | Zones                | description                                          |
@@ -107,7 +108,7 @@ mono_movie / movie / enhanced / 2ch_stereo / 5ch_stereo / 7ch_stereo / 9ch_stere
 
 ```
 Bridge yamahamusiccast:bridge:bridge "YXC Bridge" {
-Thing yamahamusiccast:device:Living "YXC Living" [configHost="1.2.3.4"]
+Thing yamahamusiccast:device:Living "YXC Living" [host="1.2.3.4"]
 }
 ```
 
@@ -171,7 +172,6 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306 / ISX-18D / WX-021
 
 - [ ] Create a pull request for OH3 (in progress, working on requested changes)
 - [ ] MusicCast Server: Add a channel to show the number of connected clients/nodes
-- [ ] MusicCast: changes made with app are not reflected in OH
 - [ ] Zone _main_ will always be present. Based on the value of zone_num, create the other zones dynamically.
 - [ ] Register binding as Audio Sink.
 - [ ] Research if it is possible to only change volume of Master without changing config.
