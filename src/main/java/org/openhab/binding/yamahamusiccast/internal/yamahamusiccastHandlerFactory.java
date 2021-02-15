@@ -44,9 +44,20 @@ import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastStateDescript
 @NonNullByDefault
 @Component(configurationPid = "binding.yamahamusiccast", service = ThingHandlerFactory.class)
 public class YamahaMusiccastHandlerFactory extends BaseThingHandlerFactory {
+    
+    //Requested change by OH maintainer(s)
+    //Java 11!
+    //private static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Set
+    //        .of(YamahaMusiccastBindingConstants.THING_DEVICE, YamahaMusiccastBindingConstants.THING_TYPE_BRIDGE);
 
-    private static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Set
-            .of(YamahaMusiccastBindingConstants.THING_DEVICE, YamahaMusiccastBindingConstants.THING_TYPE_BRIDGE);
+    // First implementation
+    //Java 8!
+    private static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = new HashSet<>();
+    static {
+        SUPPORTED_THING_TYPES_UIDS.add(YamahaMusiccastBindingConstants.THING_DEVICE);
+        SUPPORTED_THING_TYPES_UIDS.add(YamahaMusiccastBindingConstants.THING_TYPE_BRIDGE);
+    }
+
 
     private final YamahaMusiccastStateDescriptionProvider stateDescriptionProvider;
 

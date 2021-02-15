@@ -285,9 +285,13 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                 case CHANNEL_MCLINKSTATUS:
                     action = "";
                     json = "";
+                    tmpString = getDistributionInfo(this.host);
+                    distributioninfo = gson.fromJson(tmpString, DistributionInfo.class);
+                    responseCode = distributioninfo.getResponseCode();
+                    role = distributioninfo.getRole();
                     if (command.toString().equals("")) {
                         action="unlink";
-                        role="";
+                        //role="";
                         groupId="";
                     } else {
                         action="link";
@@ -298,7 +302,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                             tmpString = getDistributionInfo(mclinkSetupServer);
                             distributioninfo = gson.fromJson(tmpString, DistributionInfo.class);
                             responseCode = distributioninfo.getResponseCode();
-                        
                             role = distributioninfo.getRole();
                             if (role.equals("server")) {
                                 groupId = distributioninfo.getGroupId();
@@ -833,10 +836,15 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         String host = "";
         String label = "";
         int zonesPerHost = 1;
+
+        tmpString = getDistributionInfo(this.host);
+        DistributionInfo targetObject = gson.fromJson(tmpString, DistributionInfo.class);
+        int clients = targetObject.getClientList().size();
+
         List<StateOption> options = new ArrayList<>();
         // first add 3 options for Mc Link
         options.add(new StateOption("", "Standalone"));
-        options.add(new StateOption("server", "Server"));
+        options.add(new StateOption("server", "Server: " + clients + " clients"));
         options.add(new StateOption("client", "Client"));
 
 
@@ -1004,7 +1012,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             case "none":
                 setMCLinkToStandalone();
                 break;
-            case "server":
+            case "server":        
                 setMCLinkToServer();
                 break;
             case "client":

@@ -170,13 +170,12 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306 / ISX-18D / WX-021
 
 ###### To Do / Wishlist (last updated 7 Jan 2021)
 
-- [ ] Create a pull request for OH3 (in progress, working on requested changes)
-- [ ] MusicCast Server: Add a channel to show the number of connected clients/nodes
+- [ ] Create a pull request for OH3 (in progress, working on requested changes).
 - [ ] Zone _main_ will always be present. Based on the value of zone_num, create the other zones dynamically.
-- [ ] Register binding as Audio Sink.
+- [ ] Register binding as Audio Sink (currently not possible).
 - [ ] Research if it is possible to only change volume of Master without changing config.
-- [ ] Autodiscovery (no plans)
-- [ ] One central power switch (no plans as not available in API)
+- [ ] Autodiscovery (no plans).
+- [ ] One central power switch (no plans as not available in API).
 
 ###### v0.7x / v0.8x - In development
 
