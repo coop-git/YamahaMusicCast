@@ -129,7 +129,6 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
         if (eventListenerJob == null || eventListenerJob.isCancelled()) {
             executor = Executors.newSingleThreadExecutor(new NamedThreadFactory("binding-yamahamusiccast"));
             eventListenerJob = executor.submit(this::receivePackets);
-
         }
     }
 

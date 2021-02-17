@@ -14,6 +14,7 @@ package org.openhab.binding.yamahamusiccast.internal;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.smarthome.core.thing.ThingTypeUID;
+import org.eclipse.smarthome.core.thing.type.ChannelTypeUID;
 
 /**
  * The {@link YamahaMusiccastBindingConstants} class defines common constants, which are
@@ -30,6 +31,19 @@ public class YamahaMusiccastBindingConstants {
     public static final ThingTypeUID THING_DEVICE = new ThingTypeUID(BINDING_ID, "device");
     public static final ThingTypeUID THING_TYPE_BRIDGE = new ThingTypeUID(BINDING_ID, "bridge");
 
+    // List of all Channel Type UIDs
+    public static final ChannelTypeUID CHANNEL_TYPE_UID_POWER = new ChannelTypeUID("system:power");
+    public static final ChannelTypeUID CHANNEL_TYPE_UID_MUTE = new ChannelTypeUID("system:mute");
+    public static final ChannelTypeUID CHANNEL_TYPE_UID_VOLUME = new ChannelTypeUID(BINDING_ID, "volume");
+    public static final ChannelTypeUID CHANNEL_TYPE_UID_VOLUMEABS = new ChannelTypeUID(BINDING_ID, "volumeAbs");
+    public static final ChannelTypeUID CHANNEL_TYPE_UID_INPUT = new ChannelTypeUID(BINDING_ID, "input");
+    public static final ChannelTypeUID CHANNEL_TYPE_UID_SOUNDPROGRAM = new ChannelTypeUID(BINDING_ID, "soundProgram");
+    public static final ChannelTypeUID CHANNEL_TYPE_UID_SELECTPRESET = new ChannelTypeUID(BINDING_ID, "selectPreset");
+    public static final ChannelTypeUID CHANNEL_TYPE_UID_SLEEP = new ChannelTypeUID(BINDING_ID, "sleep");
+    public static final ChannelTypeUID CHANNEL_TYPE_UID_RECALLSCENE = new ChannelTypeUID(BINDING_ID, "recallScene");
+    public static final ChannelTypeUID CHANNEL_TYPE_UID_MCLINKSTATUS = new ChannelTypeUID(BINDING_ID, "mclinkStatus");
+
+
     // List of all Channel ids
     public static final String CHANNEL_POWER = "power";
     public static final String CHANNEL_MUTE = "mute";
@@ -40,8 +54,6 @@ public class YamahaMusiccastBindingConstants {
     public static final String CHANNEL_SELECTPRESET = "selectPreset";
     public static final String CHANNEL_PLAYER = "player";
     public static final String CHANNEL_SLEEP = "sleep";
-    public static final String CHANNEL_MCSERVER = "mcServer";
-    public static final String CHANNEL_UNLINKMCSERVER = "unlinkMCServer";
     public static final String CHANNEL_RECALLSCENE = "recallScene";
     public static final String CHANNEL_ARTIST = "artist";
     public static final String CHANNEL_TRACK = "track";

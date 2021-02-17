@@ -19,18 +19,16 @@ UDP events are captured to reflect changes in the binding for
 - Shuffle
 - Play Time
 - Total Time
+- Musiccast Link
 
 ## Supported Things
 
 Each model (AV Receiver, ...) is a Thing. Things are linked to a Bridge for receiving UDP events.
 
+
 ## Discovery
 
 No auto discovery
-
-## Binding Configuration
-
-N/A
 
 ## Thing Configuration
 
@@ -42,29 +40,27 @@ N/A
 
 ## Channels
 
-| channel        | type   | description                                                        |
-|----------------|--------|--------------------------------------------------------------------|
-| power          | Switch | Power ON/OFF                                                       |
-| mute           | Switch | Mute ON/OFF                                                        |
-| volume         | Dimmer | Volume as % (recalculated based on Max Volume Model)               |
-| volumeAbs      | Number | Volume as absolute value                                           |
-| input          | String | See below for list                                                 |
-| soundProgram   | String | See below for list                                                 |
-| selectPreset   | String | Select Netradio/USB preset (fetched from Model)                    |
-| sleep          | Number | Fixed values for Sleep : 0/30/60/90/120                            |
-| mcServer       | String | Select your MusicCast Server or set to Standalone                  |
-| unlinkMCServer | Switch | Disband MusicCast Link on Master                                   |
-| recallScene    | Number | Select a scene (create your own dropdown list!)                    |
-| player         | Player | PLAY/PAUSE/NEXT/PREVIOUS/REWIND/FASTFORWARD                        |
-| artist         | String | Artist                                                             |
-| track          | String | Track                                                              |
-| album          | String | Album                                                              |
-| albumArt       | Image  | Album Art                                                          |
-| repeat         | String | Toggle Repeat. Available values: Off, One, All                     |
-| shuffle        | String | Toggle Shuffle. Availabel values: Off, On, Songs, Album            |
-| playTime       | String | Play time of current selection: radio, song, track, ...            |
-| totalTime      | String | Total time of current selection: radio, song, track, ...           |
-| mclinkStatus   | String | TESTING: 1 channel for all mc link statuses and actions            |
+| channel        | type   | description                                                         |
+|----------------|--------|---------------------------------------------------------------------|
+| power          | Switch | Power ON/OFF                                                        |
+| mute           | Switch | Mute ON/OFF                                                         |
+| volume         | Dimmer | Volume as % (recalculated based on Max Volume Model)                |
+| volumeAbs      | Number | Volume as absolute value                                            |
+| input          | String | See below for list                                                  |
+| soundProgram   | String | See below for list                                                  |
+| selectPreset   | String | Select Netradio/USB preset (fetched from Model)                     |
+| sleep          | Number | Fixed values for Sleep : 0/30/60/90/120 in minutes                  |
+| recallScene    | Number | Select a scene (create your own dropdown list!)                     |
+| player         | Player | PLAY/PAUSE/NEXT/PREVIOUS/REWIND/FASTFORWARD                         |
+| artist         | String | Artist                                                              |
+| track          | String | Track                                                               |
+| album          | String | Album                                                               |
+| albumArt       | Image  | Album Art                                                           |
+| repeat         | String | Toggle Repeat. Available values: Off, One, All                      |
+| shuffle        | String | Toggle Shuffle. Available values: Off, On, Songs, Album             |
+| playTime       | String | Play time of current selection: radio, song, track, ...             |
+| totalTime      | String | Total time of current selection: radio, song, track, ...            |
+| mclinkStatus   | String | Select your Musiccast Server or set to Standalone, Server or Client |
 
 
 | Zones                | description                                          |
@@ -144,8 +140,8 @@ If not, a new group will be created.
 *Device A*: Living with IP 192.168.1.1
 *Device B*: Kitchen with IP 192.168.1.2
 
-Set **mcServer** to *Standalone* to remove the device/model from the current active group. The group will keep on exist with other devices/models.
-Use **unlinkMCServer** on the Thing which is currently set to master to disband the group.
+Set **mclinkStatus** to *Standalone* to remove the device/model from the current active group. The group will keep on exist with other devices/models.
+If the device/model is the server, the group will be disbanded.
 
 ```
 String YamahaMCServer "[%s]" {channel="yamahamusiccast:device:Living:main#mcServer"}
@@ -159,6 +155,9 @@ The value which is sent to OH uses the format _IP***zone_.
 
 ```
 sendCommand(Kitchen_YamahaMCServer, "192.168.1.1***main")
+sendCommand(Kitchen_YamahaMCServer, "")
+sendCommand(Kitchen_YamahaMCServer, "server")
+sendCommand(Kitchen_YamahaMCServer, "client")
 ```
 
 ## Tested Models
@@ -168,16 +167,24 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306 / ISX-18D / WX-021
 
 ## Changelog
 
-###### To Do / Wishlist (last updated 7 Jan 2021)
+###### To Do / Wishlist (last updated 17 Feb 2021)
 
 - [ ] Create a pull request for OH3 (in progress, working on requested changes).
-- [ ] Zone _main_ will always be present. Based on the value of zone_num, create the other zones dynamically.
 - [ ] Register binding as Audio Sink (currently not possible).
 - [ ] Research if it is possible to only change volume of Master without changing config.
 - [ ] Autodiscovery (no plans).
 - [ ] One central power switch (no plans as not available in API).
 
-###### v0.7x / v0.8x - In development
+###### v0.8x - In development
+
+- Added channels for TotalTime and PlayTime updated with UDP events (v0.80).
+- UDP event for mc_link are caught. Server/Client/Standalone are filled (v0.80).
+- Another set of changes to avoid null values and be compliant with coding guidelines for Pull Request OH3 (v0.80).
+- **BREAKING CHANGE**: _mcServer_ and _unlinkMCServer_ are replaced by _mclinkStatus_. Use this channel to select your Musiccast Server or set to Standalone, Server or Client (v0.81).
+- Channels and zones are created dynamically based on number of zones supported by your model (v0.81).
+- The new channel _mclinkStatus_ will also show the number of connected clients in case Thing is acting as server.
+
+###### v0.7x
 
 - **BREAKING CHANGE**: Added a bridge to receive UDP events (Power, Mute, Volume, Input) by your OpenHAB instance from various devices. Each Thing will keep the connection alive. UDP events will be dispatched to the corresponding Thing (v0.70).
 - channelVolumeAbs has been added to allow to set Volume in absolute value (v0.71).
@@ -198,9 +205,6 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306 / ISX-18D / WX-021
 - **BREAKING CHANGE**: Configuration parameter renamed from _configSyncVolume_ to _syncVolume_ (v0.79).
 - **BREAKING CHANGE**: Removed the word _channel_ in Channel names and Channel names are changed from upper to lower case.(v0.79).
 - Set client to _Standalone_ when input is changed (v0.79).
-- Added channels for TotalTime and PlayTime updated with UDP events (v0.80).
-- UDP event for mc_link are caught. Server/Client/Standalone are filled (v0.80).
-- Another set of changes to avoid null values and be compliant with coding guidelines for Pull Request OH3 (v0.80).
 
 ###### v0.60
 
