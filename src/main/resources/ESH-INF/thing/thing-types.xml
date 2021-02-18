@@ -65,12 +65,6 @@
 		</channels>
 	</channel-group-type>
 
-	<channel-type id="volume">
-		<item-type>Dimmer</item-type>
-		<label>Volume</label>
-		<description>Volume channel - percentage</description>
-		<state min="0" max="100"/>
-	</channel-type>
 	<channel-type id="volumeAbs">
 		<item-type>Number</item-type>
 		<label>Volume</label>
@@ -83,7 +77,7 @@
 	</channel-type>
 	<channel-type id="soundProgram">
 		<item-type>String</item-type>
-		<label>SoundProgram</label>
+		<label>Sound Program</label>
 		<description>SoundProgram channel</description>
 	</channel-type>
 	<channel-type id="selectPreset">
@@ -114,6 +108,18 @@
 		<item-type>Number</item-type>
 		<label>Scene Selection</label>
 		<description>Scene selection (if available)</description>
+		<state>
+			<options>
+				<option value="1">Scene 1</option>
+				<option value="2">Scene 2</option>
+				<option value="3">Scene 3</option>
+				<option value="4">Scene 4</option>
+				<option value="5">Scene 5</option>
+				<option value="6">Scene 6</option>
+				<option value="7">Scene 7</option>
+				<option value="8">Scene 8</option>
+			</options>
+		</state>
 	</channel-type>
 	<channel-type id="artist">
 		<item-type>String</item-type>

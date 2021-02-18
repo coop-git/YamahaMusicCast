@@ -23,8 +23,7 @@ UDP events are captured to reflect changes in the binding for
 
 ## Supported Things
 
-Each model (AV Receiver, ...) is a Thing. Things are linked to a Bridge for receiving UDP events.
-
+Each model (AV Receiver, ...) is a Thing (Thing Type ID: yamahamusiccast:device). Things are linked to a Bridge (Thing Type ID: yamahamusiccast:bridge) for receiving UDP events.
 
 ## Discovery
 
@@ -36,7 +35,6 @@ No auto discovery
 |------------------|---------|---------------------------------------------------------|----------|---------------|
 | host             | String  | IP address of the Yamaha model (AVR, ...)               | false    | true          |
 | syncVolume       | Boolean | Sync volume across linked models (default=false)        | true     | false         |
-
 
 ## Channels
 
@@ -50,7 +48,7 @@ No auto discovery
 | soundProgram   | String | See below for list                                                  |
 | selectPreset   | String | Select Netradio/USB preset (fetched from Model)                     |
 | sleep          | Number | Fixed values for Sleep : 0/30/60/90/120 in minutes                  |
-| recallScene    | Number | Select a scene (create your own dropdown list!)                     |
+| recallScene    | Number | Select a scene (8 defaults scenes are foreseen)                     |
 | player         | Player | PLAY/PAUSE/NEXT/PREVIOUS/REWIND/FASTFORWARD                         |
 | artist         | String | Artist                                                              |
 | track          | String | Track                                                               |
@@ -182,7 +180,8 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306 / ISX-18D / WX-021
 - Another set of changes to avoid null values and be compliant with coding guidelines for Pull Request OH3 (v0.80).
 - **BREAKING CHANGE**: _mcServer_ and _unlinkMCServer_ are replaced by _mclinkStatus_. Use this channel to select your Musiccast Server or set to Standalone, Server or Client (v0.81).
 - Channels and zones are created dynamically based on number of zones supported by your model (v0.81).
-- The new channel _mclinkStatus_ will also show the number of connected clients in case Thing is acting as server.
+- The new channel _mclinkStatus_ will also show the number of connected clients in case Thing is acting as server (v0.81).
+- The channel _recallScene_ now has 8 defaults scenes numbered from 1 to 8 (v0.81).
 
 ###### v0.7x
 

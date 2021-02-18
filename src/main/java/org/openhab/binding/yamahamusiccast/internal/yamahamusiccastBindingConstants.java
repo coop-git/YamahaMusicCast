@@ -34,7 +34,7 @@ public class YamahaMusiccastBindingConstants {
     // List of all Channel Type UIDs
     public static final ChannelTypeUID CHANNEL_TYPE_UID_POWER = new ChannelTypeUID("system:power");
     public static final ChannelTypeUID CHANNEL_TYPE_UID_MUTE = new ChannelTypeUID("system:mute");
-    public static final ChannelTypeUID CHANNEL_TYPE_UID_VOLUME = new ChannelTypeUID(BINDING_ID, "volume");
+    public static final ChannelTypeUID CHANNEL_TYPE_UID_VOLUME = new ChannelTypeUID("system:volume");
     public static final ChannelTypeUID CHANNEL_TYPE_UID_VOLUMEABS = new ChannelTypeUID(BINDING_ID, "volumeAbs");
     public static final ChannelTypeUID CHANNEL_TYPE_UID_INPUT = new ChannelTypeUID(BINDING_ID, "input");
     public static final ChannelTypeUID CHANNEL_TYPE_UID_SOUNDPROGRAM = new ChannelTypeUID(BINDING_ID, "soundProgram");
@@ -64,4 +64,8 @@ public class YamahaMusiccastBindingConstants {
     public static final String CHANNEL_MCLINKSTATUS = "mclinkStatus";
     public static final String CHANNEL_PLAYTIME = "playTime";
     public static final String CHANNEL_TOTALTIME = "totalTime";
+
+    public static final int CONNECTION_TIMEOUT = 5000;
+    public static final int LONG_CONNECTION_TIMEOUT = 60000;
+
 }
