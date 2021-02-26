@@ -37,6 +37,7 @@ public class DistributionInfo {
     private JsonArray clientList;
 
     public String getResponseCode() {
+        if (responseCode==null) {responseCode = "";}
         return responseCode;
     }
 

@@ -28,6 +28,7 @@ public class RecentInfo {
     private JsonArray recentInfo;
 
     public String getResponseCode() {
+        if (responseCode==null) {responseCode = "";}
         return responseCode;
     }
 

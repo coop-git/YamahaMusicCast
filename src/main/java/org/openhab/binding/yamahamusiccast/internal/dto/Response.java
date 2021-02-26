@@ -26,6 +26,7 @@ public class Response {
     private String responseCode;
 
     public String getResponseCode() {
+        if (responseCode==null) {responseCode = "";}
         return responseCode;
     }
 
