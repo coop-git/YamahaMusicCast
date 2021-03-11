@@ -71,6 +71,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.text.SimpleDateFormat;
 import java.math.BigDecimal;
+import java.util.*;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
@@ -105,6 +106,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     private @Nullable YamahaMusiccastConfiguration config;
     private @Nullable String httpResponse;
     private @Nullable String tmpString = "";
+    private @Nullable String stringToCheck = "";
     private int volumePercent = 0;
     private int volumeAbsValue = 0;
     private @Nullable String responseCode = "";
@@ -231,7 +233,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     role = distributioninfo.getRole();
                     if (role.equals("client")) {
                         json = "{\"group_id\":\"\"}";
-                        //httpResponse = setClientInfo(this.host,json);
                         httpResponse = setClientServerInfo(this.host, json, "setClientInfo");
                     }
                     setInput(command.toString(), zone, this.host);
@@ -269,9 +270,8 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     role = distributioninfo.getRole();
                     if (command.toString().equals("")) {
                         action="unlink";
-                        //role="";
-                        groupId="";
-                    } else {
+                        groupId = distributioninfo.getGroupId();
+                    } else if (command.toString().contains("***")) {
                         action="link";
                         String[] parts = command.toString().split("\\*\\*\\*");
                         if (parts.length > 1) {
@@ -280,12 +280,13 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                             tmpString = getDistributionInfo(mclinkSetupServer);
                             distributioninfo = gson.fromJson(tmpString, DistributionInfo.class);
                             responseCode = distributioninfo.getResponseCode();
-                            role = distributioninfo.getRole();
-                            if (role.equals("server")) {
+                            tmpString = distributioninfo.getRole();
+                            groupId = distributioninfo.getGroupId();
+                            if (tmpString.equals("server")) {
                                 groupId = distributioninfo.getGroupId();
-                            } else if (role.equals("client")) {
+                            } else if (tmpString.equals("client")) {
                                 groupId = "";
-                            } else if (role.equals("none")) {
+                            } else if (tmpString.equals("none")) {
                                 groupId = generateGroupId();
                             }  
                         }                          
@@ -295,41 +296,64 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                         json = "{\"group_id\":\"\"}";
                         if (role.equals("server")) {
                             httpResponse = setServerInfo(this.host, json);
+                            //Set GroupId = "" for linked clients
+                            for (JsonElement ip : distributioninfo.getClientList()) {   
+                                JsonObject clientObject = ip.getAsJsonObject();
+                                setClientServerInfo(clientObject.get("ip_address").getAsString(), json, "setClientInfo");
+                            }    
+                            
                         } else if (role.equals("client"))  {
-                            //httpResponse = setClientInfo(this.host,json);
+                            mclinkSetupServer = connectedServer();
+                            //Step 1. empty group on client
                             httpResponse = setClientServerInfo(this.host, json, "setClientInfo");
-                            //To Do : find connected server and delete presence
-                            setInput("none", zone, this.host);
-                        }
-                    } else if (action.equals("link")) { 
-                        json = "{\"group_id\":\"" + groupId + "\", \"zone\":\"" + mclinkSetupZone + "\", \"type\":\"add\", \"client_list\":[\"" + this.host + "\"]}";
-                        logger.debug("setServerInfo json: {}", json);
-                        //httpResponse = setServerInfo(mclinkSetupServer, json);
-                        httpResponse = setClientServerInfo(mclinkSetupServer, json, "setServerInfo");
-                        // All zones of Model are required for MC Link
-                        tmpString = "";
-                        for (int i = 1; i <= zoneNum; i++) {
-                            switch (i) {
-                                case 1:
-                                    tmpString = "\"main\"";
-                                    break;
-                                case 2:
-                                    tmpString = tmpString + ", \"zone2\"";
-                                    break;
-                                case 3:
-                                    tmpString = tmpString + ", \"zone3\"";
-                                    break;
-                                case 4:
-                                    tmpString = tmpString + ", \"zone4\"";
-                                    break;
+                            //empty zone to respect defaults
+                            if (mclinkSetupServer != "") {
+                                //Step 2. remove client from server
+                                json = "{\"group_id\":\"" + groupId + "\", \"type\":\"remove\", \"client_list\":[\"" + this.host + "\"]}";
+                                httpResponse = setClientServerInfo(mclinkSetupServer, json, "setServerInfo");
+                                //Step 3. reflect changes to master
+                                httpResponse = startDistribution(mclinkSetupServer);
+                                if (config.defaultAfterMCLink != null) {
+                                    httpResponse = setInput(config.defaultAfterMCLink.toString(), zone, this.host);
+                                }
+                            } else if (mclinkSetupServer == "") {
+                                //fallback in case client is removed from group by ending group on server side
+                                if (config.defaultAfterMCLink != null) {
+                                    httpResponse = setInput(config.defaultAfterMCLink.toString(), zone, this.host);
+                                }
                             }
                         }
-                        json = "{\"group_id\":\"" + groupId + "\", \"zone\":[" + tmpString + "]}";
-                        logger.debug("setClientInfo json: {}", json);
-                        //httpResponse = setClientInfo(this.host, json);
-                        httpResponse = setClientServerInfo(this.host, json, "setClientInfo");
-                        httpResponse = startDistribution(mclinkSetupServer);
+                    } else if (action.equals("link")) {
+                        if (role.equals("none")) {
+                            json = "{\"group_id\":\"" + groupId + "\", \"zone\":\"" + mclinkSetupZone + "\", \"type\":\"add\", \"client_list\":[\"" + this.host + "\"]}";
+                            logger.debug("setServerInfo json: {}", json);
+                            httpResponse = setClientServerInfo(mclinkSetupServer, json, "setServerInfo");
+                            // All zones of Model are required for MC Link
+                            tmpString = "";
+                            for (int i = 1; i <= zoneNum; i++) {
+                                switch (i) {
+                                    case 1:
+                                        tmpString = "\"main\"";
+                                        break;
+                                    case 2:
+                                        tmpString = tmpString + ", \"zone2\"";
+                                        break;
+                                    case 3:
+                                        tmpString = tmpString + ", \"zone3\"";
+                                        break;
+                                    case 4:
+                                        tmpString = tmpString + ", \"zone4\"";
+                                        break;
+                                }
+                            }
+                            json = "{\"group_id\":\"" + groupId + "\", \"zone\":[" + tmpString + "]}";
+                            logger.debug("setClientInfo json: {}", json);
+                            //httpResponse = setClientInfo(this.host, json);
+                            httpResponse = setClientServerInfo(this.host, json, "setClientInfo");
+                            httpResponse = startDistribution(mclinkSetupServer);
+                        }
                     }
+                    updateMCLinkStatus();
                     break;
                 case CHANNEL_RECALLSCENE:
                     recallScene(command.toString(), zone, this.host);
@@ -820,7 +844,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         String remotehost = "";
         String result = "";
         for (Thing thing : bridge.getThings()) {
-            //label = thing.getLabel();
             remotehost = thing.getConfiguration().get("host").toString();
             if (remotehost != null) {
                 tmpString = getDistributionInfo(remotehost);
@@ -829,8 +852,8 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                 if (role.equals("server")) {
                     for (JsonElement ip : distributioninfo.getClientList()) {   
                         JsonObject clientObject = ip.getAsJsonObject();
-                        if (remotehost == clientObject.get("ip_address").getAsString()) {
-                            result = clientObject.get("ip_address").getAsString();
+                        if (this.host.equals(clientObject.get("ip_address").getAsString())) {
+                            result = remotehost;
                             break;
                         }
                     }    
@@ -993,12 +1016,12 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         }
     }
 
-    private void updateMCLinkStatus () {
+    public void updateMCLinkStatus () {
         tmpString = getDistributionInfo(this.host);
         @Nullable
         DistributionInfo targetObject = gson.fromJson(tmpString, DistributionInfo.class);
         role = targetObject.getRole();
-        
+        groupId = targetObject.getGroupId();        
         switch (role) {
             case "none":
                 setMCLinkToStandalone();
@@ -1007,7 +1030,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                 setMCLinkToServer();
                 break;
             case "client":
-                setMCLinkToClient();
+                    setMCLinkToClient();
                 break;
         }
     }
@@ -1255,8 +1278,15 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     }
 
     private @Nullable String startDistribution(@Nullable String host) {
-        url = host + YAMAHA_EXTENDED_CONTROL + "dist/startDistribution?num=1";
-        return makeRequest("StartDistribution", url);
+        Random ran = new Random();
+        int nxt = ran.nextInt(200000);
+        //url = host + YAMAHA_EXTENDED_CONTROL + "dist/startDistribution?num=1";
+        return makeRequest("StartDistribution", host + YAMAHA_EXTENDED_CONTROL + "dist/startDistribution?num=" + nxt);
+    }
+
+    private @Nullable String stopDistribution(@Nullable String host) {
+        //url = host + YAMAHA_EXTENDED_CONTROL + "dist/startDistribution?num=1";
+        return makeRequest("StopDistribution", host + YAMAHA_EXTENDED_CONTROL + "dist/stopDistribution");
     }
 
     // End Music Cast API calls

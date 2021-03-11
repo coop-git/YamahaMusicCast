@@ -74,8 +74,9 @@ import java.util.UUID;
 @NonNullByDefault
 public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
     private Gson gson = new Gson();
-    private final Logger logger = LoggerFactory.getLogger(YamahaMusiccastBridgeHandler.class);    
-    private @Nullable ExecutorService executor;
+    private final Logger logger = LoggerFactory.getLogger(YamahaMusiccastBridgeHandler.class);
+    private String threadname = getThing().getUID().getAsString(); //"binding-yamahamusiccast" 
+    private @Nullable ExecutorService executor = Executors.newSingleThreadExecutor(new NamedThreadFactory(threadname));
     private @Nullable Future<?> eventListenerJob;
     private static final int UDP_PORT = 41100;
     private static final int SOCKET_TIMEOUT_MILLISECONDS = 3000;
@@ -126,18 +127,21 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
     @Override
     public void initialize() {
         updateStatus(ThingStatus.ONLINE);
-        if (eventListenerJob == null || eventListenerJob.isCancelled()) {
-            executor = Executors.newSingleThreadExecutor(new NamedThreadFactory("binding-yamahamusiccast"));
-            eventListenerJob = executor.submit(this::receivePackets);
+        Future<?> localEventListenerJob = eventListenerJob;
+        //String threadname = getThing().getUID().getAsString(); //"binding-yamahamusiccast"
+        if (localEventListenerJob == null || localEventListenerJob.isCancelled()) {
+            //executor = Executors.newSingleThreadExecutor(new NamedThreadFactory(threadname));
+            localEventListenerJob = executor.submit(this::receivePackets);
         }
     }
 
     @Override
     public void dispose() {
         super.dispose();
-        if (eventListenerJob != null) {
-            eventListenerJob.cancel(true);
-            eventListenerJob = null;
+        Future<?> localEventListenerJob = eventListenerJob;
+        if (localEventListenerJob != null) {
+            localEventListenerJob.cancel(true);
+            localEventListenerJob = null;
         }
         if (executor != null) {
             executor.shutdownNow();

@@ -31,6 +31,15 @@
 				<description>Sync Volume across linked Music Cast models</description>
 				<default>true</default>
 			</parameter>
+			<parameter name="defaultAfterMCLink" type="text">
+				<label>Default Value Afer MC Link</label>
+				<description>Default value for client when MC Link is broken</description>
+				<default>none</default>
+				<options>
+					<option value="none">None</option>
+					<option value="net_radio">Net Radio</option>
+				</options>
+			</parameter>
 		</config-description>
 	</thing-type>
 

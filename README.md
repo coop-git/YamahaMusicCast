@@ -31,10 +31,11 @@ No auto discovery
 
 ## Thing Configuration
 
-| Parameter        | type    | description                                             | Advanced | Required      |
-|------------------|---------|---------------------------------------------------------|----------|---------------|
-| host             | String  | IP address of the Yamaha model (AVR, ...)               | false    | true          |
-| syncVolume       | Boolean | Sync volume across linked models (default=false)        | true     | false         |
+| Parameter          | Type    | Description                                             | Advanced | Required      |
+|--------------------|---------|---------------------------------------------------------|----------|---------------|
+| host               | String  | IP address of the Yamaha model (AVR, ...)               | false    | true          |
+| syncVolume         | Boolean | Sync volume across linked models (default=false)        | false    | false         |
+| defaultAfterMCLink | Boolean | Default Input value for client when MC Link is broken   | false    | false         |
 
 ## Channels
 
@@ -161,7 +162,7 @@ sendCommand(Kitchen_YamahaMCServer, "client")
 ## Tested Models
 
 RX-D485 / WX-010 / WX-030 / ISX-80 / YSP-1600 / RX-A860 / R-N303D / EX-A1080 / WXA-050 / HTR-4068 (RX-V479)
-MusicCast 20 / WCX-50 / RX-V6A / YAS-306 / ISX-18D / WX-021
+MusicCast 20 / WCX-50 / RX-V6A / YAS-306 / ISX-18D / WX-021 / YAS-408
 
 ## Changelog
 
