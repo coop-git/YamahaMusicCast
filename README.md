@@ -143,9 +143,10 @@ Set **mclinkStatus** to *Standalone* to remove the device/model from the current
 If the device/model is the server, the group will be disbanded.
 
 ```
-String YamahaMCServer "[%s]" {channel="yamahamusiccast:device:Living:main#mcServer"}
-Switch YamahaUnlinkMC "" {channel="yamahamusiccast:device:Living:main#unlinkMCServer"}
+Switch YamahaMCLinkStatus "" {channel="yamahamusiccast:device:Living:main#mclinkStatus"}
 ```
+
+During testing with the Yamaha Musiccast app, when removing a slave from the group, the status of the client remained *client* and **input** stayed on *mclink*. Only when changing input, the slave was set to *standalone*. Therefor you can set the parameter **defaultAfterMCLink** to an input value supported by your device to break the whole Musiccast Link in OH.
 
 #### How to use this in a rule?
 
