@@ -35,7 +35,7 @@ No auto discovery
 |--------------------|---------|---------------------------------------------------------|----------|---------------|
 | host               | String  | IP address of the Yamaha model (AVR, ...)               | false    | true          |
 | syncVolume         | Boolean | Sync volume across linked models (default=false)        | false    | false         |
-| defaultAfterMCLink | Boolean | Default Input value for client when MC Link is broken   | false    | false         |
+| defaultAfterMCLink | String  | Default Input value for client when MC Link is broken   | false    | false         |
 
 ## Channels
 
