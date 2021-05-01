@@ -75,7 +75,7 @@ import java.util.UUID;
 public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
     private Gson gson = new Gson();
     private final Logger logger = LoggerFactory.getLogger(YamahaMusiccastBridgeHandler.class);
-    private String threadname = getThing().getUID().getAsString(); //"binding-yamahamusiccast" 
+    private String threadname = getThing().getUID().getAsString(); 
     private @Nullable ExecutorService executor = Executors.newSingleThreadExecutor(new NamedThreadFactory(threadname));
     private @Nullable Future<?> eventListenerJob;
     private static final int UDP_PORT = 41100;
@@ -99,9 +99,10 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
         }
 
         DatagramPacket packet = new DatagramPacket(new byte[BUFFER_SIZE], BUFFER_SIZE);
-        while (socket != null) {
+        DatagramSocket localSocket = socket;
+        while (localSocket != null) {
             try {
-                socket.receive(packet);
+                localSocket.receive(packet);
                 String received = new String(packet.getData(), 0, packet.getLength());
                 String trackingID = UUID.randomUUID().toString().replace("-","").substring(0,32);
                 logger.debug("Received packet: {} (Tracking: {})", received, trackingID);
@@ -110,7 +111,7 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
                 // Nothing to do on socket timeout
             } catch (IOException e) {
                 logger.debug("UDP Listener got IOException waiting for datagram: {}", e.getMessage());
-                socket = null;
+                localSocket = null;
             }
         }
         logger.debug("UDP Listener exiting");
@@ -128,10 +129,11 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
     public void initialize() {
         updateStatus(ThingStatus.ONLINE);
         Future<?> localEventListenerJob = eventListenerJob;
-        //String threadname = getThing().getUID().getAsString(); //"binding-yamahamusiccast"
+        ExecutorService localExecutor = executor;
         if (localEventListenerJob == null || localEventListenerJob.isCancelled()) {
-            //executor = Executors.newSingleThreadExecutor(new NamedThreadFactory(threadname));
-            localEventListenerJob = executor.submit(this::receivePackets);
+            if (localExecutor != null) {
+                localEventListenerJob = localExecutor.submit(this::receivePackets);
+            }
         }
     }
 
@@ -139,13 +141,14 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
     public void dispose() {
         super.dispose();
         Future<?> localEventListenerJob = eventListenerJob;
+        ExecutorService localExecutor = executor;
         if (localEventListenerJob != null) {
             localEventListenerJob.cancel(true);
             localEventListenerJob = null;
         }
-        if (executor != null) {
-            executor.shutdownNow();
-            executor = null;
+        if (localExecutor != null) {
+            localExecutor.shutdownNow();
+            localExecutor = null;
         }
     }
 
@@ -158,13 +161,15 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
                 case ONLINE:
                     logger.debug("Thing Status: ONLINE - {}",thing.getLabel());
                     YamahaMusiccastHandler handler = (YamahaMusiccastHandler) thing.getHandler();
-                    logger.debug("UDP: {} - {} ({} - Tracking: {})", json, handler.getDeviceId(), thing.getLabel(), trackingID);
+                    if (handler != null) {
+                        logger.debug("UDP: {} - {} ({} - Tracking: {})", json, handler.getDeviceId(), thing.getLabel(), trackingID);
 
-                    @Nullable
-                    UdpMessage targetObject = gson.fromJson(json, UdpMessage.class);
-                    udpDeviceId = targetObject.getDeviceId();
-                    if (udpDeviceId.equals(handler.getDeviceId())) {
-                        handler.processUDPEvent(json, trackingID);
+                        @Nullable
+                        UdpMessage targetObject = gson.fromJson(json, UdpMessage.class);
+                        udpDeviceId = targetObject.getDeviceId();
+                        if (udpDeviceId.equals(handler.getDeviceId())) {
+                            handler.processUDPEvent(json, trackingID);
+                        }
                     }
                     break;
                 default:
