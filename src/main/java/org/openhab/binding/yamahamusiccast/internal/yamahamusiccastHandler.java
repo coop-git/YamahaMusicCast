@@ -152,6 +152,8 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
 
     @Override
     public void handleCommand(ChannelUID channelUID, Command command) { 
+        String localValueToCheck = "";
+        String localRole = "";
         if (command != RefreshType.REFRESH) {
             logger.debug("Handling command {} for channel {}", command, channelUID);
             channelWithoutGroup = channelUID.getIdWithoutGroup();
@@ -163,17 +165,21 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     if (command == OnOffType.ON) {
                         httpResponse = setPower("on", zone, this.host);
                         response = gson.fromJson(httpResponse, Response.class);
-                        tmpString = response.getResponseCode();
-                        if (!tmpString.equals("0")) {
-                            updateState(channelUID, OnOffType.OFF); 
+                        localValueToCheck = response.getResponseCode();
+                        if (localValueToCheck != null) {
+                            if (!localValueToCheck.equals("0")) {
+                                updateState(channelUID, OnOffType.OFF); 
+                            }
                         }
                     } else if (command == OnOffType.OFF) {
                         httpResponse = setPower("standby", zone, this.host);
                         response = gson.fromJson(httpResponse, Response.class);
                         powerOffCleanup();
-                        tmpString = response.getResponseCode();
-                        if (!tmpString.equals("0")) {
-                            updateState(channelUID, OnOffType.ON); 
+                        localValueToCheck = response.getResponseCode();
+                        if (localValueToCheck != null) {
+                            if (!localValueToCheck.equals("0")) {
+                                updateState(channelUID, OnOffType.ON); 
+                            }
                         }
                     }
                     break;  
@@ -181,16 +187,20 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     if (command == OnOffType.ON) {
                         httpResponse = setMute("true", zone, this.host);
                         response = gson.fromJson(httpResponse, Response.class);
-                        tmpString = response.getResponseCode();
-                        if (!tmpString.equals("0")) {
-                            updateState(channelUID, OnOffType.OFF); 
+                        localValueToCheck = response.getResponseCode();
+                        if (localValueToCheck != null) {
+                            if (!localValueToCheck.equals("0")) {
+                                updateState(channelUID, OnOffType.OFF); 
+                            }
                         }
                     } else if (command == OnOffType.OFF) {
                         httpResponse = setMute("false", zone, this.host);
                         response = gson.fromJson(httpResponse, Response.class);
-                        tmpString = response.getResponseCode();
-                        if (!tmpString.equals("0")) {
-                            updateState(channelUID, OnOffType.ON); 
+                        localValueToCheck = response.getResponseCode();
+                        if (localValueToCheck != null) {
+                            if (!localValueToCheck.equals("0")) {
+                                updateState(channelUID, OnOffType.ON); 
+                            }
                         }
                     }
                     break;                  
@@ -198,17 +208,19 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     volumePercent = Integer.parseInt(command.toString().replace(".0", ""));
                     volumeAbsValue = (maxVolumeState * volumePercent)/100;
                     setVolume(volumeAbsValue, zone, this.host);
-                    if (config.syncVolume) {
-                        tmpString = getDistributionInfo(this.host);
-                        distributioninfo = gson.fromJson(tmpString, DistributionInfo.class);
-                        role = distributioninfo.getRole();
-                        if (role.equals("server")) {
-                            for (JsonElement ip : distributioninfo.getClientList()) {   
-                                JsonObject clientObject = ip.getAsJsonObject();
-                                setVolumeLinkedDevice(volumePercent, zone, clientObject.get("ip_address").getAsString());
-                            }    
-                        }
-                    } // END config.syncVolume
+                        if (config.syncVolume) {
+                            tmpString = getDistributionInfo(this.host);
+                            distributioninfo = gson.fromJson(tmpString, DistributionInfo.class);
+                            localRole = distributioninfo.getRole();
+                            if (localRole != null) {
+                                if (localRole.equals("server")) {
+                                    for (JsonElement ip : distributioninfo.getClientList()) {   
+                                        JsonObject clientObject = ip.getAsJsonObject();
+                                        setVolumeLinkedDevice(volumePercent, zone, clientObject.get("ip_address").getAsString());
+                                    }    
+                                }
+                            }
+                        } // END config.syncVolume
                     break;
                 case CHANNEL_VOLUMEABS:
                     volumeAbsValue = Integer.parseInt(command.toString().replace(".0", ""));
@@ -217,12 +229,14 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     if (config.syncVolume) {
                         tmpString = getDistributionInfo(this.host);
                         distributioninfo = gson.fromJson(tmpString, DistributionInfo.class);
-                        role = distributioninfo.getRole();
-                        if (role.equals("server")) {
-                            for (JsonElement ip : distributioninfo.getClientList()) {   
-                                JsonObject clientObject = ip.getAsJsonObject();
-                                setVolumeLinkedDevice(volumePercent, zone, clientObject.get("ip_address").getAsString());
-                            }    
+                        localRole = distributioninfo.getRole();
+                        if (localRole != null) {
+                            if (localRole.equals("server")) {
+                                for (JsonElement ip : distributioninfo.getClientList()) {   
+                                    JsonObject clientObject = ip.getAsJsonObject();
+                                    setVolumeLinkedDevice(volumePercent, zone, clientObject.get("ip_address").getAsString());
+                                }    
+                            }
                         }
                     }
                     break;
@@ -230,10 +244,12 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     //if it is a client, disconnect it first.
                     tmpString = getDistributionInfo(this.host);
                     distributioninfo = gson.fromJson(tmpString, DistributionInfo.class);
-                    role = distributioninfo.getRole();
-                    if (role.equals("client")) {
-                        json = "{\"group_id\":\"\"}";
-                        httpResponse = setClientServerInfo(this.host, json, "setClientInfo");
+                    localRole = distributioninfo.getRole();
+                    if (localRole != null) {
+                        if (localRole.equals("client")) {
+                            json = "{\"group_id\":\"\"}";
+                            httpResponse = setClientServerInfo(this.host, json, "setClientInfo");
+                        }
                     }
                     setInput(command.toString(), zone, this.host);
                     break;
@@ -280,76 +296,82 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                             tmpString = getDistributionInfo(mclinkSetupServer);
                             distributioninfo = gson.fromJson(tmpString, DistributionInfo.class);
                             responseCode = distributioninfo.getResponseCode();
-                            tmpString = distributioninfo.getRole();
+                            localRole = distributioninfo.getRole();
                             groupId = distributioninfo.getGroupId();
-                            if (tmpString.equals("server")) {
-                                groupId = distributioninfo.getGroupId();
-                            } else if (tmpString.equals("client")) {
-                                groupId = "";
-                            } else if (tmpString.equals("none")) {
-                                groupId = generateGroupId();
-                            }  
+                            if (localRole != null) {
+                                if (localRole.equals("server")) {
+                                    groupId = distributioninfo.getGroupId();
+                                } else if (localRole.equals("client")) {
+                                    groupId = "";
+                                } else if (localRole.equals("none")) {
+                                    groupId = generateGroupId();
+                                }
+                            }
                         }                          
                     }
                     
                     if (action.equals("unlink")) {
                         json = "{\"group_id\":\"\"}";
-                        if (role.equals("server")) {
-                            httpResponse = setServerInfo(this.host, json);
-                            //Set GroupId = "" for linked clients
-                            for (JsonElement ip : distributioninfo.getClientList()) {   
-                                JsonObject clientObject = ip.getAsJsonObject();
-                                setClientServerInfo(clientObject.get("ip_address").getAsString(), json, "setClientInfo");
-                            }    
-                            
-                        } else if (role.equals("client"))  {
-                            mclinkSetupServer = connectedServer();
-                            //Step 1. empty group on client
-                            httpResponse = setClientServerInfo(this.host, json, "setClientInfo");
-                            //empty zone to respect defaults
-                            if (mclinkSetupServer != "") {
-                                //Step 2. remove client from server
-                                json = "{\"group_id\":\"" + groupId + "\", \"type\":\"remove\", \"client_list\":[\"" + this.host + "\"]}";
-                                httpResponse = setClientServerInfo(mclinkSetupServer, json, "setServerInfo");
-                                //Step 3. reflect changes to master
-                                httpResponse = startDistribution(mclinkSetupServer);
-                                if (config.defaultAfterMCLink != null) {
-                                    httpResponse = setInput(config.defaultAfterMCLink.toString(), zone, this.host);
-                                }
-                            } else if (mclinkSetupServer == "") {
-                                //fallback in case client is removed from group by ending group on server side
-                                if (config.defaultAfterMCLink != null) {
-                                    httpResponse = setInput(config.defaultAfterMCLink.toString(), zone, this.host);
+                        if (localRole != null) {
+                            if (localRole.equals("server")) {
+                                httpResponse = setServerInfo(this.host, json);
+                                //Set GroupId = "" for linked clients
+                                for (JsonElement ip : distributioninfo.getClientList()) {   
+                                    JsonObject clientObject = ip.getAsJsonObject();
+                                    setClientServerInfo(clientObject.get("ip_address").getAsString(), json, "setClientInfo");
+                                }    
+                                
+                            } else if (localRole.equals("client"))  {
+                                mclinkSetupServer = connectedServer();
+                                //Step 1. empty group on client
+                                httpResponse = setClientServerInfo(this.host, json, "setClientInfo");
+                                //empty zone to respect defaults
+                                if (mclinkSetupServer != "") {
+                                    //Step 2. remove client from server
+                                    json = "{\"group_id\":\"" + groupId + "\", \"type\":\"remove\", \"client_list\":[\"" + this.host + "\"]}";
+                                    httpResponse = setClientServerInfo(mclinkSetupServer, json, "setServerInfo");
+                                    //Step 3. reflect changes to master
+                                    httpResponse = startDistribution(mclinkSetupServer);
+                                    if (config.defaultAfterMCLink != null) {
+                                        httpResponse = setInput(config.defaultAfterMCLink.toString(), zone, this.host);
+                                    }
+                                } else if (mclinkSetupServer == "") {
+                                    //fallback in case client is removed from group by ending group on server side
+                                    if (config.defaultAfterMCLink != null) {
+                                        httpResponse = setInput(config.defaultAfterMCLink.toString(), zone, this.host);
+                                    }
                                 }
                             }
                         }
                     } else if (action.equals("link")) {
-                        if (role.equals("none")) {
-                            json = "{\"group_id\":\"" + groupId + "\", \"zone\":\"" + mclinkSetupZone + "\", \"type\":\"add\", \"client_list\":[\"" + this.host + "\"]}";
-                            logger.debug("setServerInfo json: {}", json);
-                            httpResponse = setClientServerInfo(mclinkSetupServer, json, "setServerInfo");
-                            // All zones of Model are required for MC Link
-                            tmpString = "";
-                            for (int i = 1; i <= zoneNum; i++) {
-                                switch (i) {
-                                    case 1:
-                                        tmpString = "\"main\"";
-                                        break;
-                                    case 2:
-                                        tmpString = tmpString + ", \"zone2\"";
-                                        break;
-                                    case 3:
-                                        tmpString = tmpString + ", \"zone3\"";
-                                        break;
-                                    case 4:
-                                        tmpString = tmpString + ", \"zone4\"";
-                                        break;
+                        if (localRole != null) {
+                            if (localRole.equals("none")) {
+                                json = "{\"group_id\":\"" + groupId + "\", \"zone\":\"" + mclinkSetupZone + "\", \"type\":\"add\", \"client_list\":[\"" + this.host + "\"]}";
+                                logger.debug("setServerInfo json: {}", json);
+                                httpResponse = setClientServerInfo(mclinkSetupServer, json, "setServerInfo");
+                                // All zones of Model are required for MC Link
+                                tmpString = "";
+                                for (int i = 1; i <= zoneNum; i++) {
+                                    switch (i) {
+                                        case 1:
+                                            tmpString = "\"main\"";
+                                            break;
+                                        case 2:
+                                            tmpString = tmpString + ", \"zone2\"";
+                                            break;
+                                        case 3:
+                                            tmpString = tmpString + ", \"zone3\"";
+                                            break;
+                                        case 4:
+                                            tmpString = tmpString + ", \"zone4\"";
+                                            break;
+                                    }
                                 }
+                                json = "{\"group_id\":\"" + groupId + "\", \"zone\":[" + tmpString + "]}";
+                                logger.debug("setClientInfo json: {}", json);
+                                httpResponse = setClientServerInfo(this.host, json, "setClientInfo");
+                                httpResponse = startDistribution(mclinkSetupServer);
                             }
-                            json = "{\"group_id\":\"" + groupId + "\", \"zone\":[" + tmpString + "]}";
-                            logger.debug("setClientInfo json: {}", json);
-                            httpResponse = setClientServerInfo(this.host, json, "setClientInfo");
-                            httpResponse = startDistribution(mclinkSetupServer);
                         }
                     }
                     updateMCLinkStatus();
@@ -603,12 +625,13 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     } 
 
     private void updateStatusZone(String zoneToUpdate) {
+        String localZone = "";
         tmpString = getStatus(this.host, zoneToUpdate);
         @Nullable
         Status targetObject = gson.fromJson(tmpString, Status.class);
-        responseCode = targetObject.getResponseCode();
-        powerState = targetObject.getPower();
-        muteState = targetObject.getMute();
+        String responseCode = targetObject.getResponseCode();
+        String powerState = targetObject.getPower();
+        String muteState = targetObject.getMute();
         volumeState = targetObject.getVolume();
         maxVolumeState = targetObject.getMaxVolume();
         inputState = targetObject.getInput();
@@ -624,69 +647,71 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         logger.debug("{} - Soundprogram: {}", zoneToUpdate, soundProgramState);
         logger.debug("{} - Sleep: {}", zoneToUpdate, sleepState);
 
-        switch (responseCode) {
-            case "0":
-                for (Channel channel : getThing().getChannels()) {
-                    ChannelUID channelUID = channel.getUID();
-                    channelWithoutGroup = channelUID.getIdWithoutGroup();
-                    zone = channelUID.getGroupId();
-                    if (isLinked(channelUID)) {
-                        switch (channelWithoutGroup) {
-                            case CHANNEL_POWER:
-                                if (powerState.equals("on")) {
-                                    if (zone.equals(zoneToUpdate)) {
-                                        updateState(channelUID, OnOffType.ON); 
-                                    }
-                                } else if (powerState.equals("standby")) {
-                                    if (zone.equals(zoneToUpdate)) {
-                                        updateState(channelUID, OnOffType.OFF);
-                                    }
-                                }
-                                break; 
-                            case CHANNEL_MUTE:
-                                if (muteState.equals("true")) {
-                                    if (zone.equals(zoneToUpdate)) {
-                                        updateState(channelUID, OnOffType.ON); 
-                                    }
-                                } else if (muteState.equals("false")) {
-                                    if (zone.equals(zoneToUpdate)) {
-                                        updateState(channelUID, OnOffType.OFF);
-                                    }
-                                }
-                                break;
-                            case CHANNEL_VOLUME:
-                                if (zone.equals(zoneToUpdate)) {
-                                    updateState(channelUID, new PercentType((volumeState * 100) / maxVolumeState));
-                                }   
-                                break;
-                            case CHANNEL_VOLUMEABS:
-                                if (zone.equals(zoneToUpdate)) {
-                                    updateState(channelUID, new DecimalType(volumeState));
-                                }   
-                                break;                                
-                            case CHANNEL_INPUT:
-                                if (zone.equals(zoneToUpdate)) {
-                                    updateState(channelUID, StringType.valueOf(inputState));
-                                }
-                                break;
-                            case CHANNEL_SOUNDPROGRAM:
-                                if (zone.equals(zoneToUpdate)) {
-                                    updateState(channelUID, StringType.valueOf(soundProgramState));
-                                }   
-                                break;
-                            case CHANNEL_SLEEP:
-                                if (zone.equals(zoneToUpdate)) {
-                                    updateState(channelUID, new DecimalType(sleepState));
-                                }   
-                                break;
-                        } //END switch (channelWithoutGroup)
-                    } //END IsLinked
-                }    
-                break;
-            case "999":
+            switch (responseCode) {
+                case "0":
+                    for (Channel channel : getThing().getChannels()) {
+                        ChannelUID channelUID = channel.getUID();
+                        channelWithoutGroup = channelUID.getIdWithoutGroup();
+                        localZone = channelUID.getGroupId();
+                        if (localZone != null) {
+                            if (isLinked(channelUID)) {
+                                switch (channelWithoutGroup) {
+                                    case CHANNEL_POWER:
+                                        if (powerState.equals("on")) {
+                                            if (localZone.equals(zoneToUpdate)) {
+                                                updateState(channelUID, OnOffType.ON); 
+                                            }
+                                        } else if (powerState.equals("standby")) {
+                                            if (localZone.equals(zoneToUpdate)) {
+                                                updateState(channelUID, OnOffType.OFF);
+                                            }
+                                        }
+                                        break; 
+                                    case CHANNEL_MUTE:
+                                        if (muteState.equals("true")) {
+                                            if (localZone.equals(zoneToUpdate)) {
+                                                updateState(channelUID, OnOffType.ON); 
+                                            }
+                                        } else if (muteState.equals("false")) {
+                                            if (localZone.equals(zoneToUpdate)) {
+                                                updateState(channelUID, OnOffType.OFF);
+                                            }
+                                        }
+                                        break;
+                                    case CHANNEL_VOLUME:
+                                        if (localZone.equals(zoneToUpdate)) {
+                                            updateState(channelUID, new PercentType((volumeState * 100) / maxVolumeState));
+                                        }   
+                                        break;
+                                    case CHANNEL_VOLUMEABS:
+                                        if (localZone.equals(zoneToUpdate)) {
+                                            updateState(channelUID, new DecimalType(volumeState));
+                                        }   
+                                        break;                                
+                                    case CHANNEL_INPUT:
+                                        if (localZone.equals(zoneToUpdate)) {
+                                            updateState(channelUID, StringType.valueOf(inputState));
+                                        }
+                                        break;
+                                    case CHANNEL_SOUNDPROGRAM:
+                                        if (localZone.equals(zoneToUpdate)) {
+                                            updateState(channelUID, StringType.valueOf(soundProgramState));
+                                        }   
+                                        break;
+                                    case CHANNEL_SLEEP:
+                                        if (localZone.equals(zoneToUpdate)) {
+                                            updateState(channelUID, new DecimalType(sleepState));
+                                        }   
+                                        break;
+                                } //END switch (channelWithoutGroup)
+                            } //END IsLinked
+                        }
+                    }    
+                    break;
+                case "999":
                     logger.debug("Nothing to do! - {} ({})", thingLabel, zoneToUpdate);
-                break;
-        }
+                    break;
+            }
     }
 
     private void updatePresets(int value) {
@@ -696,7 +721,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         tmpString = getPresetInfo(this.host); // Without zone
 
         PresetInfo presetinfo = gson.fromJson(tmpString, PresetInfo.class);
-        responseCode = presetinfo.getResponseCode();
+        String responseCode = presetinfo.getResponseCode();
         if (responseCode.equals("0")) {
             List<StateOption> optionsPresets = new ArrayList<>();
             inputText = getLastInput(); // Without zone
@@ -732,12 +757,12 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         try {
             @Nullable
             PlayInfo targetObject = gson.fromJson(tmpString, PlayInfo.class);
-            responseCode = targetObject.getResponseCode();
-            playbackState = targetObject.getPlayback();
+            String responseCode = targetObject.getResponseCode();
+            String playbackState = targetObject.getPlayback();
             artistState = targetObject.getArtist();
             trackState = targetObject.getTrack();
             albumState = targetObject.getAlbum();
-            albumArtUrlState = targetObject.getAlbumArtUrl();
+            String albumArtUrlState = targetObject.getAlbumArtUrl();
             repeatState = targetObject.getRepeat();
             shuffleState = targetObject.getShuffle();
             playTimeState = targetObject.getPlayTime();
@@ -792,7 +817,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         String text = "";
         tmpString = getRecentInfo(this.host);
         RecentInfo recentinfo = gson.fromJson(tmpString, RecentInfo.class);
-        responseCode = recentinfo.getResponseCode();
+        String responseCode = recentinfo.getResponseCode();
         if (responseCode.equals("0")) {
             for (JsonElement ri : recentinfo.getRecentInfo()) {  
                 JsonObject recentObject = ri.getAsJsonObject();
@@ -808,20 +833,24 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         Bridge bridge = getBridge();
         String remotehost = "";
         String result = "";
-        for (Thing thing : bridge.getThings()) {
-            remotehost = thing.getConfiguration().get("host").toString();
-            if (remotehost != null) {
-                tmpString = getDistributionInfo(remotehost);
-                distributioninfo = gson.fromJson(tmpString, DistributionInfo.class);
-                role = distributioninfo.getRole();
-                if (role.equals("server")) {
-                    for (JsonElement ip : distributioninfo.getClientList()) {   
-                        JsonObject clientObject = ip.getAsJsonObject();
-                        if (this.host.equals(clientObject.get("ip_address").getAsString())) {
-                            result = remotehost;
-                            break;
+        if (bridge != null) {
+            for (Thing thing : bridge.getThings()) {
+                remotehost = thing.getConfiguration().get("host").toString();
+                if (remotehost != null) {
+                    tmpString = getDistributionInfo(remotehost);
+                    distributioninfo = gson.fromJson(tmpString, DistributionInfo.class);
+                    String localRole = distributioninfo.getRole();
+                    if (localRole != null) {
+                        if (localRole.equals("server")) {
+                            for (JsonElement ip : distributioninfo.getClientList()) {   
+                                JsonObject clientObject = ip.getAsJsonObject();
+                                if (this.host.equals(clientObject.get("ip_address").getAsString())) {
+                                    result = remotehost;
+                                    break;
+                                }
+                            }    
                         }
-                    }    
+                    }
                 }
             }
         }
@@ -844,35 +873,35 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         options.add(new StateOption("server", "Server: " + clients + " clients"));
         options.add(new StateOption("client", "Client"));
 
-
-        for (Thing thing : bridge.getThings()) {
-            label = thing.getLabel();
-            host = thing.getConfiguration().get("host").toString();
-            if (host == null) {
-                host = "";
-                zonesPerHost = 0;
-            } else {
-                logger.debug("Thing found on Bridge: {} - {}", label, host);
-                zonesPerHost = getNumberOfZones(host);
-                for (int i = 1; i <= zonesPerHost; i++) {
-                    switch (i) {
-                        case 1:
-                            options.add(new StateOption(host + "***main", label + " - main (" + host + ")"));
-                            break;
-                        case 2:
-                            options.add(new StateOption(host + "***zone2", label + " - zone2 (" + host + ")"));
-                            break;
-                        case 3:
-                            options.add(new StateOption(host + "***zone3", label + " - zone3 (" + host + ")"));
-                            break;
-                        case 4:
-                            options.add(new StateOption(host + "***zone4", label + " - zone4 (" + host + ")"));
-                            break;
+        if (bridge != null) {
+            for (Thing thing : bridge.getThings()) {
+                label = thing.getLabel();
+                host = thing.getConfiguration().get("host").toString();
+                if (host == null) {
+                    host = "";
+                    zonesPerHost = 0;
+                } else {
+                    logger.debug("Thing found on Bridge: {} - {}", label, host);
+                    zonesPerHost = getNumberOfZones(host);
+                    for (int i = 1; i <= zonesPerHost; i++) {
+                        switch (i) {
+                            case 1:
+                                options.add(new StateOption(host + "***main", label + " - main (" + host + ")"));
+                                break;
+                            case 2:
+                                options.add(new StateOption(host + "***zone2", label + " - zone2 (" + host + ")"));
+                                break;
+                            case 3:
+                                options.add(new StateOption(host + "***zone3", label + " - zone3 (" + host + ")"));
+                                break;
+                            case 4:
+                                options.add(new StateOption(host + "***zone4", label + " - zone4 (" + host + ")"));
+                                break;
+                        }
                     }
                 }
             }
         }
-        
         //for each zone of the device, set all the possible combinations
         ChannelUID testchannel;
         for (int i = 1; i <= zoneNum; i++) {
@@ -974,18 +1003,20 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         tmpString = getDistributionInfo(this.host);
         @Nullable
         DistributionInfo targetObject = gson.fromJson(tmpString, DistributionInfo.class);
-        role = targetObject.getRole();
+        String localRole = targetObject.getRole();
         groupId = targetObject.getGroupId();        
-        switch (role) {
-            case "none":
-                setMCLinkToStandalone();
-                break;
-            case "server":        
-                setMCLinkToServer();
-                break;
-            case "client":
-                    setMCLinkToClient();
-                break;
+        if (localRole != null) {
+            switch (localRole) {
+                case "none":
+                    setMCLinkToStandalone();
+                    break;
+                case "server":        
+                    setMCLinkToServer();
+                    break;
+                case "client":
+                        setMCLinkToClient();
+                    break;
+            }
         }
     }
 
