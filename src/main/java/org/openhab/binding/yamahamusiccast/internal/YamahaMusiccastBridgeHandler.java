@@ -27,12 +27,21 @@ import org.eclipse.jetty.client.api.Request;
 import org.eclipse.jetty.client.util.StringContentProvider;
 import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.http.HttpMethod;
-import org.eclipse.smarthome.core.thing.*;
+import org.eclipse.smarthome.core.thing.ChannelUID;
+import org.eclipse.smarthome.core.thing.Thing;
+import org.eclipse.smarthome.core.thing.ThingStatus;
+import org.eclipse.smarthome.core.thing.ThingStatusDetail;
+import org.eclipse.smarthome.core.thing.ThingStatusInfo;
+import org.eclipse.smarthome.core.thing.Bridge;
+import org.eclipse.smarthome.core.thing.binding.BridgeHandler;
+import org.eclipse.smarthome.core.thing.binding.ThingHandler;
 import org.eclipse.smarthome.core.thing.binding.BaseThingHandler;
 import org.eclipse.smarthome.core.thing.binding.BaseBridgeHandler;
-import org.eclipse.smarthome.core.thing.binding.ThingHandlerService;
 import org.eclipse.smarthome.core.thing.binding.builder.ChannelBuilder;
 import org.eclipse.smarthome.core.thing.binding.builder.ThingBuilder;
+import org.eclipse.smarthome.core.thing.Channel;
+import org.eclipse.smarthome.core.thing.type.ChannelTypeUID;
+import org.eclipse.smarthome.core.thing.binding.ThingHandlerService;
 import org.eclipse.smarthome.core.types.Command;
 import org.eclipse.smarthome.io.net.http.HttpClientFactory;
 import org.slf4j.Logger;
@@ -166,9 +175,11 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
 
                         @Nullable
                         UdpMessage targetObject = gson.fromJson(json, UdpMessage.class);
-                        udpDeviceId = targetObject.getDeviceId();
-                        if (udpDeviceId.equals(handler.getDeviceId())) {
-                            handler.processUDPEvent(json, trackingID);
+                        if (targetObject != null) {
+                            udpDeviceId = targetObject.getDeviceId();
+                            if (udpDeviceId.equals(handler.getDeviceId())) {
+                                handler.processUDPEvent(json, trackingID);
+                            }
                         }
                     }
                     break;
