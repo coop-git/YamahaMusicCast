@@ -35,7 +35,7 @@ public class Status {
     private int volume;
 
     @SerializedName("max_volume")
-    private int maxVolume;
+    private int maxVolume = 1;
 
     @SerializedName("input")
     private String input;

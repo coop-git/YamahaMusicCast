@@ -39,7 +39,7 @@ public class Features {
     
     public class System {
         @SerializedName("zone_num")
-        private int zoneNum;
+        private int zoneNum = 0;
 
         public int getZoneNum() {
             return zoneNum;

@@ -47,10 +47,10 @@ public class PlayInfo {
     private String shuffle;
 
     @SerializedName("play_time")
-    private int playTime;
+    private int playTime = 0;
 
     @SerializedName("total_time")
-    private int totalTime;
+    private int totalTime = 0;
 
     public String getResponseCode() {
         if (responseCode==null) {responseCode = "";}
