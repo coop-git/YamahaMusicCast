@@ -289,7 +289,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     distributioninfo = gson.fromJson(tmpString, DistributionInfo.class);
                     if (distributioninfo != null) {
                         responseCode = distributioninfo.getResponseCode();
-                        role = distributioninfo.getRole();
+                        localRole = distributioninfo.getRole();
                         if (command.toString().equals("")) {
                             action="unlink";
                             groupId = distributioninfo.getGroupId();
@@ -341,11 +341,11 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                                         httpResponse = setClientServerInfo(mclinkSetupServer, json, "setServerInfo");
                                         //Step 3. reflect changes to master
                                         httpResponse = startDistribution(mclinkSetupServer);
-                                        localDefaultAfterMCLink = getThing().getConfiguration().get("syncVolume").toString();
+                                        localDefaultAfterMCLink = getThing().getConfiguration().get("defaultAfterMCLink").toString();
                                         httpResponse = setInput(localDefaultAfterMCLink.toString(), zone, this.host);
                                     } else if (mclinkSetupServer == "") {
                                         //fallback in case client is removed from group by ending group on server side
-                                        localDefaultAfterMCLink = getThing().getConfiguration().get("syncVolume").toString();
+                                        localDefaultAfterMCLink = getThing().getConfiguration().get("defaultAfterMCLink").toString();
                                         httpResponse = setInput(localDefaultAfterMCLink.toString(), zone, this.host);
                                     }
                                 }
@@ -1124,7 +1124,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     private String makeRequest(@Nullable String topicAVR, String url) {
         String response = "";
         try {
-            response = HttpUtil.executeUrl("GET", HTTP + url, CONNECTION_TIMEOUT_MILLISEC);
+            response = HttpUtil.executeUrl("GET", HTTP + url, LONG_CONNECTION_TIMEOUT_MILLISEC);
             logger.debug("{} - {}", topicAVR, response);
             return response;
         } catch (IOException e) {

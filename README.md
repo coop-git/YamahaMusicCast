@@ -37,6 +37,8 @@ No auto discovery
 | syncVolume         | Boolean | Sync volume across linked models (default=false)        | false    | false         |
 | defaultAfterMCLink | String  | Default Input value for client when MC Link is broken   | false    | false         |
 
+Default value for *defaultAfterMCLink* is *NET RADIO* as most of the models have this on board.
+
 ## Channels
 
 | channel        | type   | description                                                         |

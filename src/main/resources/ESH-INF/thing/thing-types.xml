@@ -34,7 +34,7 @@
 			<parameter name="defaultAfterMCLink" type="text">
 				<label>MC Link Default Value</label>
 				<description>Default value for client when MC Link is broken</description>
-				<default>none</default>
+				<default>net_radio</default>
 				<options>
 					<option value="none">None</option>
 					<option value="net_radio">Net Radio</option>
