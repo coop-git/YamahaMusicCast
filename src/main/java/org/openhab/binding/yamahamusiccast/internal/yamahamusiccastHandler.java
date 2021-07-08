@@ -157,6 +157,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         String localRole = "";
         boolean localSyncVolume;
         String localDefaultAfterMCLink = "";
+        String localRoleSelectedThing = "";
         if (command != RefreshType.REFRESH) {
             logger.debug("Handling command {} for channel {}", command, channelUID);
             channelWithoutGroup = channelUID.getIdWithoutGroup();
@@ -303,14 +304,14 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                                 distributioninfo = gson.fromJson(tmpString, DistributionInfo.class);
                                 if (distributioninfo != null) {
                                     responseCode = distributioninfo.getResponseCode();
-                                    localRole = distributioninfo.getRole();
+                                    localRoleSelectedThing = distributioninfo.getRole();
                                     groupId = distributioninfo.getGroupId();
-                                    if (localRole != null) {
-                                        if ("server".equals(localRole)) {
+                                    if (localRoleSelectedThing != null) {
+                                        if ("server".equals(localRoleSelectedThing)) {
                                             groupId = distributioninfo.getGroupId();
-                                        } else if ("client".equals(localRole)) {
+                                        } else if ("client".equals(localRoleSelectedThing)) {
                                             groupId = "";
-                                        } else if ("none".equals(localRole)) {
+                                        } else if ("none".equals(localRoleSelectedThing)) {
                                             groupId = generateGroupId();
                                         }
                                     }
@@ -1043,7 +1044,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                     setMCLinkToServer();
                     break;
                 case "client":
-                        setMCLinkToClient();
+                    setMCLinkToClient();
                     break;
             }
         }
