@@ -960,7 +960,10 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         @Nullable
         Features targetObject = gson.fromJson(tmpString, Features.class);
         if (targetObject != null) {
-            numberOfZones = targetObject.getSystem().getZoneNum();
+            responseCode = targetObject.getResponseCode();
+            if ("0".equals(responseCode)) {
+                numberOfZones = targetObject.getSystem().getZoneNum();
+            }
         }
         return numberOfZones;
     }
@@ -1280,7 +1283,8 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         appProps.setProperty("X-AppPort", "41100");
         try {
             httpResponse = HttpUtil.executeUrl("GET", HTTP + host + YAMAHA_EXTENDED_CONTROL + "netusb/getPlayInfo", appProps, null, "", CONNECTION_TIMEOUT_MILLISEC);
-            logger.debug("{}", httpResponse);
+            //logger.debug("{}", httpResponse);
+            logger.debug("{} - {}", "UDP task", httpResponse);
         } catch (IOException e) {
             logger.warn("UDP refresh failed - {}", e.getMessage());
         }
