@@ -1282,7 +1282,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         appProps.setProperty("X-AppName", "MusicCast/1");
         appProps.setProperty("X-AppPort", "41100");
         try {
-            httpResponse = HttpUtil.executeUrl("GET", HTTP + host + YAMAHA_EXTENDED_CONTROL + "netusb/getPlayInfo", appProps, null, "", CONNECTION_TIMEOUT_MILLISEC);
+            httpResponse = HttpUtil.executeUrl("GET", HTTP + host + YAMAHA_EXTENDED_CONTROL + "netusb/getPlayInfo", appProps, null, "", LONG_CONNECTION_TIMEOUT_MILLISEC);
             //logger.debug("{}", httpResponse);
             logger.debug("{} - {}", "UDP task", httpResponse);
         } catch (IOException e) {
