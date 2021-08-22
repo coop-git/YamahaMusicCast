@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2020 Contributors to the openHAB project
+ * Copyright (c) 2010-2021 Contributors to the openHAB project
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information.
@@ -13,9 +13,9 @@
 package org.openhab.binding.yamahamusiccast.internal;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
-import org.eclipse.smarthome.core.thing.binding.BaseDynamicStateDescriptionProvider;
-import org.eclipse.smarthome.core.thing.i18n.ChannelTypeI18nLocalizationService;
-import org.eclipse.smarthome.core.thing.type.DynamicStateDescriptionProvider;
+import org.openhab.core.thing.binding.BaseDynamicStateDescriptionProvider;
+import org.openhab.core.thing.i18n.ChannelTypeI18nLocalizationService;
+import org.openhab.core.thing.type.DynamicStateDescriptionProvider;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 

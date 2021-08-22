@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2020 Contributors to the openHAB project
+ * Copyright (c) 2010-2021 Contributors to the openHAB project
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information.
@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.openhab.binding.yamahamusiccast.internal.dto;
-import com.google.gson.annotations.SerializedName;
 
+import com.google.gson.annotations.SerializedName;
 
 /**
  * This class represents the UDP event received from the Yamaha model/device.
@@ -26,7 +26,9 @@ public class UdpMessage {
     private String deviceId;
 
     public String getDeviceId() {
-        if (deviceId==null) {deviceId = "";}
+        if (deviceId == null) {
+            deviceId = "";
+        }
         return deviceId;
     }
 
@@ -46,22 +48,27 @@ public class UdpMessage {
     public Zone getMain() {
         return main;
     }
+
     public Zone getZone2() {
         return zone2;
     }
+
     public Zone getZone3() {
         return zone3;
     }
+
     public Zone getZone4() {
         return zone4;
     }
+
     public NetUSB getNetUSB() {
         return netusb;
     }
+
     public Dist getDist() {
         return dist;
     }
-    
+
     public class Zone {
         @SerializedName("power")
         private String power;
@@ -74,28 +81,39 @@ public class UdpMessage {
         @SerializedName("status_updated")
         private String statusUpdated;
 
-
         public String getPower() {
-            if (power==null) {power = "";}
+            if (power == null) {
+                power = "";
+            }
             return power;
         }
+
         public String getMute() {
-            if (mute==null) {mute = "";}
+            if (mute == null) {
+                mute = "";
+            }
             return mute;
         }
+
         public String getInput() {
-            if (input==null) {input = "";}
+            if (input == null) {
+                input = "";
+            }
             return input;
         }
+
         public int getVolume() {
             return volume;
         }
+
         public String getstatusUpdated() {
-            if (statusUpdated==null) {statusUpdated = "";}
+            if (statusUpdated == null) {
+                statusUpdated = "";
+            }
             return statusUpdated;
         }
     }
-    
+
     public class NetUSB {
         @SerializedName("preset_control")
         private PresetControl presetControl;
@@ -103,14 +121,18 @@ public class UdpMessage {
         private String playInfoUpdated;
         @SerializedName("play_time")
         private int playTime;
-        
+
         public PresetControl getPresetControl() {
             return presetControl;
         }
+
         public String getPlayInfoUpdated() {
-            if (playInfoUpdated==null) {playInfoUpdated = "";}
+            if (playInfoUpdated == null) {
+                playInfoUpdated = "";
+            }
             return playInfoUpdated;
         }
+
         public int getPlayTime() {
             return playTime;
         }
@@ -122,20 +144,25 @@ public class UdpMessage {
         @SerializedName("num")
         private int num = 1;
         @SerializedName("result")
-        private String result;  
+        private String result;
 
         public String getType() {
-            if (type==null) {type = "";}
+            if (type == null) {
+                type = "";
+            }
             return type;
         }
+
         public String getResult() {
-            if (result==null) {result = "";}
+            if (result == null) {
+                result = "";
+            }
             return result;
         }
+
         public int getNum() {
             return num;
         }
-
     }
 
     public class Dist {
@@ -143,11 +170,10 @@ public class UdpMessage {
         private String distInfoUpdated;
 
         public String getDistInfoUpdated() {
-            if (distInfoUpdated==null) {distInfoUpdated = "";}
+            if (distInfoUpdated == null) {
+                distInfoUpdated = "";
+            }
             return distInfoUpdated;
-        }        
+        }
     }
-
 }
-
-

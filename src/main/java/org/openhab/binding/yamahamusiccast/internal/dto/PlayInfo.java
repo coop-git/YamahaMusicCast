@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2020 Contributors to the openHAB project
+ * Copyright (c) 2010-2021 Contributors to the openHAB project
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information.
@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.openhab.binding.yamahamusiccast.internal.dto;
-import com.google.gson.annotations.SerializedName;
 
+import com.google.gson.annotations.SerializedName;
 
 /**
  * This class represents the PlayInfo request requested from the Yamaha model/device via the API.
@@ -53,42 +53,58 @@ public class PlayInfo {
     private int totalTime = 0;
 
     public String getResponseCode() {
-        if (responseCode==null) {responseCode = "";}
+        if (responseCode == null) {
+            responseCode = "";
+        }
         return responseCode;
     }
 
     public String getPlayback() {
-        if (playback==null) {playback = "";}
+        if (playback == null) {
+            playback = "";
+        }
         return playback;
-    }  
+    }
 
     public String getArtist() {
-        if (artist==null) {artist = "";}
+        if (artist == null) {
+            artist = "";
+        }
         return artist;
-    }  
+    }
 
     public String getTrack() {
-        if (track==null) {track = "";}
+        if (track == null) {
+            track = "";
+        }
         return track;
-    }  
+    }
 
     public String getAlbum() {
-        if (album==null) {album = "";}
+        if (album == null) {
+            album = "";
+        }
         return album;
-    }  
-   
+    }
+
     public String getAlbumArtUrl() {
-        if (albumarturl==null) {albumarturl = "";}
+        if (albumarturl == null) {
+            albumarturl = "";
+        }
         return albumarturl;
-    }  
+    }
 
     public String getRepeat() {
-        if (repeat==null) {repeat = "";}
+        if (repeat == null) {
+            repeat = "";
+        }
         return repeat;
-    }  
+    }
 
     public String getShuffle() {
-        if (shuffle==null) {shuffle = "";}
+        if (shuffle == null) {
+            shuffle = "";
+        }
         return shuffle;
     }
 
@@ -100,5 +116,3 @@ public class PlayInfo {
         return totalTime;
     }
 }
-
-

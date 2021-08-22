@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2020 Contributors to the openHAB project
+ * Copyright (c) 2010-2021 Contributors to the openHAB project
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information.
@@ -11,8 +11,9 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.openhab.binding.yamahamusiccast.internal.dto;
-import com.google.gson.annotations.SerializedName;
+
 import com.google.gson.JsonArray;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * This class represents the DistributionInfo request requested from the Yamaha model/device via the API.
@@ -37,39 +38,46 @@ public class DistributionInfo {
     private JsonArray clientList;
 
     public String getResponseCode() {
-        if (responseCode==null) {responseCode = "";}
+        if (responseCode == null) {
+            responseCode = "";
+        }
         return responseCode;
     }
 
     public String getGroupId() {
-        if (groupId==null) {groupId = "";}
+        if (groupId == null) {
+            groupId = "";
+        }
         return groupId;
     }
 
     public String getRole() {
-        if (role==null) {role = "";}
+        if (role == null) {
+            role = "";
+        }
         return role;
     }
 
     public String getServerZone() {
-        if (serverZone==null) {serverZone = "";}
+        if (serverZone == null) {
+            serverZone = "";
+        }
         return serverZone;
     }
 
     public JsonArray getClientList() {
         return clientList;
     }
-    
+
     public class ClientList {
         @SerializedName("ip_address")
         private String ipaddress;
 
         public String getIpaddress() {
-            if (ipaddress==null) {ipaddress = "";}
+            if (ipaddress == null) {
+                ipaddress = "";
+            }
             return ipaddress;
-        } 
+        }
     }
-
 }
-
-

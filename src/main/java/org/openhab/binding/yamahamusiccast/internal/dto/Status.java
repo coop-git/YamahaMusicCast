@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2020 Contributors to the openHAB project
+ * Copyright (c) 2010-2021 Contributors to the openHAB project
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information.
@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.openhab.binding.yamahamusiccast.internal.dto;
-import com.google.gson.annotations.SerializedName;
 
+import com.google.gson.annotations.SerializedName;
 
 /**
  * This class represents the Status request requested from the Yamaha model/device via the API.
@@ -46,19 +46,24 @@ public class Status {
     @SerializedName("sleep")
     private int sleep = 0;
 
-
     public String getResponseCode() {
-        if (responseCode==null) {responseCode = "";}
+        if (responseCode == null) {
+            responseCode = "";
+        }
         return responseCode;
     }
 
     public String getPower() {
-        if (power==null) {power = "";}
+        if (power == null) {
+            power = "";
+        }
         return power;
     }
 
     public String getMute() {
-        if (mute==null) {mute = "";}
+        if (mute == null) {
+            mute = "";
+        }
         return mute;
     }
 
@@ -67,25 +72,28 @@ public class Status {
     }
 
     public int getMaxVolume() {
-        //if no value is returned, set to 1 to avoid division by zero
-        if (maxVolume==0) {maxVolume = 1;}
+        // if no value is returned, set to 1 to avoid division by zero
+        if (maxVolume == 0) {
+            maxVolume = 1;
+        }
         return maxVolume;
     }
 
     public String getInput() {
-        if (input==null) {input = "";}
+        if (input == null) {
+            input = "";
+        }
         return input;
     }
 
     public String getSoundProgram() {
-        if (soundProgram==null) {soundProgram = "";}
+        if (soundProgram == null) {
+            soundProgram = "";
+        }
         return soundProgram;
     }
 
     public int getSleep() {
         return sleep;
     }
-
 }
-
-

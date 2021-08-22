@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2020 Contributors to the openHAB project
+ * Copyright (c) 2010-2021 Contributors to the openHAB project
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information.
@@ -12,68 +12,32 @@
  */
 package org.openhab.binding.yamahamusiccast.internal;
 
-import org.openhab.binding.yamahamusiccast.internal.dto.UdpMessage;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-
-import org.apache.commons.lang.StringUtils;
-import org.eclipse.jdt.annotation.NonNullByDefault;
-import org.eclipse.jdt.annotation.Nullable;
-import org.eclipse.jetty.client.HttpClient;
-import org.eclipse.jetty.client.api.ContentResponse;
-import org.eclipse.jetty.client.api.Request;
-import org.eclipse.jetty.client.util.StringContentProvider;
-import org.eclipse.jetty.http.HttpHeader;
-import org.eclipse.jetty.http.HttpMethod;
-import org.eclipse.smarthome.core.thing.ChannelUID;
-import org.eclipse.smarthome.core.thing.Thing;
-import org.eclipse.smarthome.core.thing.ThingStatus;
-import org.eclipse.smarthome.core.thing.ThingStatusDetail;
-import org.eclipse.smarthome.core.thing.ThingStatusInfo;
-import org.eclipse.smarthome.core.thing.Bridge;
-import org.eclipse.smarthome.core.thing.binding.BridgeHandler;
-import org.eclipse.smarthome.core.thing.binding.ThingHandler;
-import org.eclipse.smarthome.core.thing.binding.BaseThingHandler;
-import org.eclipse.smarthome.core.thing.binding.BaseBridgeHandler;
-import org.eclipse.smarthome.core.thing.binding.builder.ChannelBuilder;
-import org.eclipse.smarthome.core.thing.binding.builder.ThingBuilder;
-import org.eclipse.smarthome.core.thing.Channel;
-import org.eclipse.smarthome.core.thing.type.ChannelTypeUID;
-import org.eclipse.smarthome.core.thing.binding.ThingHandlerService;
-import org.eclipse.smarthome.core.types.Command;
-import org.eclipse.smarthome.io.net.http.HttpClientFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import jdk.internal.jshell.tool.resources.version;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonSyntaxException;
-
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import org.eclipse.smarthome.core.common.ThreadPoolManager;
-import org.eclipse.smarthome.core.common.NamedThreadFactory;
-import org.openhab.binding.yamahamusiccast.internal.UdpListener;
-import java.io.IOException;
-
-
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.util.Arrays;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
+import org.eclipse.jdt.annotation.NonNullByDefault;
+import org.eclipse.jdt.annotation.Nullable;
+import org.openhab.binding.yamahamusiccast.internal.dto.UdpMessage;
+import org.openhab.core.common.NamedThreadFactory;
+import org.openhab.core.thing.Bridge;
+import org.openhab.core.thing.ChannelUID;
+import org.openhab.core.thing.Thing;
+import org.openhab.core.thing.ThingStatus;
+import org.openhab.core.thing.ThingStatusInfo;
+import org.openhab.core.thing.binding.BaseBridgeHandler;
+import org.openhab.core.types.Command;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.gson.Gson;
 
 /**
  * The {@link YamahaMusiccastBridgeHandler} is responsible for dispatching UDP events to linked Things.
@@ -84,7 +48,7 @@ import java.util.UUID;
 public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
     private Gson gson = new Gson();
     private final Logger logger = LoggerFactory.getLogger(YamahaMusiccastBridgeHandler.class);
-    private String threadname = getThing().getUID().getAsString(); 
+    private String threadname = getThing().getUID().getAsString();
     private @Nullable ExecutorService executor = Executors.newSingleThreadExecutor(new NamedThreadFactory(threadname));
     private @Nullable Future<?> eventListenerJob;
     private static final int UDP_PORT = 41100;
@@ -113,9 +77,9 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
             try {
                 localSocket.receive(packet);
                 String received = new String(packet.getData(), 0, packet.getLength());
-                String trackingID = UUID.randomUUID().toString().replace("-","").substring(0,32);
+                String trackingID = UUID.randomUUID().toString().replace("-", "").substring(0, 32);
                 logger.debug("Received packet: {} (Tracking: {})", received, trackingID);
-                handleUDPEvent(received,trackingID);
+                handleUDPEvent(received, trackingID);
             } catch (SocketTimeoutException e) {
                 // Nothing to do on socket timeout
             } catch (IOException e) {
@@ -168,10 +132,11 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
             ThingStatusInfo statusInfo = thing.getStatusInfo();
             switch (statusInfo.getStatus()) {
                 case ONLINE:
-                    logger.debug("Thing Status: ONLINE - {}",thing.getLabel());
+                    logger.debug("Thing Status: ONLINE - {}", thing.getLabel());
                     YamahaMusiccastHandler handler = (YamahaMusiccastHandler) thing.getHandler();
                     if (handler != null) {
-                        logger.debug("UDP: {} - {} ({} - Tracking: {})", json, handler.getDeviceId(), thing.getLabel(), trackingID);
+                        logger.debug("UDP: {} - {} ({} - Tracking: {})", json, handler.getDeviceId(), thing.getLabel(),
+                                trackingID);
 
                         @Nullable
                         UdpMessage targetObject = gson.fromJson(json, UdpMessage.class);
@@ -184,10 +149,9 @@ public class YamahaMusiccastBridgeHandler extends BaseBridgeHandler {
                     }
                     break;
                 default:
-                    logger.debug("Thing Status: NOT ONLINE - {} (Tracking: {})",thing.getLabel(), trackingID);
+                    logger.debug("Thing Status: NOT ONLINE - {} (Tracking: {})", thing.getLabel(), trackingID);
                     break;
             }
         }
     }
-
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2020 Contributors to the openHAB project
+ * Copyright (c) 2010-2021 Contributors to the openHAB project
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information.
@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.openhab.binding.yamahamusiccast.internal.dto;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -30,17 +31,23 @@ public class DeviceInfo {
     private String deviceId;
 
     public String getResponseCode() {
-        if (responseCode==null) {responseCode = "";}
+        if (responseCode == null) {
+            responseCode = "";
+        }
         return responseCode;
     }
 
     public String getModelName() {
-        if (modelName==null) {modelName = "";}
+        if (modelName == null) {
+            modelName = "";
+        }
         return modelName;
     }
 
     public String getDeviceId() {
-        if (deviceId==null) {deviceId = "";}
+        if (deviceId == null) {
+            deviceId = "";
+        }
         return deviceId;
     }
 }

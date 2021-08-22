@@ -186,7 +186,8 @@ MusicCast 20 / WCX-50 / RX-V6A / YAS-306 / ISX-18D / WX-021 / YAS-408
 - Channels and zones are created dynamically based on number of zones supported by your model (v0.81).
 - The new channel _mclinkStatus_ will also show the number of connected clients in case Thing is acting as server (v0.81).
 - The channel _recallScene_ now has 8 defaults scenes numbered from 1 to 8 (v0.81).
-- Small bugfixes (v0.82).
+- Small bugfixes (v0.82/v0.83).
+- Sometimes scheduler for UDP events fails. When powering on device via binding, scheduler is checked and started if missing (v0.84).
 
 ###### v0.7x
 

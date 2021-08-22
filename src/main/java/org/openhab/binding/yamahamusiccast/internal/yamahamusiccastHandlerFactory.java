@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2020 Contributors to the openHAB project
+ * Copyright (c) 2010-2021 Contributors to the openHAB project
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information.
@@ -14,26 +14,19 @@ package org.openhab.binding.yamahamusiccast.internal;
 
 import static org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastBindingConstants.*;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
-
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
-import org.eclipse.smarthome.core.thing.Thing;
-import org.eclipse.smarthome.core.thing.Bridge;
-import org.eclipse.smarthome.core.thing.ThingTypeUID;
-import org.eclipse.smarthome.core.thing.binding.BaseThingHandlerFactory;
-import org.eclipse.smarthome.core.thing.binding.ThingHandler;
-import org.eclipse.smarthome.core.thing.binding.ThingHandlerFactory;
+import org.openhab.core.thing.Bridge;
+import org.openhab.core.thing.Thing;
+import org.openhab.core.thing.ThingTypeUID;
+import org.openhab.core.thing.binding.BaseThingHandlerFactory;
+import org.openhab.core.thing.binding.ThingHandler;
+import org.openhab.core.thing.binding.ThingHandlerFactory;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.Activate;
-import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastHandler;
-import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastBridgeHandler;
-import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastStateDescriptionProvider;
-
 
 /**
  * The {@link YamahamusiccastHandlerFactory} is responsible for creating things and thing
@@ -44,20 +37,9 @@ import org.openhab.binding.yamahamusiccast.internal.YamahaMusiccastStateDescript
 @NonNullByDefault
 @Component(configurationPid = "binding.yamahamusiccast", service = ThingHandlerFactory.class)
 public class YamahaMusiccastHandlerFactory extends BaseThingHandlerFactory {
-    
-    //Requested change by OH maintainer(s)
-    //Java 11!
-    //private static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Set
-    //        .of(YamahaMusiccastBindingConstants.THING_DEVICE, YamahaMusiccastBindingConstants.THING_TYPE_BRIDGE);
 
-    // First implementation
-    //Java 8!
-    private static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = new HashSet<>();
-    static {
-        SUPPORTED_THING_TYPES_UIDS.add(YamahaMusiccastBindingConstants.THING_DEVICE);
-        SUPPORTED_THING_TYPES_UIDS.add(YamahaMusiccastBindingConstants.THING_TYPE_BRIDGE);
-    }
-
+    private static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Set
+            .of(YamahaMusiccastBindingConstants.THING_DEVICE, YamahaMusiccastBindingConstants.THING_TYPE_BRIDGE);
 
     private final YamahaMusiccastStateDescriptionProvider stateDescriptionProvider;
 
@@ -65,6 +47,7 @@ public class YamahaMusiccastHandlerFactory extends BaseThingHandlerFactory {
     public YamahaMusiccastHandlerFactory(@Reference YamahaMusiccastStateDescriptionProvider stateDescriptionProvider) {
         this.stateDescriptionProvider = stateDescriptionProvider;
     }
+
     @Override
     public boolean supportsThingType(ThingTypeUID thingTypeUID) {
         return SUPPORTED_THING_TYPES_UIDS.contains(thingTypeUID);
@@ -77,9 +60,8 @@ public class YamahaMusiccastHandlerFactory extends BaseThingHandlerFactory {
         if (thingTypeUID.equals(THING_TYPE_BRIDGE)) {
             return new YamahaMusiccastBridgeHandler((Bridge) thing);
         } else if (THING_DEVICE.equals(thingTypeUID)) {
-            return new YamahaMusiccastHandler(thing,stateDescriptionProvider);
-        } 
+            return new YamahaMusiccastHandler(thing, stateDescriptionProvider);
+        }
         return null;
-        
     }
 }

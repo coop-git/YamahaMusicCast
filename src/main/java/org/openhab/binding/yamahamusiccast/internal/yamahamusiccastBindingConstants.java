@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2020 Contributors to the openHAB project
+ * Copyright (c) 2010-2021 Contributors to the openHAB project
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information.
@@ -13,8 +13,8 @@
 package org.openhab.binding.yamahamusiccast.internal;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
-import org.eclipse.smarthome.core.thing.ThingTypeUID;
-import org.eclipse.smarthome.core.thing.type.ChannelTypeUID;
+import org.openhab.core.thing.ThingTypeUID;
+import org.openhab.core.thing.type.ChannelTypeUID;
 
 /**
  * The {@link YamahaMusiccastBindingConstants} class defines common constants, which are
@@ -43,7 +43,6 @@ public class YamahaMusiccastBindingConstants {
     public static final ChannelTypeUID CHANNEL_TYPE_UID_RECALLSCENE = new ChannelTypeUID(BINDING_ID, "recallScene");
     public static final ChannelTypeUID CHANNEL_TYPE_UID_MCLINKSTATUS = new ChannelTypeUID(BINDING_ID, "mclinkStatus");
 
-
     // List of all Channel ids
     public static final String CHANNEL_POWER = "power";
     public static final String CHANNEL_MUTE = "mute";
@@ -69,5 +68,4 @@ public class YamahaMusiccastBindingConstants {
     public static final int LONG_CONNECTION_TIMEOUT_MILLISEC = 60000;
     public static final String HTTP = "http://";
     public static final String YAMAHA_EXTENDED_CONTROL = "/YamahaExtendedControl/v1/";
-
 }

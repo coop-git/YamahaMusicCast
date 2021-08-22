@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2020 Contributors to the openHAB project
+ * Copyright (c) 2010-2021 Contributors to the openHAB project
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information.
@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.openhab.binding.yamahamusiccast.internal.dto;
-import com.google.gson.annotations.SerializedName;
 
+import com.google.gson.annotations.SerializedName;
 
 /**
  * This class represents the Features request requested from the Yamaha model/device via the API.
@@ -26,7 +26,9 @@ public class Features {
     private String responseCode;
 
     public String getResponseCode() {
-        if (responseCode==null) {responseCode = "";}
+        if (responseCode == null) {
+            responseCode = "";
+        }
         return responseCode;
     }
 
@@ -36,7 +38,7 @@ public class Features {
     public System getSystem() {
         return system;
     }
-    
+
     public class System {
         @SerializedName("zone_num")
         private int zoneNum = 0;
@@ -44,10 +46,5 @@ public class Features {
         public int getZoneNum() {
             return zoneNum;
         }
-
     }
-
-
 }
-
-
