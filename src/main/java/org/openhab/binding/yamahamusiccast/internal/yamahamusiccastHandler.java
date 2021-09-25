@@ -576,14 +576,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
             channel = new ChannelUID(getThing().getUID(), zoneToUpdate, CHANNEL_POWER);
             if ("on".equals(powerState)) {
                 updateState(channel, OnOffType.ON);
-
-                ScheduledFuture<?> localGeneralHousekeepingTask = generalHousekeepingTask;
-                if (localGeneralHousekeepingTask == null) {
-                    logger.info("No scheduler task found!");
-                } else {
-                    logger.info("Scheduler task found!");
-                }
-
             } else if ("standby".equals(powerState)) {
                 updateState(channel, OnOffType.OFF);
                 powerOffCleanup();
