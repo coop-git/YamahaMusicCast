@@ -104,7 +104,7 @@ mono_movie / movie / enhanced / 2ch_stereo / 5ch_stereo / 7ch_stereo / 9ch_stere
 ### Bridge & Thing(s)
 
 ```
-Bridge yamahamusiccast:bridge:bridge "YXC Bridge" {
+Bridge yamahamusiccast:bridge:virtual "YXC Bridge" {
 Thing yamahamusiccast:device:Living "YXC Living" [host="1.2.3.4"]
 }
 ```

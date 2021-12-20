@@ -77,30 +77,23 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     private Gson gson = new Gson();
     private Logger logger = LoggerFactory.getLogger(YamahaMusiccastHandler.class);
     private @Nullable ScheduledFuture<?> generalHousekeepingTask;
-    private @Nullable YamahaMusiccastConfiguration config;
     private @Nullable String httpResponse;
     private @Nullable String tmpString = "";
-    private @Nullable String stringToCheck = "";
     private int volumePercent = 0;
     private int volumeAbsValue = 0;
     private @Nullable String responseCode = "";
-    private @Nullable String powerState = "";
-    private @Nullable String muteState = "";
     private int volumeState = 0;
     private int maxVolumeState = 0;
     private @Nullable String inputState = "";
     private @Nullable String soundProgramState = "";
     private int sleepState = 0;
-    private @Nullable String playbackState = "";
     private @Nullable String artistState = "";
     private @Nullable String trackState = "";
     private @Nullable String albumState = "";
-    private @Nullable String albumArtUrlState = "";
     private @Nullable String repeatState = "";
     private @Nullable String shuffleState = "";
     private int playTimeState = 0;
     private int totalTimeState = 0;
-    private @Nullable String topicAVR = "";
     private @Nullable String zone = "main";
     private String channelWithoutGroup = "";
     private @Nullable String thingLabel = "";
@@ -111,7 +104,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
     private String action = "";
     private int zoneNum = 0;
     private @Nullable String groupId = "";
-    private @Nullable String role = "";
     private @Nullable String host;
     public @Nullable String deviceId = "";
 
@@ -307,7 +299,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                             json = "{\"group_id\":\"\"}";
                             if (localRole != null) {
                                 if ("server".equals(localRole)) {
-                                    httpResponse = setServerInfo(this.host, json);
+                                    httpResponse = setClientServerInfo(this.host, json, "setServerInfo");
                                     // Set GroupId = "" for linked clients
                                     if (distributioninfo != null) {
                                         for (JsonElement ip : distributioninfo.getClientList()) {
@@ -321,7 +313,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                                     // Step 1. empty group on client
                                     httpResponse = setClientServerInfo(this.host, json, "setClientInfo");
                                     // empty zone to respect defaults
-                                    if (mclinkSetupServer != "") {
+                                    if (!"".equals(mclinkSetupServer)) {
                                         // Step 2. remove client from server
                                         json = "{\"group_id\":\"" + groupId
                                                 + "\", \"type\":\"remove\", \"client_list\":[\"" + this.host + "\"]}";
@@ -331,7 +323,7 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
                                         localDefaultAfterMCLink = getThing().getConfiguration()
                                                 .get("defaultAfterMCLink").toString();
                                         httpResponse = setInput(localDefaultAfterMCLink.toString(), zone, this.host);
-                                    } else if (mclinkSetupServer == "") {
+                                    } else if ("".equals(mclinkSetupServer)) {
                                         // fallback in case client is removed from group by ending group on server side
                                         localDefaultAfterMCLink = getThing().getConfiguration()
                                                 .get("defaultAfterMCLink").toString();
@@ -1206,36 +1198,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         return makeRequest("DistributionInfo", host + YAMAHA_EXTENDED_CONTROL + "dist/getDistributionInfo");
     }
 
-    private @Nullable String setServerInfo(@Nullable String host, String json) {
-        InputStream is = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
-        topicAVR = "SetServerInfo";
-        url = "";
-        try {
-            url = "http://" + host + YAMAHA_EXTENDED_CONTROL + "dist/setServerInfo";
-            httpResponse = HttpUtil.executeUrl("POST", url, is, "", LONG_CONNECTION_TIMEOUT_MILLISEC);
-            logger.debug("MC Link/Unlink Server {}", httpResponse);
-            return httpResponse;
-        } catch (IOException e) {
-            logger.warn("IO Exception - {} - {}", topicAVR, e.getMessage());
-            return "{\"response_code\":\"999\"}";
-        }
-    }
-
-    private @Nullable String setClientInfo(@Nullable String host, String json) {
-        InputStream is = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
-        topicAVR = "SetClientInfo";
-        url = "";
-        try {
-            url = "http://" + host + YAMAHA_EXTENDED_CONTROL + "dist/setClientInfo";
-            httpResponse = HttpUtil.executeUrl("POST", url, is, "", LONG_CONNECTION_TIMEOUT_MILLISEC);
-            logger.debug("MC Link/Unlink Client {}", httpResponse);
-            return httpResponse;
-        } catch (IOException e) {
-            logger.warn("IO Exception - {} - {}", topicAVR, e.getMessage());
-            return "{\"response_code\":\"999\"}";
-        }
-    }
-
     private @Nullable String setClientServerInfo(@Nullable String host, String json, String type) {
         InputStream is = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
         try {
@@ -1253,10 +1215,6 @@ public class YamahaMusiccastHandler extends BaseThingHandler {
         Random ran = new Random();
         int nxt = ran.nextInt(200000);
         return makeRequest("StartDistribution", host + YAMAHA_EXTENDED_CONTROL + "dist/startDistribution?num=" + nxt);
-    }
-
-    private @Nullable String stopDistribution(@Nullable String host) {
-        return makeRequest("StopDistribution", host + YAMAHA_EXTENDED_CONTROL + "dist/stopDistribution");
     }
 
     // End Music Cast API calls
